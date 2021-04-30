@@ -2,16 +2,16 @@ CC = gcc
 CFLAGS = -Wall
 
 default:
-	$(CC) $(CFLAGS) main.c -o friendsbook && ./friendsbook
+	$(CC) $(CFLAGS) main.c friendsbook.c -o friendsbook && ./friendsbook
 
 com:
-	$(CC) $(CFLAGS) main.c -o friendsbook
+	$(CC) $(CFLAGS) main.c friendsbook.c -o friendsbook
 
 run:
 	./friendsbook
 
-x:
-	$(CC) $(CFLAGS) test.c -o test && ./test
+test:
+	$(CC) $(CFLAGS) lab.c -o lab && ./lab
 
 clean:
-	rm -rf friendsbook
+	rm -rf friendsbook lab
