@@ -1,6 +1,13 @@
 #ifndef FRIENDSBOOK
 #define FRIENDSBOOK
 
+#include <stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define clrscr system("clear")
+
 typedef char string[50];
 
 typedef struct User User;
@@ -26,7 +33,7 @@ struct Graph {
     bool *visited;  // a boolean array
 };
 
-// Queue Functions
+// Queue Functions (for BFS)
 Queue *createQueue();
 void enqueue(Queue *, User);
 User dequeue(Queue *);
@@ -40,20 +47,25 @@ void mainmenu();
 void usermenu();
 void friendmenu();
 
+// Frienship Network Functions
 Graph *createGraph(int);
 void addEdge(Graph *, User, User);
+void displayfriendgraph(Graph *); // TODO
 
+// User Functions
 User *createUser(User);
 void printUser(User);
-void adduser(Graph *);     // TODO
-void searchuser(Graph *);  // TODO
-void edituser(Graph *);    // TODO
-void displayuser(Graph *); // TODO
-void removeuser(Graph *);  // TODO
+void adduser(Graph *);
+void searchusermenu(Graph *);
+void searchuserbyuid(Graph *);
+void searchuserbyname(Graph *);
+void edituser(Graph *); // TODO
+void displayuser(Graph *);
+void removeuser(Graph *); // TODO
 
-void recommendfriend();    // TODO
-void displayfriendgraph(); // TODO
-void checkfriend();        // TODO
+// Project Functions
+void recommendfriend(Graph *); // TODO
+void checkfriend(Graph *);     // TODO
 
 void quit();
 

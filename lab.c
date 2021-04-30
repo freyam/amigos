@@ -14,7 +14,7 @@ struct User {
     string city;
     User *next;
 };
-User null_user = {-1, "", -1, ""};
+User null_user = {0, "", 0, ""};
 
 User *createUser(User);
 

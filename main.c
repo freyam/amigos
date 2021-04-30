@@ -1,8 +1,3 @@
-#include <stdbool.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
 #include "friendsbook.h"
 
 Graph *g;
@@ -12,8 +7,8 @@ int main() {
 
     char pass;
     scanf("%c", &pass);
-    if (pass != '\'') {
-        system("clear");
+    if (pass != 'q') {
+        clrscr;
         printf("403 ACCESS DENIED!\n");
         exit(0);
     }
@@ -21,11 +16,12 @@ int main() {
     g = createGraph(10);
 
     mainmenu();
+
     quit();
 }
 
 void banner() {
-    system("clear");
+    clrscr;
 
     printf("  *********************************  \n");
     printf("  *********************************  \n");
@@ -41,7 +37,7 @@ void banner() {
 }
 
 void mainmenu() {
-    system("clear");
+    clrscr;
 
     int ch;
     do {
@@ -50,7 +46,6 @@ void mainmenu() {
         printf("  **                             **  \n");
         printf("  **           Friends           **  \n");
         printf("  **            Book             **  \n");
-        printf("  **                             **  \n");
         printf("  **                             **  \n");
         printf("  **          Main Menu          **  \n");
         printf("  **                             **  \n");
@@ -84,7 +79,7 @@ void mainmenu() {
 }
 
 void usermenu() {
-    system("clear");
+    clrscr;
 
     int ch;
     do {
@@ -94,7 +89,6 @@ void usermenu() {
         printf("  **           Friends           **  \n");
         printf("  **            Book             **  \n");
         printf("  **                             **  \n");
-        printf("  **                             **  \n");
         printf("  **       User Management       **  \n");
         printf("  **                             **  \n");
         printf("  **        1. Register          **  \n");
@@ -102,7 +96,6 @@ void usermenu() {
         printf("  **        3. Edit              **  \n");
         printf("  **        4. Display           **  \n");
         printf("  **        5. Unregister        **  \n");
-        printf("  **                             **  \n");
         printf("  **                             **  \n");
         printf("  **  9. Back to the Main Menu   **  \n");
         printf("  **    0. Exit Friends Book     **  \n");
@@ -114,13 +107,12 @@ void usermenu() {
         printf("Enter your choice: ");
         scanf("%d", &ch);
 
-        User u;
         switch (ch) {
         case 1:
             adduser(g);
             break;
         case 2:
-            searchuser(g);
+            searchusermenu(g);
             break;
         case 3:
             edituser(g);
@@ -145,7 +137,7 @@ void usermenu() {
 }
 
 void friendmenu() {
-    system("clear");
+    clrscr;
 
     int ch;
     do {
@@ -155,13 +147,11 @@ void friendmenu() {
         printf("  **           Friends           **  \n");
         printf("  **            Book             **  \n");
         printf("  **                             **  \n");
-        printf("  **                             **  \n");
         printf("  **      Friend Management      **  \n");
         printf("  **                             **  \n");
         printf("  **       1. Recommend          **  \n");
         printf("  **       2. Check Status       **  \n");
         printf("  **       3. Display Graph      **  \n");
-        printf("  **                             **  \n");
         printf("  **                             **  \n");
         printf("  **  9. Back to the Main Menu   **  \n");
         printf("  **    0. Exit Friends Book     **  \n");
@@ -175,13 +165,13 @@ void friendmenu() {
 
         switch (ch) {
         case 1:
-            recommendfriend();
+            recommendfriend(g);
             break;
         case 2:
-            checkfriend();
+            checkfriend(g);
             break;
         case 3:
-            displayfriendgraph();
+            displayfriendgraph(g);
             break;
         case 9:
             mainmenu();
@@ -197,7 +187,7 @@ void friendmenu() {
 }
 
 void quit() {
-    system("clear");
+    clrscr;
     printf("Thank You for visiting us at https://friendsbook.co.in!\n");
     exit(0);
 }
