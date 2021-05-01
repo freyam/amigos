@@ -1,5 +1,5 @@
-#ifndef FRIENDSBOOK
-#define FRIENDSBOOK
+#ifndef AMIGOS
+#define AMIGOS
 
 #include <limits.h>
 #include <stdbool.h>
@@ -65,8 +65,8 @@ void edituserbyuid(Graph *);
 void edituserbyname(Graph *);
 void displayusers(Graph *);
 void removeusermenu(Graph *);
-void removeuserbyuid(Graph *, Heap *h);  // TODO
-void removeuserbyname(Graph *, Heap *h); // TODO
+void removeuserbyuid(Graph *, Heap *h);
+void removeuserbyname(Graph *, Heap *h);
 
 // Project Functions
 void recommendfriend(Graph *); // TODO

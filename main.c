@@ -1,4 +1,4 @@
-#include "friendsbook.h"
+#include "amigos.h"
 
 Graph *g;
 Heap *h;

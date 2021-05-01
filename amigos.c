@@ -1,4 +1,4 @@
-#include "friendsbook.h"
+#include "amigos.h"
 
 unsigned long int minidx = 1;
 

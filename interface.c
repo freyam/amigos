@@ -1,4 +1,4 @@
-#include "friendsbook.h"
+#include "amigos.h"
 
 extern Graph *g;
 extern Heap *h;
@@ -9,10 +9,7 @@ void banner() {
     printf("  *********************************  \n");
     printf("  *********************************  \n");
     printf("  **                             **  \n");
-    printf("  **           Friends           **  \n");
-    printf("  **            Book             **  \n");
-    printf("  **                             **  \n");
-    printf("  **           Team 13           **  \n");
+    printf("  **            Amigos           **  \n");
     printf("  **                             **  \n");
     printf("  *********************************  \n");
     printf("  *********************************  \n");
@@ -27,8 +24,7 @@ void mainmenu() {
         printf("  *********************************  \n");
         printf("  *********************************  \n");
         printf("  **                             **  \n");
-        printf("  **           Friends           **  \n");
-        printf("  **            Book             **  \n");
+        printf("  **            Amigos           **  \n");
         printf("  **                             **  \n");
         printf("  **          Main Menu          **  \n");
         printf("  **                             **  \n");
@@ -68,8 +64,7 @@ void usermenu() {
         printf("  *********************************  \n");
         printf("  *********************************  \n");
         printf("  **                             **  \n");
-        printf("  **           Friends           **  \n");
-        printf("  **            Book             **  \n");
+        printf("  **            Amigos           **  \n");
         printf("  **                             **  \n");
         printf("  **       User Management       **  \n");
         printf("  **                             **  \n");
@@ -128,8 +123,7 @@ void searchusermenu(Graph *g) {
         printf("  *********************************  \n");
         printf("  *********************************  \n");
         printf("  **                             **  \n");
-        printf("  **           Friends           **  \n");
-        printf("  **            Book             **  \n");
+        printf("  **            Amigos           **  \n");
         printf("  **                             **  \n");
         printf("  **                             **  \n");
         printf("  **       User Management       **  \n");
@@ -177,8 +171,7 @@ void editusermenu(Graph *g) {
         printf("  *********************************  \n");
         printf("  *********************************  \n");
         printf("  **                             **  \n");
-        printf("  **           Friends           **  \n");
-        printf("  **            Book             **  \n");
+        printf("  **            Amigos           **  \n");
         printf("  **                             **  \n");
         printf("  **                             **  \n");
         printf("  **       User Management       **  \n");
@@ -226,8 +219,7 @@ void removeusermenu(Graph *g) {
         printf("  *********************************  \n");
         printf("  *********************************  \n");
         printf("  **                             **  \n");
-        printf("  **           Friends           **  \n");
-        printf("  **            Book             **  \n");
+        printf("  **            Amigos           **  \n");
         printf("  **                             **  \n");
         printf("  **                             **  \n");
         printf("  **       User Management       **  \n");
@@ -275,8 +267,7 @@ void friendmenu() {
         printf("  *********************************  \n");
         printf("  *********************************  \n");
         printf("  **                             **  \n");
-        printf("  **           Friends           **  \n");
-        printf("  **            Book             **  \n");
+        printf("  **            Amigos           **  \n");
         printf("  **                             **  \n");
         printf("  **      Friend Management      **  \n");
         printf("  **                             **  \n");
@@ -318,6 +309,6 @@ void friendmenu() {
 
 void quit() {
     clrscr;
-    printf("Thank You for visiting us at https://friendsbook.co.in!\n");
+    printf("Thank You for visiting us at https://amigos.co.in!\n");
     exit(0);
 }

@@ -1,4 +1,4 @@
-#include "friendsbook.h"
+#include "amigos.h"
 
 Heap *createHeap(int capacity) {
     Heap *h = (Heap *)malloc(sizeof(Heap));
