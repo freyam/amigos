@@ -151,7 +151,7 @@ void printQueue(Queue *q) {
     }
 }
 
-void printUser(User u) {
+void printuser(User u) {
     printf("[%05ld] - %10s - %d - %10s\n", u.uid, u.name, u.age, u.city);
 }
 

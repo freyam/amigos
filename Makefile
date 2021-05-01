@@ -2,10 +2,10 @@ CC = gcc
 CFLAGS = -Wall
 
 default:
-	$(CC) $(CFLAGS) main.c friendsbook.c -o friendsbook && ./friendsbook
+	$(CC) $(CFLAGS) main.c friendsbook.c interface.c minheap.c -o friendsbook && ./friendsbook
 
 com:
-	$(CC) $(CFLAGS) main.c friendsbook.c -o friendsbook
+	$(CC) $(CFLAGS) main.c friendsbook.c interface.c minheap.c -o friendsbook
 
 run:
 	./friendsbook
