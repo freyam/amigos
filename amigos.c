@@ -30,19 +30,17 @@ void addEdge(Graph *graph, User src, User dest) {
     User *newUser = createUser(dest);
     newUser->next = graph->adjList[src.uid];
     graph->adjList[src.uid] = newUser;
-
-    // newUser = createUser(src);
-    // newUser->next = graph->adjList[dest.uid];
-    // graph->adjList[dest.uid] = newUser;
 }
 
 // Creates a new User Node
-User *createUser(User v) {
+User *createUser(User u) {
     User *newUser = malloc(sizeof(User));
-    newUser->uid = v.uid;
-    strcpy(newUser->name, v.name);
-    newUser->age = v.age;
-    strcpy(newUser->city, v.city);
+    newUser->uid = u.uid;
+    strcpy(newUser->name, u.name);
+    newUser->age = u.age;
+    strcpy(newUser->city, u.city);
+    newUser->gender = u.gender;
+    strcpy(newUser->institution, u.institution);
     newUser->next = NULL;
     return newUser;
 }
@@ -58,21 +56,25 @@ void adduser(Graph *g, Heap *h) {
     scanf("%d", &u.age);
     printf("City: ");
     scanf("%s", u.city);
+    printf("Gender: ");
+    scanf("%c", &u.gender);
+    printf("Institution: ");
+    scanf("%s", u.institution);
 
     g->adjList[u.uid] = createUser(u);
     printuser(*(g->adjList[u.uid]));
 }
 
 void autofill(Graph *g) {
-    User u[9] = {{0, "", 0, ""},
-                 {1, "Freyam", 19, "Ahmedabad"},
-                 {2, "Lokesh", 19, "Chennai"},
-                 {3, "Freya", 22, "Abu Dhabi"},
-                 {4, "Tejal", 48, "Abu Dhabi"},
-                 {5, "Bhushan", 51, "Kanpur"},
-                 {6, "Varshita", 19, "Ruwais"},
-                 {7, "Swetha", 19, "Sharjah"},
-                 {8, "Shubh", 19, "Doha"}};
+    User u[9] = {{0, "", 0, "", 'Z', ""},
+                 {1, "Freyam", 19, "Ahmedabad", 'M', "IIITH"},
+                 {2, "Lokesh", 19, "Chennai", 'M', "IIITH"},
+                 {3, "Freya", 22, "Abu Dhabi", 'F', "IIITH"},
+                 {4, "Tejal", 48, "Abu Dhabi", 'F', "NITB"},
+                 {5, "Bhushan", 51, "Kanpur", 'M', "JCIT"},
+                 {6, "Varshita", 19, "Ruwais", 'F', "IIITH"},
+                 {7, "Swetha", 19, "Sharjah", 'F', "IIITH"},
+                 {8, "Shubh", 19, "Doha", 'M', "IIITH"}};
 
     if (minidx == 1)
         for (int i = 1; i <= 8; ++i)
@@ -87,7 +89,7 @@ void autofill(Graph *g) {
 }
 
 void printuser(User u) {
-    printf("[%03ld] - %10s - %02d - %10s\n", u.uid, u.name, u.age, u.city);
+    printf("[%03ld] - %10s (%c) - %02d - %5s @ %s\n", u.uid, u.name, u.gender, u.age, u.institution, u.city);
 }
 
 void searchuserbyuid(Graph *g) {

@@ -309,6 +309,6 @@ void friendmenu() {
 
 void quit() {
     clrscr;
-    printf("Thank You for visiting us at https://amigos.co.in!\n");
+    printf("Thank You for visiting us at https://amigos.com     !\n");
     exit(0);
 }
