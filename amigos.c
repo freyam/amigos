@@ -39,48 +39,54 @@ User *createUser(User u) {
     strcpy(newUser->name, u.name);
     newUser->age = u.age;
     strcpy(newUser->city, u.city);
-    newUser->gender = u.gender;
+    strcpy(newUser->gender, u.gender);
     strcpy(newUser->institution, u.institution);
     newUser->next = NULL;
     return newUser;
 }
 
 // Adds a new User to the Friendship Network
+
 void adduser(Graph *g, Heap *h) {
     User u;
     u.uid = findidx(h);
     printf("Enter the details of User [%03ld]\n", u.uid);
     printf("Name: ");
-    scanf("%s", u.name);
+    getchar();
+    scanf("%[^\n]s", u.name);
     printf("Age: ");
     scanf("%d", &u.age);
     printf("City: ");
-    scanf("%s", u.city);
+    getchar();
+    scanf("%[^\n]s", u.city);
     printf("Gender: ");
-    scanf("%c", &u.gender);
+    getchar();
+    scanf("%[^\n]s", u.gender);
     printf("Institution: ");
-    scanf("%s", u.institution);
+    getchar();
+    scanf("%[^\n]s", u.institution);
 
     g->adjList[u.uid] = createUser(u);
     printuser(*(g->adjList[u.uid]));
 }
 
 void autofill(Graph *g) {
-    User u[9] = {{0, "", 0, "", 'Z', ""},
-                 {1, "Freyam", 19, "Ahmedabad", 'M', "IIITH"},
-                 {2, "Lokesh", 19, "Chennai", 'M', "IIITH"},
-                 {3, "Freya", 22, "Abu Dhabi", 'F', "IIITH"},
-                 {4, "Tejal", 48, "Abu Dhabi", 'F', "NITB"},
-                 {5, "Bhushan", 51, "Kanpur", 'M', "JCIT"},
-                 {6, "Varshita", 19, "Ruwais", 'F', "IIITH"},
-                 {7, "Swetha", 19, "Sharjah", 'F', "IIITH"},
-                 {8, "Shubh", 19, "Doha", 'M', "IIITH"}};
+    User u[10] = {{0, "", 0, "", "", ""},
+                  {1, "Freyam Mehta", 19, "Ahmedabad", "M", "IIITH"},
+                  {2, "Lokesh Venktachalam", 19, "Chennai", "M", "IIITH"},
+                  {3, "Freya Mehta", 22, "Abu Dhabi", "F", "IIITH"},
+                  {4, "Tejal Mehta", 48, "Abu Dhabi", "F", "NITB"},
+                  {5, "Bhushan Mehta", 51, "Kanpur", "M", "JCIT"},
+                  {6, "Varshita Kolipaka", 18, "Ruwais", "F", "IIITH"},
+                  {7, "Swetha Vipparla", 19, "Sharjah", "F", "IIITH"},
+                  {8, "Shubh Agarwal", 19, "Doha", "M", "IIITH"},
+                  {9, "Anusha Roy", 18, "Khalifa", "F", "IIITH"}};
 
     if (minidx == 1)
-        for (int i = 1; i <= 8; ++i)
+        for (int i = 1; i <= 9; ++i)
             g->adjList[minidx++] = createUser(u[i]);
     else
-        for (int i = 1; i <= 8; ++i)
+        for (int i = 1; i <= 9; ++i)
             g->adjList[i] = createUser(u[i]);
 
     displayusers(g);
@@ -89,7 +95,7 @@ void autofill(Graph *g) {
 }
 
 void printuser(User u) {
-    printf("[%03ld] - %10s (%c) - %02d - %5s @ %s\n", u.uid, u.name, u.gender, u.age, u.institution, u.city);
+    printf("[%03ld] %20s (%s) | %02d | %5s | %s\n", u.uid, u.name, u.gender, u.age, u.institution, u.city);
 }
 
 void searchuserbyuid(Graph *g) {
@@ -107,7 +113,8 @@ void searchuserbyname(Graph *g) {
     bool found = 0;
     string name;
     printf("Enter the Name: ");
-    scanf("%s", name);
+    getchar();
+    scanf("%[^\n]s", name);
     for (int i = 0; i < g->V; ++i)
         if (g->adjList[i] && !strcmp(g->adjList[i]->name, name)) {
             printuser(*(g->adjList[i]));
@@ -145,18 +152,27 @@ void edituserbyname(Graph *g) {
     bool found = 0;
     string name;
     printf("Enter the Name: ");
-    scanf("%s", name);
+    getchar();
+    scanf("%[^\n]s", name);
     for (int i = 0; i < g->V; ++i)
         if (g->adjList[i] && !strcmp(g->adjList[i]->name, name)) {
             printuser(*(g->adjList[i]));
             printf("\n");
             printf("Enter the new details\n");
             printf("Name: ");
-            scanf("%s", g->adjList[i]->name);
+            getchar();
+            scanf("%[^\n]s", g->adjList[i]->name);
             printf("Age: ");
             scanf("%d", &g->adjList[i]->age);
             printf("City: ");
-            scanf("%s", g->adjList[i]->city);
+            getchar();
+            scanf("%[^\n]s", g->adjList[i]->city);
+            printf("Gender: ");
+            getchar();
+            scanf("%[^\n]s", g->adjList[i]->gender);
+            printf("Institution: ");
+            getchar();
+            scanf("%[^\n]s", g->adjList[i]->institution);
 
             printf("Edited.\n");
             printuser(*(g->adjList[i]));
@@ -172,7 +188,7 @@ void displayusers(Graph *g) {
     system("clear");
 
     bool found = 0;
-
+    printf("--------------------------------------------------------\n");
     for (int i = 0; i < g->V; ++i)
         if (g->adjList[i]) {
             if (!found)
@@ -181,8 +197,9 @@ void displayusers(Graph *g) {
         }
 
     if (!found)
-        printf("User Database is Empty!");
+        printf("User Database is Empty!\n");
 
+    printf("--------------------------------------------------------\n");
     printf("\n");
 }
 
@@ -212,7 +229,8 @@ void removeuserbyname(Graph *g, Heap *h) {
     bool found = 0;
     string name;
     printf("Enter the Name: ");
-    scanf("%s", name);
+    getchar();
+    scanf("%[^\n]s", name);
     for (int i = 0; i < g->V; ++i)
         if (g->adjList[i] && !strcmp(g->adjList[i]->name, name)) {
             printuser(*(g->adjList[i]));

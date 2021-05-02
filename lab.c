@@ -156,6 +156,13 @@ void printuser(User u) {
 }
 
 int main() {
+
+    string s;
+    scanf("%[^\n]", s);
+
+    printf("%s\n", s);
+
+    exit(0);
     Graph *graph = createGraph(6);
     User u[6] = {{-1, "", -1, ""},
                  {1, "Freyam", 19, "Ahmedabad"},

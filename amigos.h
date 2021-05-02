@@ -17,7 +17,7 @@ struct User {
     string name;
     int age;
     string city;
-    char gender;
+    string gender;
     string institution;
     User *next;
 };
