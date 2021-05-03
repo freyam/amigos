@@ -14,4 +14,7 @@ test:
 	$(CC) $(CFLAGS) lab.c -o lab && ./lab
 
 clean:
-	rm -rf amigos lab
+	rm -rf amigos lab amigos.csv
+
+import:
+	curl "https://api.mockaroo.com/api/5bf8e450?count=1000&key=47166f30" > "amigos.csv"

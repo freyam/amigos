@@ -4,7 +4,7 @@ extern Graph *g;
 extern Heap *h;
 
 void banner() {
-    clrscr;
+    system("clear");
 
     printf("  *********************************  \n");
     printf("  *********************************  \n");
@@ -17,7 +17,7 @@ void banner() {
 }
 
 void mainmenu() {
-    clrscr;
+    system("clear");
 
     int ch;
     do {
@@ -57,7 +57,7 @@ void mainmenu() {
 }
 
 void usermenu() {
-    clrscr;
+    system("clear");
 
     int ch;
     do {
@@ -101,7 +101,7 @@ void usermenu() {
             removeusermenu(g);
             break;
         case 7:
-            autofill(g);
+            importData(g);
             break;
         case 9:
             mainmenu();
@@ -116,7 +116,7 @@ void usermenu() {
 }
 
 void searchusermenu(Graph *g) {
-    clrscr;
+    system("clear");
 
     int ch;
     do {
@@ -164,7 +164,7 @@ void searchusermenu(Graph *g) {
 }
 
 void editusermenu(Graph *g) {
-    clrscr;
+    system("clear");
 
     int ch;
     do {
@@ -212,7 +212,7 @@ void editusermenu(Graph *g) {
 }
 
 void removeusermenu(Graph *g) {
-    clrscr;
+    system("clear");
 
     int ch;
     do {
@@ -260,7 +260,7 @@ void removeusermenu(Graph *g) {
 }
 
 void friendmenu() {
-    clrscr;
+    system("clear");
 
     int ch;
     do {
@@ -295,6 +295,9 @@ void friendmenu() {
         case 3:
             displayFriendshipGraph(g);
             break;
+        case 7:
+            displayAdjacencyList(g);
+            break;
         case 9:
             mainmenu();
             break;
@@ -308,7 +311,7 @@ void friendmenu() {
 }
 
 void quit() {
-    clrscr;
+    system("clear");
     printf("Thank You for visiting us at https://amigos.com/\n");
     exit(0);
 }

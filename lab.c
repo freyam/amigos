@@ -8,10 +8,10 @@ typedef char string[25];
 
 typedef struct User User;
 struct User {
-    unsigned long int uid;
+    int uid;
     string name;
     int age;
-    string city;
+    string location;
     User *next;
 };
 User null_user = {0, "", 0, ""};
@@ -69,7 +69,7 @@ User *createUser(User v) {
     newUser->uid = v.uid;
     strcpy(newUser->name, v.name);
     newUser->age = v.age;
-    strcpy(newUser->city, v.city);
+    strcpy(newUser->location, v.location);
     newUser->next = NULL;
     return newUser;
 }
@@ -151,14 +151,14 @@ void printQueue(Queue *q) {
     }
 }
 
-void printuser(User u) {
-    printf("[%05ld] - %10s - %d - %10s\n", u.uid, u.name, u.age, u.city);
+void printUser(User u) {
+    printf("[%05ld] - %10s - %d - %10s\n", u.uid, u.name, u.age, u.location);
 }
 
 int main() {
 
     string s;
-    scanf("%[^\n]", s);
+    scanf("%[^,]", s);
 
     printf("%s\n", s);
 

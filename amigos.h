@@ -7,18 +7,18 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define clrscr system("clear")
-
 typedef char string[50];
 
 typedef struct User User;
 struct User {
-    unsigned long int uid;
+    int uid;
     string name;
-    int age;
+    string age;
     string gender;
-    string institution;
-    string city;
+    string email;
+    string ip;
+    string job_title;
+    string location;
     User *next;
 };
 
@@ -43,7 +43,7 @@ struct Heap {
     int capacity;
 };
 
-// Interface Functions
+// Core UI and UX Functions
 void banner();
 void authorization();
 void initialize();
@@ -54,13 +54,15 @@ void friendmenu();
 // Frienship Network Functions
 Graph *createGraph(int);
 void addEdge(Graph *, User, User);
-void displayFriendshipGraph(Graph *); // TODO
+void displayFriendshipGraph(Graph *);
+void displayAdjacencyList(Graph *g);
 
 // User Functions
 User *createUser(User);
-void printuser(User);
+void printUser(User);
 void adduser(Graph *, Heap *);
 void autofill(Graph *);
+void importData(Graph *g);
 void searchusermenu(Graph *);
 void searchuserbyuid(Graph *);
 void searchuserbyname(Graph *);
@@ -74,7 +76,7 @@ void removeuserbyname(Graph *, Heap *h);
 
 // Project Functions
 void recommendfriend(Graph *); // TODO
-void checkfriend(Graph *);     // TODO
+void checkfriend(Graph *);
 
 // Queue Functions (for BFS)
 Queue *createQueue();
