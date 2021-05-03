@@ -1,3 +1,3 @@
 ![](/src/header.png)
 
-## Amigos - A Tacky Social Media
+## Amigos - A Rich Social Media Experience

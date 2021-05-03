@@ -31,7 +31,7 @@ void mainmenu() {
         printf("  **     1. User Management      **  \n");
         printf("  **     2. Friend Management    **  \n");
         printf("  **                             **  \n");
-        printf("  **    0. Exit Friends Book     **  \n");
+        printf("  **       0. Exit Amigos        **  \n");
         printf("  **                             **  \n");
         printf("  *********************************  \n");
         printf("  *********************************  \n");
@@ -75,7 +75,7 @@ void usermenu() {
         printf("  **        5. Unregister        **  \n");
         printf("  **                             **  \n");
         printf("  **  9. Back to the Main Menu   **  \n");
-        printf("  **    0. Exit Friends Book     **  \n");
+        printf("  **       0. Exit Amigos        **  \n");
         printf("  **                             **  \n");
         printf("  *********************************  \n");
         printf("  *********************************  \n");
@@ -116,7 +116,7 @@ void usermenu() {
 }
 
 void searchusermenu(Graph *g) {
-    system("clear");
+    clrscr;
 
     int ch;
     do {
@@ -135,7 +135,7 @@ void searchusermenu(Graph *g) {
         printf("  **                             **  \n");
         printf("  **                             **  \n");
         printf("  **  9. Back to the User Menu   **  \n");
-        printf("  **    0. Exit Friends Book     **  \n");
+        printf("  **       0. Exit Amigos        **  \n");
         printf("  **                             **  \n");
         printf("  *********************************  \n");
         printf("  *********************************  \n");
@@ -164,7 +164,7 @@ void searchusermenu(Graph *g) {
 }
 
 void editusermenu(Graph *g) {
-    system("clear");
+    clrscr;
 
     int ch;
     do {
@@ -183,7 +183,7 @@ void editusermenu(Graph *g) {
         printf("  **                             **  \n");
         printf("  **                             **  \n");
         printf("  **  9. Back to the User Menu   **  \n");
-        printf("  **    0. Exit Friends Book     **  \n");
+        printf("  **       0. Exit Amigos        **  \n");
         printf("  **                             **  \n");
         printf("  *********************************  \n");
         printf("  *********************************  \n");
@@ -212,7 +212,7 @@ void editusermenu(Graph *g) {
 }
 
 void removeusermenu(Graph *g) {
-    system("clear");
+    clrscr;
 
     int ch;
     do {
@@ -231,7 +231,7 @@ void removeusermenu(Graph *g) {
         printf("  **                             **  \n");
         printf("  **                             **  \n");
         printf("  **  9. Back to the User Menu   **  \n");
-        printf("  **    0. Exit Friends Book     **  \n");
+        printf("  **       0. Exit Amigos        **  \n");
         printf("  **                             **  \n");
         printf("  *********************************  \n");
         printf("  *********************************  \n");
@@ -276,7 +276,7 @@ void friendmenu() {
         printf("  **       3. Display Graph      **  \n");
         printf("  **                             **  \n");
         printf("  **  9. Back to the Main Menu   **  \n");
-        printf("  **    0. Exit Friends Book     **  \n");
+        printf("  **       0. Exit Amigos        **  \n");
         printf("  **                             **  \n");
         printf("  *********************************  \n");
         printf("  *********************************  \n");

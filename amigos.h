@@ -16,9 +16,9 @@ struct User {
     unsigned long int uid;
     string name;
     int age;
-    string city;
     string gender;
     string institution;
+    string city;
     User *next;
 };
 
@@ -45,6 +45,8 @@ struct Heap {
 
 // Interface Functions
 void banner();
+void authorization();
+void initialize();
 void mainmenu();
 void usermenu();
 void friendmenu();
