@@ -11,7 +11,7 @@ void bfs(Graph *graph, User startVertex) {
     enqueue(q, startVertex);
 
     while (!isEmpty(q)) {
-        printQueue(q);
+        // printQueue(q);
         User currentVertex = dequeue(q);
         printf("Visited %s\n", currentVertex.name);
 

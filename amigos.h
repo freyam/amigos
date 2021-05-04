@@ -1,11 +1,13 @@
-#ifndef AMIGOS
-#define AMIGOS
+#ifndef AMIGOS_H
+#define AMIGOS_H
 
 #include <limits.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
+#include <unistd.h>
 
 typedef char string[50];
 
@@ -47,36 +49,40 @@ struct Heap {
 void banner();
 void authorization();
 void initialize();
-void mainmenu();
-void usermenu();
-void friendmenu();
+void mainMenu();
+void userMenu();
+void friendMenu();
 
 // Frienship Network Functions
 Graph *createGraph(int);
-void addEdge(Graph *, User, User);
-void displayFriendshipGraph(Graph *);
-void displayAdjacencyList(Graph *g);
+void addFriendship(Graph *, User, User);
+void displayFriendships(Graph *);
+void displayAdjacencyList(Graph *);
 
 // User Functions
 User *createUser(User);
 void printUser(User);
 void adduser(Graph *, Heap *);
 void autofill(Graph *);
-void importData(Graph *g);
-void searchusermenu(Graph *);
-void searchuserbyuid(Graph *);
-void searchuserbyname(Graph *);
-void editusermenu(Graph *);
-void edituserbyuid(Graph *);
-void edituserbyname(Graph *);
-void displayusers(Graph *);
-void removeusermenu(Graph *);
-void removeuserbyuid(Graph *, Heap *h);
-void removeuserbyname(Graph *, Heap *h);
+void importData(Graph *);
+
+void searchMenu(Graph *);
+void searchUID(Graph *);
+void searchName(Graph *);
+
+void editMenu(Graph *);
+void editUID(Graph *);
+void editName(Graph *);
+
+void displayUsers(Graph *);
+
+void removeMenu(Graph *);
+void removeUID(Graph *, Heap *h);
+void removeName(Graph *, Heap *h);
 
 // Project Functions
-void recommendfriend(Graph *); // TODO
-void checkfriend(Graph *);
+void recommendFriends(Graph *); // TODO
+void checkFriendship(Graph *);
 
 // Queue Functions (for BFS)
 Queue *createQueue();
@@ -85,6 +91,7 @@ User dequeue(Queue *);
 void display(Queue *);
 bool isEmpty(Queue *);
 void printQueue(Queue *);
+void bfs(Graph *, User);
 
 // Min Heap Functions (for Minimum Index)
 Heap *createHeap(int);

@@ -16,7 +16,7 @@ void banner() {
     printf("\n");
 }
 
-void mainmenu() {
+void mainMenu() {
     system("clear");
 
     int ch;
@@ -42,21 +42,21 @@ void mainmenu() {
 
         switch (ch) {
         case 1:
-            usermenu();
+            userMenu();
             break;
         case 2:
-            friendmenu();
+            friendMenu();
             break;
         case 0:
             quit();
         default:
             printf("Invalid Choice!\n");
-            mainmenu();
+            mainMenu();
         }
     } while (ch <= 2);
 }
 
-void usermenu() {
+void userMenu() {
     system("clear");
 
     int ch;
@@ -89,33 +89,33 @@ void usermenu() {
             adduser(g, h);
             break;
         case 2:
-            searchusermenu(g);
+            searchMenu(g);
             break;
         case 3:
-            editusermenu(g);
+            editMenu(g);
             break;
         case 4:
-            displayusers(g);
+            displayUsers(g);
             break;
         case 5:
-            removeusermenu(g);
+            removeMenu(g);
             break;
         case 7:
             importData(g);
             break;
         case 9:
-            mainmenu();
+            mainMenu();
             break;
         case 0:
             quit();
         default:
             printf("Invalid Choice!\n");
-            usermenu();
+            userMenu();
         }
     } while (ch <= 9);
 }
 
-void searchusermenu(Graph *g) {
+void searchMenu(Graph *g) {
     system("clear");
 
     int ch;
@@ -146,24 +146,24 @@ void searchusermenu(Graph *g) {
 
         switch (ch) {
         case 1:
-            searchuserbyuid(g);
+            searchUID(g);
             break;
         case 2:
-            searchuserbyname(g);
+            searchName(g);
             break;
         case 9:
-            usermenu();
+            userMenu();
             break;
         case 0:
             quit();
         default:
             printf("Invalid Choice!\n");
-            searchusermenu(g);
+            searchMenu(g);
         }
     } while (ch <= 9);
 }
 
-void editusermenu(Graph *g) {
+void editMenu(Graph *g) {
     system("clear");
 
     int ch;
@@ -194,24 +194,24 @@ void editusermenu(Graph *g) {
 
         switch (ch) {
         case 1:
-            edituserbyuid(g);
+            editUID(g);
             break;
         case 2:
-            edituserbyname(g);
+            editName(g);
             break;
         case 9:
-            usermenu();
+            userMenu();
             break;
         case 0:
             quit();
         default:
             printf("Invalid Choice!\n");
-            editusermenu(g);
+            editMenu(g);
         }
     } while (ch <= 9);
 }
 
-void removeusermenu(Graph *g) {
+void removeMenu(Graph *g) {
     system("clear");
 
     int ch;
@@ -242,24 +242,24 @@ void removeusermenu(Graph *g) {
 
         switch (ch) {
         case 1:
-            removeuserbyuid(g, h);
+            removeUID(g, h);
             break;
         case 2:
-            removeuserbyname(g, h);
+            removeName(g, h);
             break;
         case 9:
-            usermenu();
+            userMenu();
             break;
         case 0:
             quit();
         default:
             printf("Invalid Choice!\n");
-            searchusermenu(g);
+            searchMenu(g);
         }
     } while (ch <= 9);
 }
 
-void friendmenu() {
+void friendMenu() {
     system("clear");
 
     int ch;
@@ -274,6 +274,7 @@ void friendmenu() {
         printf("  **       1. Recommend          **  \n");
         printf("  **       2. Check Status       **  \n");
         printf("  **       3. Display Graph      **  \n");
+        printf("  **       4. Display Network    **  \n");
         printf("  **                             **  \n");
         printf("  **  9. Back to the Main Menu   **  \n");
         printf("  **       0. Exit Amigos        **  \n");
@@ -287,25 +288,26 @@ void friendmenu() {
 
         switch (ch) {
         case 1:
-            recommendfriend(g);
+            recommendFriends(g);
             break;
         case 2:
-            checkfriend(g);
+            checkFriendship(g);
             break;
         case 3:
-            displayFriendshipGraph(g);
+            displayFriendships(g);
             break;
-        case 7:
+        case 4:
             displayAdjacencyList(g);
+            system("dot -Tpng data/graphviz.dot -o data/friendship-graph.png && xdg-open data/friendship-graph.png");
             break;
         case 9:
-            mainmenu();
+            mainMenu();
             break;
         case 0:
             quit();
         default:
             printf("Invalid Choice!\n");
-            usermenu();
+            userMenu();
         }
     } while (ch <= 9);
 }

@@ -89,7 +89,7 @@ Graph *createGraph(int vertices) {
     return graph;
 }
 
-void addEdge(Graph *graph, User src, User dest) {
+void addFriendship(Graph *graph, User src, User dest) {
     User *newUser = createUser(dest);
     newUser->next = graph->adjList[src.uid];
     graph->adjList[src.uid] = newUser;
@@ -156,13 +156,6 @@ void printUser(User u) {
 }
 
 int main() {
-
-    string s;
-    scanf("%[^,]", s);
-
-    printf("%s\n", s);
-
-    exit(0);
     Graph *graph = createGraph(6);
     User u[6] = {{-1, "", -1, ""},
                  {1, "Freyam", 19, "Ahmedabad"},
@@ -171,13 +164,13 @@ int main() {
                  {4, "Tejal", 48, "Abu Dhabi"},
                  {5, "Bhushan", 51, "Kanpur"}};
 
-    addEdge(graph, u[1], u[2]);
-    addEdge(graph, u[1], u[3]);
-    addEdge(graph, u[2], u[3]);
-    addEdge(graph, u[2], u[5]);
-    addEdge(graph, u[2], u[4]);
-    addEdge(graph, u[3], u[5]);
-    addEdge(graph, u[4], u[5]);
+    addFriendship(graph, u[1], u[2]);
+    addFriendship(graph, u[1], u[3]);
+    addFriendship(graph, u[2], u[3]);
+    addFriendship(graph, u[2], u[5]);
+    addFriendship(graph, u[2], u[4]);
+    addFriendship(graph, u[3], u[5]);
+    addFriendship(graph, u[4], u[5]);
 
     bfs(graph, u[1]);
 

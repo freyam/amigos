@@ -1,11 +1,12 @@
 #include "amigos.h"
 
-int minidx = 1;
+int minUID = 1;
 
 Graph *g;
 Heap *h;
-int V = 100;
+int V = 1000;
 
+// Adds Password Checker
 void authorization() {
     string pass;
     scanf("%s", pass);
@@ -16,18 +17,20 @@ void authorization() {
     }
 }
 
+// Initializes the Necessary Functions and Data Structures
 void initialize() {
+    srand(time(0));
+
     g = createGraph(V);
     h = createHeap(V);
 
-    // autofill(g);
-    // system("sleep 0.5");
+    importData(g);
 }
 
-int findidx(Heap *h) {
-    // printf("%d %d\n", minidx, h->arr[0]);
-    if (h->count == 0 || minidx <= h->arr[0])
-        return minidx++;
+// Finds the minimum UID for a new user
+int findUID(Heap *h) {
+    if (h->count == 0 || minUID <= h->arr[0])
+        return minUID++;
     else
         return PopMin(h);
 }
@@ -65,7 +68,8 @@ User *createUser(User u) {
     return newUser;
 }
 
-void addEdge(Graph *g, User u, User v) {
+// Adds a Frienship to the Network
+void addFriendship(Graph *g, User u, User v) {
     User *newUser = createUser(v);
     newUser->next = g->adjList[u.uid]->next;
     g->adjList[u.uid]->next = newUser;
@@ -74,7 +78,7 @@ void addEdge(Graph *g, User u, User v) {
 // Adds a new User to the Friendship Network
 void adduser(Graph *g, Heap *h) {
     User u;
-    u.uid = findidx(h);
+    u.uid = findUID(h);
     printf("Enter the details of User [%03d]\n", u.uid);
     printf("Name: ");
     getchar();
@@ -102,15 +106,18 @@ void adduser(Graph *g, Heap *h) {
     printUser(*(g->adjList[u.uid]));
 }
 
+// Imports a User Database from amigos.csv
 void importData(Graph *g) {
     system("clear");
 
-    int entries = 100;
+    int entries = 50; // max 1000
     char buffer;
 
-    FILE *f = fopen("amigos.csv", "r");
+    FILE *f = fopen("data/amigos.csv", "r");
+
     string header;
     fscanf(f, "%[^\n]s", header);
+
     for (int i = 1; i <= entries; ++i) {
         User u;
 
@@ -130,22 +137,28 @@ void importData(Graph *g) {
         fscanf(f, "%c", &buffer);
         fscanf(f, "%[^\n]s", u.location);
 
-        g->adjList[minidx++] = createUser(u);
+        g->adjList[minUID++] = createUser(u);
     }
 
     for (int i = 1; i <= entries * 2; ++i) {
-        int u = (rand() % entries) + 1, v = (rand() % entries) + 1;
+        int u = (rand() % entries) + 1;
+        int v = (rand() % entries) + 1;
+
         if (u != v)
-            addEdge(g, *g->adjList[u], *g->adjList[v]);
+            addFriendship(g, *g->adjList[u], *g->adjList[v]);
     }
+
+    fclose(f);
 }
 
+// Prints User Information
 void printUser(User u) {
     printf("[%03d] %20s | %3s | %1s | %30s | %15s | %30s | %s\n",
            u.uid, u.name, u.age, u.gender, u.email, u.ip, u.job_title, u.location);
 }
 
-void searchuserbyuid(Graph *g) {
+// Searches a User by UID
+void searchUID(Graph *g) {
     system("clear");
 
     int uid;
@@ -160,7 +173,8 @@ void searchuserbyuid(Graph *g) {
     printf("\n");
 }
 
-void searchuserbyname(Graph *g) {
+// Searches a User by Name
+void searchName(Graph *g) {
     system("clear");
 
     bool found = 0;
@@ -183,7 +197,8 @@ void searchuserbyname(Graph *g) {
     printf("\n");
 }
 
-void edituserbyuid(Graph *g) {
+// Edits User by UID
+void editUID(Graph *g) {
     system("clear");
 
     int uid;
@@ -223,7 +238,8 @@ void edituserbyuid(Graph *g) {
     printf("\n");
 }
 
-void edituserbyname(Graph *g) {
+// Edits User by Name
+void editName(Graph *g) {
     system("clear");
 
     bool found = 0;
@@ -272,14 +288,15 @@ void edituserbyname(Graph *g) {
     printf("\n");
 }
 
-void displayusers(Graph *g) {
+// Displays the User Database
+void displayUsers(Graph *g) {
     system("clear");
 
     bool found = 0;
     printf("-------------------------------------------------------");
     printf("-------------------------------------------------------");
     printf("-------------------------------------------------------\n");
-    for (int i = 0; i < g->V; ++i)
+    for (int i = 1; i <= g->V; ++i)
         if (g->adjList[i]) {
             if (!found)
                 found = 1;
@@ -298,7 +315,8 @@ void displayusers(Graph *g) {
     getchar();
 }
 
-void removeuserbyuid(Graph *g, Heap *h) {
+// Removes User by UID
+void removeUID(Graph *g, Heap *h) {
     system("clear");
 
     int uid;
@@ -326,7 +344,8 @@ void removeuserbyuid(Graph *g, Heap *h) {
     printf("\n");
 }
 
-void removeuserbyname(Graph *g, Heap *h) {
+// Removes User by Name
+void removeName(Graph *g, Heap *h) {
     system("clear");
 
     bool found = 0;
@@ -361,7 +380,8 @@ void removeuserbyname(Graph *g, Heap *h) {
     printf("\n");
 }
 
-void displayFriendshipGraph(Graph *g) {
+// Displays the Frienship Network
+void displayFriendships(Graph *g) {
     system("clear");
 
     bool found = 0;
@@ -375,10 +395,10 @@ void displayFriendshipGraph(Graph *g) {
             if (!found)
                 found = 1;
             User *temp = g->adjList[i];
-            printf("Friends of %25s: ", temp->name);
+            printf("Friends of [%03d] %25s: ", temp->uid, temp->name);
             temp = temp->next;
             while (temp) {
-                printf("%s", temp->name);
+                printf("[%03d]%s", temp->uid, temp->name);
                 temp = temp->next;
                 if (temp)
                     printf(", ");
@@ -397,31 +417,45 @@ void displayFriendshipGraph(Graph *g) {
     printf("\n");
 }
 
+//  Displays the Adjacency List for Network Visualization
 void displayAdjacencyList(Graph *g) {
     system("clear");
+    FILE *f = fopen("data/graphviz.dot", "w");
 
-    printf("Copy this to https://yiboyang.github.io/graphrel/\n\n");
+    fprintf(f, "digraph AmigosFriendNetwork {\n");
+    fprintf(f, "\tnode [fontname=\"Consolas\", shape=oval, style=filled, color=\".7 .3 1.0\"];\n");
 
-    for (int i = 0; i < g->V; ++i) {
+    for (int i = 1; i <= g->V; ++i) {
         if (g->adjList[i]) {
             User *temp = g->adjList[i];
-            printf("%d:[", (temp->uid));
+            fprintf(f, "\t\"%s\" -> ", temp->name);
             temp = temp->next;
             while (temp) {
-                printf("%d", temp->uid);
+                fprintf(f, "\"%s\"", temp->name);
                 temp = temp->next;
                 if (temp)
-                    printf(",");
+                    fprintf(f, " -> ");
             }
-            printf("],");
+            fprintf(f, "\n");
         }
     }
-    printf("\n\n");
+    fprintf(f, "}");
+    fclose(f);
 }
 
-void recommendfriend(Graph *g) {}
+// Recommends Friends to a User
+void recommendFriends(Graph *g) {
+    system("clear");
+    int uid;
+    printf("Enter the UID: ");
+    scanf("%d", &uid);
 
-void checkfriend(Graph *g) {
+    if (g->adjList[uid])
+        bfs(g, *g->adjList[uid]);
+}
+
+// Checks the Frienship Status between 2 Users
+void checkFriendship(Graph *g) {
     system("clear");
 
     int uid1, uid2;
