@@ -4,10 +4,10 @@ User null_user = {0, "", "", "", "", "", "", ""};
 
 extern int V;
 
-void bfs(Graph *graph, User startVertex) {
+void bfs(Graph *g, User startVertex) {
     Queue *q = createQueue();
 
-    graph->visited[startVertex.uid] = 1;
+    g->visited[startVertex.uid] = 1;
     enqueue(q, startVertex);
 
     while (!isEmpty(q)) {
@@ -15,13 +15,13 @@ void bfs(Graph *graph, User startVertex) {
         User currentVertex = dequeue(q);
         printf("Visited %s\n", currentVertex.name);
 
-        User *temp = graph->adjList[currentVertex.uid];
+        User *temp = g->adjList[currentVertex.uid];
 
         while (temp) {
             User adjVertex = *temp;
 
-            if (graph->visited[adjVertex.uid] == 0) {
-                graph->visited[adjVertex.uid] = 1;
+            if (g->visited[adjVertex.uid] == 0) {
+                g->visited[adjVertex.uid] = 1;
                 enqueue(q, adjVertex);
             }
             temp = temp->next;

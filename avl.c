@@ -185,23 +185,23 @@ void printPreOrder(struct Node *root) {
     }
 }
 
-int main() {
-    struct Node *root = NULL;
+// int main() {
+//     struct Node *root = NULL;
 
-    root = insertNode(root, 2);
-    root = insertNode(root, 1);
-    root = insertNode(root, 7);
-    root = insertNode(root, 4);
-    root = insertNode(root, 5);
-    root = insertNode(root, 3);
-    root = insertNode(root, 8);
+//     root = insertNode(root, 2);
+//     root = insertNode(root, 1);
+//     root = insertNode(root, 7);
+//     root = insertNode(root, 4);
+//     root = insertNode(root, 5);
+//     root = insertNode(root, 3);
+//     root = insertNode(root, 8);
 
-    printPreOrder(root);
+//     printPreOrder(root);
 
-    root = deleteNode(root, 3);
+//     root = deleteNode(root, 3);
 
-    printf("\nAfter deletion: ");
-    printPreOrder(root);
+//     printf("\nAfter deletion: ");
+//     printPreOrder(root);
 
-    return 0;
-}
+//     return 0;
+// }

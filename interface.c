@@ -298,7 +298,7 @@ void friendMenu() {
             break;
         case 4:
             displayAdjacencyList(g);
-            system("dot -Tpng data/graphviz.dot -o data/friendship-graph.png && xdg-open data/friendship-graph.png");
+            system("dot -Tpng data/graphviz.dot -o data/friendship-g.png && xdg-open data/friendship-g.png");
             break;
         case 9:
             mainMenu();

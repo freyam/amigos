@@ -39,10 +39,10 @@ void display(Queue *);
 bool isEmpty(Queue *);
 void printQueue(Queue *);
 
-void bfs(Graph *graph, User startVertex) {
+void bfs(Graph *g, User startVertex) {
     Queue *q = createQueue();
 
-    graph->visited[startVertex.uid] = 1;
+    g->visited[startVertex.uid] = 1;
     enqueue(q, startVertex);
 
     while (!isEmpty(q)) {
@@ -50,13 +50,13 @@ void bfs(Graph *graph, User startVertex) {
         User currentVertex = dequeue(q);
         printf("Visited %s\n", currentVertex.name);
 
-        User *temp = graph->adjList[currentVertex.uid];
+        User *temp = g->adjList[currentVertex.uid];
 
         while (temp) {
             User adjVertex = *temp;
 
-            if (graph->visited[adjVertex.uid] == 0) {
-                graph->visited[adjVertex.uid] = 1;
+            if (g->visited[adjVertex.uid] == 0) {
+                g->visited[adjVertex.uid] = 1;
                 enqueue(q, adjVertex);
             }
             temp = temp->next;
@@ -75,28 +75,28 @@ User *createUser(User v) {
 }
 
 Graph *createGraph(int vertices) {
-    Graph *graph = malloc(sizeof(Graph));
-    graph->V = vertices;
+    Graph *g = malloc(sizeof(Graph));
+    g->V = vertices;
 
-    graph->adjList = malloc(vertices * sizeof(User *));
-    graph->visited = malloc(vertices * sizeof(bool));
+    g->adjList = malloc(vertices * sizeof(User *));
+    g->visited = malloc(vertices * sizeof(bool));
 
     for (int i = 0; i < vertices; i++) {
-        graph->adjList[i] = NULL;
-        graph->visited[i] = 0;
+        g->adjList[i] = NULL;
+        g->visited[i] = 0;
     }
 
-    return graph;
+    return g;
 }
 
-void addFriendship(Graph *graph, User src, User dest) {
+void addFriendship(Graph *g, User src, User dest) {
     User *newUser = createUser(dest);
-    newUser->next = graph->adjList[src.uid];
-    graph->adjList[src.uid] = newUser;
+    newUser->next = g->adjList[src.uid];
+    g->adjList[src.uid] = newUser;
 
     // newUser = createUser(src);
-    // newUser->next = graph->adjList[dest.uid];
-    // graph->adjList[dest.uid] = newUser;
+    // newUser->next = g->adjList[dest.uid];
+    // g->adjList[dest.uid] = newUser;
 }
 
 Queue *createQueue() {
@@ -156,7 +156,7 @@ void printUser(User u) {
 }
 
 int main() {
-    Graph *graph = createGraph(6);
+    Graph *g = createGraph(6);
     User u[6] = {{-1, "", -1, ""},
                  {1, "Freyam", 19, "Ahmedabad"},
                  {2, "Lokesh", 19, "Chennai"},
@@ -164,15 +164,15 @@ int main() {
                  {4, "Tejal", 48, "Abu Dhabi"},
                  {5, "Bhushan", 51, "Kanpur"}};
 
-    addFriendship(graph, u[1], u[2]);
-    addFriendship(graph, u[1], u[3]);
-    addFriendship(graph, u[2], u[3]);
-    addFriendship(graph, u[2], u[5]);
-    addFriendship(graph, u[2], u[4]);
-    addFriendship(graph, u[3], u[5]);
-    addFriendship(graph, u[4], u[5]);
+    addFriendship(g, u[1], u[2]);
+    addFriendship(g, u[1], u[3]);
+    addFriendship(g, u[2], u[3]);
+    addFriendship(g, u[2], u[5]);
+    addFriendship(g, u[2], u[4]);
+    addFriendship(g, u[3], u[5]);
+    addFriendship(g, u[4], u[5]);
 
-    bfs(graph, u[1]);
+    bfs(g, u[1]);
 
     return 0;
 }

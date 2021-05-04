@@ -2,10 +2,10 @@ CC = gcc
 CFLAGS = -Wall
 
 default:
-	$(CC) $(CFLAGS) main.c amigos.c interface.c minheap.c bfs.c -o amigos && ./amigos
+	$(CC) $(CFLAGS) main.c interface.c amigos.c heap.c bfs.c avl.c -o amigos && ./amigos
 
 com:
-	$(CC) $(CFLAGS) main.c amigos.c interface.c minheap.c bfs.c -o amigos
+	$(CC) $(CFLAGS) main.c interface.c amigos.c heap.c bfs.c avl.c -o amigos
 
 run:
 	./amigos
