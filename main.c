@@ -1,8 +1,9 @@
 #include "amigos.h"
 
 int main() {
-    banner();
-    // authorization();
-    initialize();
-    mainMenu();
+	banner();
+	// authorization();
+
+	initialize();
+	mainMenu();
 }

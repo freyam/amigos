@@ -11,38 +11,43 @@
 
 typedef char string[50];
 
+#define gets(s) \
+	getchar();  \
+	scanf("%[^\n]s", s);
+
 typedef struct User User;
 struct User {
-    int uid;
-    string name;
-    string age;
-    string gender;
-    string email;
-    string ip;
-    string job_title;
-    string location;
-    User *next;
+	int uid;
+	string
+		name,
+		age,
+		gender,
+		email,
+		ip,
+		job_title,
+		location;
+	User *next;
 };
 
 typedef struct Graph Graph;
 struct Graph {
-    int V;          // number of vertices
-    User **adjList; // the adjacency list
-    bool *visited;  // a boolean array
+	int V;			 // number of vertices
+	User **adjList;	 // the adjacency list
+	bool *visited;	 // a boolean array
 };
 
 typedef struct Queue Queue;
 struct Queue {
-    User items[100];
-    int front;
-    int rear;
+	User items[100];
+	int front;
+	int rear;
 };
 
 typedef struct Heap Heap;
 struct Heap {
-    int *arr;
-    int count;
-    int capacity;
+	int *arr;
+	int count;
+	int capacity;
 };
 
 // Core UI and UX Functions
@@ -55,34 +60,46 @@ void friendMenu();
 
 // Frienship Network Functions
 Graph *createGraph(int);
-void addFriendship(Graph *, User, User);
-void displayFriendships(Graph *);
-void displayAdjacencyList(Graph *);
 
-// User Functions
+// User Manangement Functions
 User *createUser(User);
 void printUser(User);
-void adduser(Graph *, Heap *);
-void autofill(Graph *);
+void addUser(Graph *, Heap *);
 void importData(Graph *);
 
-void searchMenu(Graph *);
-void searchUID(Graph *);
-void searchName(Graph *);
+void searchUserMenu(Graph *);
+void searchUserUID(Graph *);
+void searchUserName(Graph *);
 
-void editMenu(Graph *);
-void editUID(Graph *);
-void editName(Graph *);
+void editUserMenu(Graph *);
+void editUserUID(Graph *);
+void editUserName(Graph *);
 
-void displayUsers(Graph *);
+void displayUserDatabase(Graph *);
 
-void removeMenu(Graph *);
-void removeUID(Graph *, Heap *h);
-void removeName(Graph *, Heap *h);
+void removeUserMenu(Graph *);
+void removeUserUID(Graph *, Heap *h);
+void removeUserName(Graph *, Heap *h);
 
-// Project Functions
-void recommendFriends(Graph *); // TODO
-void checkFriendship(Graph *);
+// Friend Manangement Functions
+void addFriendship(Graph *, User, User);
+
+void addFriendMenu();
+void addFriendshipUID(Graph *);
+void addFriendshipName(Graph *);
+
+void recommendFriendsMenu();
+void recommendFriendsNewUser(Graph *);
+void recommendFriendsExistingUser(Graph *);
+
+void checkFriendMenu();
+void checkFriendshipUID(Graph *);
+void checkFriendshipName(Graph *);
+
+void displayFriendsMenu();
+void displayFriendsAdjacencyList(Graph *);
+void writeFriendshipNetwork(Graph *);
+void ViewFriendshipNetwork();
 
 // Queue Functions (for BFS)
 Queue *createQueue();
@@ -93,7 +110,7 @@ bool isEmpty(Queue *);
 void printQueue(Queue *);
 void bfs(Graph *, User);
 
-// Min Heap Functions (for Minimum Index)
+// Min Heap Functions (for Minimum UID)
 Heap *createHeap(int);
 void insertHeap(Heap *, int);
 void printHeap(Heap *);
