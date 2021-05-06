@@ -1,10 +1,11 @@
-/** C implementation for
+/**C implementation for
 	Red-Black Tree Insertion
 	This code is provided by
 	costheta_z **/
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+//#include <amigos.h>
 
 int black=0;
 int red=1;
@@ -18,13 +19,13 @@ int RED=1;
 struct node {
 	int data; // data
 	int color; // 1-red, 0-black
-	struct node* parent; // parent
-	struct node* right; // right-child
-	struct node* left; // left child
+	struct node *parent; // parent
+	struct node *right; // right-child
+	struct node *left; // left child
 };
 
 struct vertex {
-    struct node* root1;
+    struct node *root1;
     
 
 };
@@ -32,7 +33,7 @@ struct vertex {
 struct vertex a[10000000];
 
 //function to insert node
-struct node* RedBlackTree(struct node* head,struct node* temp)
+struct node *RedBlackTree(struct node *head,struct node *temp)
 {
     //If RBT is empty
     //Return the new node
@@ -63,10 +64,10 @@ struct node* RedBlackTree(struct node* head,struct node* temp)
 
 
 // global root for the entire tree
-struct node* root = NULL;
+struct node *root = NULL;
 /*
 // function to perform BST insertion of a node
-struct node* bst(struct node* trav,struct node* temp)
+struct node *bst(struct node *trav,struct node *temp)
 {
 	// If the tree is empty,
 	// return a new node
@@ -91,9 +92,9 @@ struct node* bst(struct node* trav,struct node* temp)
 */
 // Function performing right rotation
 // of the passed node
-struct node* rightrotate(struct node* head ,struct node* temp)
+struct node *rightrotate(struct node *head ,struct node *temp)
 {
-	struct node* left = temp->left;
+	struct node *left = temp->left;
 	
     temp->left = left->right;
 	
@@ -127,9 +128,9 @@ struct node* rightrotate(struct node* head ,struct node* temp)
 // Function performing left rotation
 // of the passed node
 
-struct node* leftrotate(struct node* head ,struct node* temp)
+struct node *leftrotate(struct node *head ,struct node *temp)
 {
-	struct node* right = temp->right;
+	struct node *right = temp->right;
 
 	temp->right = right->left;
 	
@@ -161,26 +162,26 @@ struct node* leftrotate(struct node* head ,struct node* temp)
 // This function fixes violations
 // caused by BST insertion
 
-struct node* restructure(struct node* head, struct node* pt)
+struct node *restructure(struct node *head, struct node *pt)
 {
-	struct node* parent_pt = NULL;
-	struct node* grand_parent_pt = NULL;
+	struct node *parent_pt = NULL;
+	struct node *grand_parent_pt = NULL;
 
 	while ((pt != head) && (pt->color != 0) && (pt->parent->color == 1))
 	{
 		parent_pt = pt->parent;
 		grand_parent_pt = pt->parent->parent;
 
-		/* Case : A
+		/*Case : A
 			Parent of pt is left child
 			of Grand-parent of pt 
 		*/
 		if (parent_pt == grand_parent_pt->left)
 		{
 
-			struct node* uncle_pt = grand_parent_pt->right;
+			struct node *uncle_pt = grand_parent_pt->right;
 
-			/* Case : 1
+			/*Case : 1
 				The uncle of pt is also red
 				Only Recoloring required 
 			*/
@@ -195,7 +196,7 @@ struct node* restructure(struct node* head, struct node* pt)
 			else 
 			{
 
-				/* Case : 2
+				/*Case : 2
 					pt is right child of its parent
 					Left-rotation required 
 				*/
@@ -206,7 +207,7 @@ struct node* restructure(struct node* head, struct node* pt)
 					parent_pt = pt->parent;
 				}
 
-				/* Case : 3
+				/*Case : 3
 					pt is left child of its parent
 					Right-rotation required 
 				*/
@@ -218,14 +219,14 @@ struct node* restructure(struct node* head, struct node* pt)
 			}
 		}
 
-		/* Case : B
+		/*Case : B
 			Parent of pt is right child of Grand-parent of pt 
 		*/
 		else 
 		{
-			struct node* uncle_pt = grand_parent_pt->left;
+			struct node *uncle_pt = grand_parent_pt->left;
 
-			/* Case : 1
+			/*Case : 1
 				The uncle of pt is also red
 				Only Recoloring required 
 			*/
@@ -238,7 +239,7 @@ struct node* restructure(struct node* head, struct node* pt)
 			}
 			else 
 			{
-				/* Case : 2
+				/*Case : 2
 					pt is left child of its parent
 					Right-rotation required 
 				*/
@@ -250,7 +251,7 @@ struct node* restructure(struct node* head, struct node* pt)
 					parent_pt = pt->parent;
 				}
 
-				/* Case : 3
+				/*Case : 3
 					pt is right child of its parent
 					Left-rotation required 
 				*/
@@ -285,7 +286,7 @@ void swapValues(struct node *u, struct node *v) {
 }
 
 
-struct node* siblingfind(struct node* x) {
+struct node *siblingfind(struct node *x) {
 	// sibling null if no parent
 	if (x->parent == NULL)
 		return NULL;
@@ -296,7 +297,7 @@ struct node* siblingfind(struct node* x) {
 	return x->parent->left;
 }
 
-struct node* unclefind(struct node* x) {
+struct node *unclefind(struct node *x) {
 	// If no parent or grandparent, then no uncle
 	if (x->parent == NULL || x->parent->parent == NULL)
 		return NULL;
@@ -309,7 +310,7 @@ struct node* unclefind(struct node* x) {
 		return x->parent->parent->left;
 }
 
-bool hasRedChild(struct node* x) {
+bool hasRedChild(struct node *x) {
 	return (x->left != NULL && x->left->color == RED) ||(x->right != NULL && x->right->color == RED);
 }
 
@@ -317,7 +318,7 @@ bool hasRedChild(struct node* x) {
 
 
 // fix red red at given node
-struct node* fixRedRed(struct node* head,struct node* x) 
+struct node *fixRedRed(struct node *head,struct node *x) 
 {
 	// if x is root color it black and return
 	if (x == head) 
@@ -327,9 +328,9 @@ struct node* fixRedRed(struct node* head,struct node* x)
 	}
 
 	// initialize parent, grandparent, uncle
-	struct node* parent = x->parent;
-	struct node* grandparent = parent->parent;
-	struct node* uncle = unclefind(x);
+	struct node *parent = x->parent;
+	struct node *grandparent = parent->parent;
+	struct node *uncle = unclefind(x);
 
 	if (parent->color != 0) 
 	{
@@ -382,8 +383,8 @@ struct node* fixRedRed(struct node* head,struct node* x)
 
 // find node that do not have a left child
 // in the subtree of the given node
-struct node* successor(struct node* x) {
-	struct node* temp = x;
+struct node *successor(struct node *x) {
+	struct node *temp = x;
 
 	while (temp->left != NULL)
 	{
@@ -393,7 +394,7 @@ struct node* successor(struct node* x) {
 }
 
 // find node that replaces a deleted node in BST
-struct node* BSTreplace(struct node* x) {
+struct node *BSTreplace(struct node *x) {
 	// when node have 2 children
 	if (x->left != NULL && x->right != NULL)
 		return successor(x->right);
@@ -410,13 +411,13 @@ struct node* BSTreplace(struct node* x) {
 }
 
 
-struct node* fixDoubleBlack(struct node* head,struct node* x) {
+struct node *fixDoubleBlack(struct node *head,struct node *x) {
 	if (x == head)
 	// Reached root
 	return head;
 
-	struct node* sibling = siblingfind(x);
-	struct node* parent = x->parent;
+	struct node *sibling = siblingfind(x);
+	struct node *parent = x->parent;
 
 	if (sibling == NULL) 
 	{
@@ -471,15 +472,15 @@ struct node* fixDoubleBlack(struct node* head,struct node* x) {
 					{
 						// left right
 						sibling->right->color = parent->color;
-						head = leftRotate(head,sibling);
-						head = rightRotate(head,parent);
+						head = leftrotate(head,sibling);
+						head = rightrotate(head,parent);
 					} 
 					else 
 					{
 						// right right
 						sibling->right->color = sibling->color;
 						sibling->color = parent->color;
-						head = leftRotate(head,parent);
+						head = leftrotate(head,parent);
 					}
 				}
 				parent->color = BLACK;
@@ -504,13 +505,13 @@ struct node* fixDoubleBlack(struct node* head,struct node* x) {
 
 
 // deletes the given node
-struct node* deleteNode(struct node* head ,struct node* v) {
+struct node *deleteNode(struct node *head ,struct node *v) {
 	
-	struct node* u = BSTreplace(v);
+	struct node *u = BSTreplace(v);
 
 	// True when u and v are both black
 	bool uvBlack = ((u == NULL || u->color == black) && (v->color == black));
-	struct node* parent = v->parent;
+	struct node *parent = v->parent;
 
 	if (u == NULL) 
 	{
@@ -531,7 +532,7 @@ struct node* deleteNode(struct node* head ,struct node* v) {
 			else 
 			{
 				// u or v is red
-				if (siblingdind(v) != NULL)
+				if (siblingfind(v) != NULL)
 					// sibling is not null, make it red"
 					siblingfind(v)->color = RED;
 			}
@@ -596,29 +597,71 @@ struct node* deleteNode(struct node* head ,struct node* v) {
 	return head;
 }
 
+struct node *search(struct node *head,int n) {
+	struct node *temp = head;
+	while (temp != NULL) 
+	{
+		if (n < temp->data) 
+		{
+			if (temp->left == NULL)
+				break;
+			else
+				temp = temp->left;
+		} 
+		else if (n == temp->data) 
+		{
+			break;
+		} 
+		else 
+		{
+			if (temp->right == NULL)
+				break;
+			else
+				temp = temp->right;
+		}
+	}
 
+	return temp;
+}
 
+// utility function that deletes the node with given value
+struct node *deleteByVal(struct node *head,int n) {
+	if (root == NULL)
+	// Tree is empty
+	return head;
 
+	struct node *v = search(head,n), *u;
 
+	if (v->data != n) 
+	{
+		printf("No node found to delete with value: %d \n",n);
+		//cout << "No node found to delete with value:" << n << '\n';;
+		return head;
+	}
 
+	head = deleteNode(head,v);
 
-/*
+	return head;
+
+}
+
+///*
 // Function to print inorder traversal
 // of the fixated tree
-void inorder(struct node* trav)
+void inorder(struct node *trav)
 {
 	if (trav == NULL)
 		return;
-	inorder(trav->l);
-	printf("%d ", trav->d);
-	inorder(trav->r);
+	inorder(trav->left);
+	printf("%d ", trav->data);
+	inorder(trav->right);
 }
-/*
+///*
 // driver code
 int main()
 {
 	int n = 7;
-	int a[7] = { 7, 6, 5, 4, 3, 2, 1 };
+	int b[7] = { 7, 6, 5, 4, 3, 2, 1 };
 
 	for (int i = 0; i < n; i++) {
 
@@ -626,26 +669,32 @@ int main()
 		// 1. color as red
 		// 2. parent, left and right pointers as NULL
 		// 3. data as i-th value in the array
-		struct node* temp
+		struct node *temp
 			= (struct node*)malloc(sizeof(struct node));
-		temp->r = NULL;
-		temp->l = NULL;
+		temp->right = NULL;
+		temp->left = NULL;
 		temp->parent = NULL;
-		temp->d = a[i];
-		temp->c = 1;
+		temp->data = b[i];
+		temp->color = 1;
 
 		// calling function that performs bst insertion of
 		// this newly created node
-		root = bst(root, temp);
+		root = RedBlackTree(root, temp);
 
 		// calling function to preserve properties of rb
 		// tree
-		fixup(root, temp);
+		root = restructure(root, temp);
 	}
 
 	printf("Inoder Traversal of Created Tree\n");
 	inorder(root);
+	printf("\n");
+	root = deleteByVal(root,5);
+	root = deleteByVal(root,3);
+	root = deleteByVal(root,1);
+
+	inorder(root);
 
 	return 0;
 }
-*/
+//*/
