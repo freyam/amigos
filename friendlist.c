@@ -88,7 +88,7 @@ struct node* bst(struct node* trav,struct node* temp)
 */
 // Function performing right rotation
 // of the passed node
-void rightrotate(struct node* temp)
+struct node* rightrotate(struct node* head ,struct node* temp)
 {
 	struct node* left = temp->left;
 	
@@ -104,7 +104,7 @@ void rightrotate(struct node* temp)
 	
     if (!temp->parent)
     {
-		root = left;
+		head = left;
     }
 	else if (temp == temp->parent->left)
     {
@@ -117,11 +117,14 @@ void rightrotate(struct node* temp)
 
 	left->right = temp;
 	temp->parent = left;
+
+	return head;
 }
 
 // Function performing left rotation
 // of the passed node
-void leftrotate(struct node* temp)
+
+struct node* leftrotate(struct node* head ,struct node* temp)
 {
 	struct node* right = temp->right;
 
@@ -136,7 +139,7 @@ void leftrotate(struct node* temp)
 	
 	if (!temp->parent)
 	{
-		root = right;
+		head = right;
 	}
 	else if (temp == temp->parent->left)
 	{
@@ -148,16 +151,19 @@ void leftrotate(struct node* temp)
 	}
 	right->left = temp;
 	temp->parent = right;
+
+	return head;
 }
 
 // This function fixes violations
 // caused by BST insertion
-void restructure(struct node* head, struct node* pt)
+
+struct node* restructure(struct node* head, struct node* pt)
 {
 	struct node* parent_pt = NULL;
 	struct node* grand_parent_pt = NULL;
 
-	while ((pt != root) && (pt->color != 0) && (pt->parent->color == 1))
+	while ((pt != head) && (pt->color != 0) && (pt->parent->color == 1))
 	{
 		parent_pt = pt->parent;
 		grand_parent_pt = pt->parent->parent;
@@ -192,7 +198,7 @@ void restructure(struct node* head, struct node* pt)
 				*/
 				if (pt == parent_pt->right) 
 				{
-					leftrotate(parent_pt);
+					head = leftrotate(head,parent_pt);
 					pt = parent_pt;
 					parent_pt = pt->parent;
 				}
@@ -201,7 +207,7 @@ void restructure(struct node* head, struct node* pt)
 					pt is left child of its parent
 					Right-rotation required 
 				*/
-				rightrotate(grand_parent_pt);
+				head = rightrotate(head,grand_parent_pt);
 				int t = parent_pt->color;
 				parent_pt->color = grand_parent_pt->color;
 				grand_parent_pt->color = t;
@@ -230,13 +236,13 @@ void restructure(struct node* head, struct node* pt)
 			else 
 			{
 				/* Case : 2
-				pt is left child of its parent
-				Right-rotation required 
+					pt is left child of its parent
+					Right-rotation required 
 				*/
 				
 				if (pt == parent_pt->left) 
 				{
-					rightrotate(parent_pt);
+					head = rightrotate(head,parent_pt);
 					pt = parent_pt;
 					parent_pt = pt->parent;
 				}
@@ -245,7 +251,7 @@ void restructure(struct node* head, struct node* pt)
 					pt is right child of its parent
 					Left-rotation required 
 				*/
-				leftrotate(grand_parent_pt);
+				head = leftrotate(head,grand_parent_pt);
 
 				int t = parent_pt->color;
 				parent_pt->color = grand_parent_pt->color;
@@ -256,8 +262,19 @@ void restructure(struct node* head, struct node* pt)
 		}
 	}
 
-	root->color = 0;
+	head->color = 0;
+
+	return head;
 }
+
+
+
+
+
+
+
+
+
 /*
 // Function to print inorder traversal
 // of the fixated tree
