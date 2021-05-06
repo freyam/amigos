@@ -4,9 +4,12 @@
 	costheta_z **/
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
-
-
+int black=0;
+int red=1;
+int BLACK=0;
+int RED=1;
 
 
 
@@ -267,7 +270,331 @@ struct node* restructure(struct node* head, struct node* pt)
 	return head;
 }
 
+void swapColors(struct node *x1, struct node *x2) {
+	int temp;
+	temp = x1->color;
+	x1->color = x2->color;
+	x2->color = temp;
+}
 
+void swapValues(struct node *u, struct node *v) {
+	int temp;
+	temp = u->data;
+	u->data = v->data;
+	v->data = temp;
+}
+
+
+struct node* siblingfind(struct node* x) {
+	// sibling null if no parent
+	if (x->parent == NULL)
+		return NULL;
+
+	if (x->parent->left == x)
+		return x->parent->right;
+
+	return x->parent->left;
+}
+
+struct node* unclefind(struct node* x) {
+	// If no parent or grandparent, then no uncle
+	if (x->parent == NULL || x->parent->parent == NULL)
+		return NULL;
+
+	if (x->parent->parent->left == x->parent)
+		// uncle on right
+		return x->parent->parent->right;
+	else
+		// uncle on left
+		return x->parent->parent->left;
+}
+
+bool hasRedChild(struct node* x) {
+	return (x->left != NULL && x->left->color == RED) ||(x->right != NULL && x->right->color == RED);
+}
+
+
+
+
+// fix red red at given node
+struct node* fixRedRed(struct node* head,struct node* x) 
+{
+	// if x is root color it black and return
+	if (x == head) 
+	{
+		x->color = 0;//BLACK;
+		return head;
+	}
+
+	// initialize parent, grandparent, uncle
+	struct node* parent = x->parent;
+	struct node* grandparent = parent->parent;
+	struct node* uncle = unclefind(x);
+
+	if (parent->color != 0) 
+	{
+		if (uncle != NULL && uncle->color == 1) 
+		{
+			// uncle red, perform recoloring and recurse
+			parent->color = 0;//BLACK;
+			uncle->color = 0;//BLACK;
+			grandparent->color = 1;//RED;
+			head = fixRedRed(head,grandparent);
+		} 
+		else 
+		{
+			// Else perform LR, LL, RL, RR
+			if (parent->parent->left == parent) 
+			{
+				if (x->parent->left == x) 
+				{
+					// for left right
+					swapColors(parent, grandparent);
+				}
+				else 
+				{
+					head = leftrotate(head,parent);
+					swapColors(x, grandparent);
+				}
+				// for left left and left right
+				head = rightrotate(head,grandparent);
+			}
+			else 
+			{
+				if (x->parent->left == x) 
+				{
+					// for right left
+					head = rightrotate(head,parent);
+					swapColors(x, grandparent);
+				}	 
+				else 
+				{
+					swapColors(parent, grandparent);
+				}
+
+				// for right right and right left
+				head = leftrotate(head,grandparent);
+			}
+		}
+	}
+	return head;
+}
+
+// find node that do not have a left child
+// in the subtree of the given node
+struct node* successor(struct node* x) {
+	struct node* temp = x;
+
+	while (temp->left != NULL)
+	{
+		temp = temp->left;
+	}
+	return temp;
+}
+
+// find node that replaces a deleted node in BST
+struct node* BSTreplace(struct node* x) {
+	// when node have 2 children
+	if (x->left != NULL && x->right != NULL)
+		return successor(x->right);
+
+	// when leaf
+	if (x->left == NULL && x->right == NULL)
+		return NULL;
+
+	// when single child
+	if (x->left != NULL)
+		return x->left;
+	else
+		return x->right;
+}
+
+
+struct node* fixDoubleBlack(struct node* head,struct node* x) {
+	if (x == head)
+	// Reached root
+	return head;
+
+	struct node* sibling = siblingfind(x);
+	struct node* parent = x->parent;
+
+	if (sibling == NULL) 
+	{
+		// No sibiling, double black pushed up
+		head = fixDoubleBlack(head,parent);
+	} 
+	else 
+	{
+		if (sibling->color == RED) 
+		{
+			// Sibling red
+			parent->color = RED;
+			sibling->color = BLACK;
+			if (sibling->parent->left == sibling) 
+			{
+				// left case
+				head = rightrotate(head,parent);
+			} 
+			else 
+			{
+				// right case
+				head = leftrotate(head,parent);
+			}
+			head = fixDoubleBlack(head,x);
+		} 
+		else 
+		{
+			// Sibling black
+			if (hasRedChild(sibling)) 
+			{
+				// at least 1 red children
+				if (sibling->left != NULL && sibling->left->color == RED) 
+				{
+					if (sibling->parent->left == sibling) 
+					{
+						// left left
+						sibling->left->color = sibling->color;
+						sibling->color = parent->color;
+						head = rightrotate(head,parent);
+					} 
+					else 
+					{
+						// right left
+						sibling->left->color = parent->color;
+						head = rightrotate(head,sibling);
+						head = leftrotate(head,parent);
+					}
+				} 
+				else 
+				{
+					if (sibling->parent->left==sibling) 
+					{
+						// left right
+						sibling->right->color = parent->color;
+						head = leftRotate(head,sibling);
+						head = rightRotate(head,parent);
+					} 
+					else 
+					{
+						// right right
+						sibling->right->color = sibling->color;
+						sibling->color = parent->color;
+						head = leftRotate(head,parent);
+					}
+				}
+				parent->color = BLACK;
+			} 
+			else 
+			{
+				// 2 black children
+				sibling->color = RED;
+				if (parent->color == BLACK)
+				{
+					head = fixDoubleBlack(head,parent);
+				}
+				else
+				{
+					parent->color = BLACK;
+				}
+			}
+		}
+	}
+	return head;
+}
+
+
+// deletes the given node
+struct node* deleteNode(struct node* head ,struct node* v) {
+	
+	struct node* u = BSTreplace(v);
+
+	// True when u and v are both black
+	bool uvBlack = ((u == NULL || u->color == black) && (v->color == black));
+	struct node* parent = v->parent;
+
+	if (u == NULL) 
+	{
+		// u is NULL therefore v is leaf
+		if (v == head) 
+		{
+			// v is root, making root null
+			head = NULL;
+		} 
+		else 
+		{
+			if (uvBlack) 
+			{
+				// u and v both black
+				// v is leaf, fix double black at v
+				head = fixDoubleBlack(head,v);
+			} 
+			else 
+			{
+				// u or v is red
+				if (siblingdind(v) != NULL)
+					// sibling is not null, make it red"
+					siblingfind(v)->color = RED;
+			}
+
+			// delete v from the tree
+			if (v->parent->left == v) 
+			{
+				parent->left = NULL;
+			} 
+			else 
+			{
+				parent->right = NULL;
+			}
+		}
+		free(v);//delete v;
+		return head;
+	}
+
+	if (v->left == NULL || v->right == NULL) 
+	{
+		// v has 1 child
+		if (v == root) 
+		{
+			// v is root, assign the value of u to v, and delete u
+			v->data = u->data;
+			v->left = v->right = NULL;
+			free(u);//delete u;
+		} 
+		else 
+		{
+			// Detach v from tree and move u up
+			if (v->parent->left == v) 
+			{
+				parent->left = u;
+			} 
+			else
+			{
+				parent->right = u;
+			}
+			free(v);//delete v;
+
+			u->parent = parent;
+			
+			if (uvBlack) 
+			{
+			// u and v both black, fix double black at u
+				head = fixDoubleBlack(head,u);
+			} 
+			else 
+			{
+				// u or v red, color u black
+				u->color = BLACK;
+			}
+		}
+		return head;
+	}
+
+	// v has 2 children, swap values with successor and recurse
+	swapValues(u, v);
+	head = deleteNode(head,u);
+
+	return head;
+}
 
 
 
