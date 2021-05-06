@@ -55,7 +55,7 @@ struct node* RedBlackTree(struct node* head,struct node* temp)
     }
 
 }
-  BLACK  BLACK  BLACK
+
 
 
 
@@ -111,127 +111,154 @@ void rightrotate(struct node* temp)
 		temp->parent->left = left;
     }
 	else
-		temp->parent->r = left;
-	left->r = temp;
-	temp->p = left;
+	{
+		temp->parent->right = left;
+	}
+
+	left->right = temp;
+	temp->parent = left;
 }
 
 // Function performing left rotation
 // of the passed node
 void leftrotate(struct node* temp)
 {
-	struct node* right = temp->r;
-	temp->r = right->l;
-	if (temp->r)
-		temp->r->p = temp;
-	right->p = temp->p;
-	if (!temp->p)
+	struct node* right = temp->right;
+
+	temp->right = right->left;
+	
+	if (temp->right)
+	{
+		temp->right->parent = temp;
+	}
+
+	right->parent = temp->parent;
+	
+	if (!temp->parent)
+	{
 		root = right;
-	else if (temp == temp->p->l)
-		temp->p->l = right;
+	}
+	else if (temp == temp->parent->left)
+	{
+		temp->parent->left = right;
+	}
 	else
-		temp->p->r = right;
-	right->l = temp;
-	temp->p = right;
+	{
+		temp->parent->right = right;
+	}
+	right->left = temp;
+	temp->parent = right;
 }
 
 // This function fixes violations
 // caused by BST insertion
-void fixup(struct node* root, struct node* pt)
+void restructure(struct node* head, struct node* pt)
 {
 	struct node* parent_pt = NULL;
 	struct node* grand_parent_pt = NULL;
 
-	while ((pt != root) && (pt->c != 0)
-		&& (pt->p->c == 1))
+	while ((pt != root) && (pt->color != 0) && (pt->parent->color == 1))
 	{
-		parent_pt = pt->p;
-		grand_parent_pt = pt->p->p;
+		parent_pt = pt->parent;
+		grand_parent_pt = pt->parent->parent;
 
 		/* Case : A
 			Parent of pt is left child
-			of Grand-parent of
-		pt */
-		if (parent_pt == grand_parent_pt->l)
+			of Grand-parent of pt 
+		*/
+		if (parent_pt == grand_parent_pt->left)
 		{
 
-			struct node* uncle_pt = grand_parent_pt->r;
+			struct node* uncle_pt = grand_parent_pt->right;
 
 			/* Case : 1
 				The uncle of pt is also red
-				Only Recoloring required */
-			if (uncle_pt != NULL && uncle_pt->c == 1)
+				Only Recoloring required 
+			*/
+			if (uncle_pt != NULL && uncle_pt->color == 1)
 			{
-				grand_parent_pt->c = 1;
-				parent_pt->c = 0;
-				uncle_pt->c = 0;
+				grand_parent_pt->color = 1;
+				parent_pt->color = 0;
+				uncle_pt->color = 0;
 				pt = grand_parent_pt;
 			}
 
-			else {
+			else 
+			{
 
 				/* Case : 2
 					pt is right child of its parent
-					Left-rotation required */
-				if (pt == parent_pt->r) {
+					Left-rotation required 
+				*/
+				if (pt == parent_pt->right) 
+				{
 					leftrotate(parent_pt);
 					pt = parent_pt;
-					parent_pt = pt->p;
+					parent_pt = pt->parent;
 				}
 
 				/* Case : 3
 					pt is left child of its parent
-					Right-rotation required */
+					Right-rotation required 
+				*/
 				rightrotate(grand_parent_pt);
-				int t = parent_pt->c;
-				parent_pt->c = grand_parent_pt->c;
-				grand_parent_pt->c = t;
+				int t = parent_pt->color;
+				parent_pt->color = grand_parent_pt->color;
+				grand_parent_pt->color = t;
 				pt = parent_pt;
 			}
 		}
 
 		/* Case : B
-			Parent of pt is right
-			child of Grand-parent of
-		pt */
-		else {
-			struct node* uncle_pt = grand_parent_pt->l;
+			Parent of pt is right child of Grand-parent of pt 
+		*/
+		else 
+		{
+			struct node* uncle_pt = grand_parent_pt->left;
 
 			/* Case : 1
 				The uncle of pt is also red
-				Only Recoloring required */
-			if ((uncle_pt != NULL) && (uncle_pt->c == 1))
+				Only Recoloring required 
+			*/
+			if ((uncle_pt != NULL) && (uncle_pt->color == 1))
 			{
-				grand_parent_pt->c = 1;
-				parent_pt->c = 0;
-				uncle_pt->c = 0;
+				grand_parent_pt->color = 1;
+				parent_pt->color = 0;
+				uncle_pt->color = 0;
 				pt = grand_parent_pt;
 			}
-			else {
+			else 
+			{
 				/* Case : 2
 				pt is left child of its parent
-				Right-rotation required */
-				if (pt == parent_pt->l) {
+				Right-rotation required 
+				*/
+				
+				if (pt == parent_pt->left) 
+				{
 					rightrotate(parent_pt);
 					pt = parent_pt;
-					parent_pt = pt->p;
+					parent_pt = pt->parent;
 				}
 
 				/* Case : 3
 					pt is right child of its parent
-					Left-rotation required */
+					Left-rotation required 
+				*/
 				leftrotate(grand_parent_pt);
-				int t = parent_pt->c;
-				parent_pt->c = grand_parent_pt->c;
-				grand_parent_pt->c = t;
+
+				int t = parent_pt->color;
+				parent_pt->color = grand_parent_pt->color;
+				grand_parent_pt->color = t;
 				pt = parent_pt;
+
 			}
 		}
 	}
 
-	root->c = 0;
+	root->color = 0;
 }
-
+/*
 // Function to print inorder traversal
 // of the fixated tree
 void inorder(struct node* trav)
@@ -242,7 +269,7 @@ void inorder(struct node* trav)
 	printf("%d ", trav->d);
 	inorder(trav->r);
 }
-
+/*
 // driver code
 int main()
 {
@@ -259,7 +286,7 @@ int main()
 			= (struct node*)malloc(sizeof(struct node));
 		temp->r = NULL;
 		temp->l = NULL;
-		temp->p = NULL;
+		temp->parent = NULL;
 		temp->d = a[i];
 		temp->c = 1;
 
@@ -277,3 +304,4 @@ int main()
 
 	return 0;
 }
+*/
