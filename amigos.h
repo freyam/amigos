@@ -51,6 +51,12 @@ struct Heap {
 	int capacity;
 };
 
+typedef struct intidx intidx;
+struct intidx {
+	int idx;
+	int val;
+};
+
 // Core UI and UX Functions
 void banner();
 void authorization();

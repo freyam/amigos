@@ -137,13 +137,13 @@ void importData(Graph *g) {
 		g->adjList[minUID++] = createUser(u);
 	}
 
-	for (int i = 1; i <= entries * 2; ++i) {
-		int u = (rand() % entries) + 1;
-		int v = (rand() % entries) + 1;
+	// for (int i = 1; i <= entries * 2; ++i) {
+	// 	int u = (rand() % entries) + 1;
+	// 	int v = (rand() % entries) + 1;
 
-		if (u != v)
-			addFriendship(g, *g->adjList[u], *g->adjList[v]);
-	}
+	// 	if (u != v)
+	// 		addFriendship(g, *g->adjList[u], *g->adjList[v]);
+	// }
 
 	fclose(f);
 }
@@ -392,24 +392,55 @@ void addFriendship(Graph *g, User u, User v) {
 void addFriendshipUID(Graph *g) {}
 void addFriendshipName(Graph *g) {}
 
+void countingSort(intidx scores[]) {
+	intidx temp[g->V];
+	for (int i = 0; i < g->V; ++i) {
+		temp[i].idx = i;
+		temp[i].val = 0;
+	}
+	int max = scores[0].val;
+	for (int i = 1; i < g->V; i++)
+		if (scores[i].val > max)
+			max = scores[i].val;
+
+	int count[81];
+
+	for (int i = 0; i <= max; ++i)
+		count[i] = 0;
+
+	for (int i = 0; i < g->V; i++)
+		count[scores[i].val]++;
+
+	for (int i = 1; i <= max; i++)
+		count[i] += count[i - 1];
+
+	for (int i = g->V - 1; i >= 0; i--) {
+		temp[count[scores[i].val] - 1] = scores[i];
+		count[scores[i].val]--;
+	}
+
+	for (int i = 0; i < g->V; i++)
+		scores[i] = temp[i];
+}
+
 int userComp(const void *a, const void *b) {
 	return (*(int *)b - *(int *)a);
 }
 
 int compatibilityScore(User u1, User u2) {
-	int score = 0;
+	int score = 0;	// max 80
 	if (abs(u1.age - u2.age) <= 3)
-		score += 5 - (abs(u1.age - u2.age));
+		score += 10 - (abs(u1.age - u2.age));
 	if (u1.gender == u2.gender)
 		score += 5;
 	if (!strcmp(u1.job_title, u2.job_title))
-		score += 10;
+		score += 30;
 	if (!strcmp(u1.university, u2.university))
-		score += 10;
+		score += 20;
 	if (!strcmp(u1.city, u2.city))
-		score += 5;
+		score += 10;
 	if (!strcmp(u1.country, u2.country))
-		score += 3;
+		score += 5;
 
 	return score;
 }
@@ -420,15 +451,43 @@ void recommendFriendsNewUser(Graph *g) {
 	int uid;
 	printf("Enter the UID: ");
 	scanf("%d", &uid);
-	int scores[g->V];
 
-	for (int i = 1; i < g->V; ++i)
+	int toAdd;
+	printf("Enter the number of friends you want to add: ");
+	scanf("%d", &toAdd);
+
+	if (toAdd == 0) {
+		printf("Skipping Recommending Friends...\n");
+		recommendFriendsMenu();
+	}
+
+	intidx scores[g->V];
+	for (int i = 0; i < g->V; ++i) {
+		scores[i].idx = i;
+		scores[i].val = 0;
+	}
+
+	for (int i = 1; i <= entries; ++i)
 		if (uid != i)
-			scores[i] = compatibilityScore(*g->adjList[uid], *g->adjList[i]);
+			scores[i].val = compatibilityScore(*g->adjList[uid], *g->adjList[i]);
 		else
-			scores[i] = 0;
+			scores[i].val = 0;
 
-	qsort(scores, g->V, sizeof(int), userComp);
+	countingSort(scores);
+
+	for (int i = 0; i < 10; ++i)
+		printf("%d ", scores[i].val);
+	printf("\n");
+
+	for (int i = 0; i < 10; ++i)
+		printUser(*g->adjList[scores[i].idx]);
+
+	for (int i = 0; i < toAdd; ++i) {
+		int friendid;
+		printf("Enter the UID: ");
+		scanf("%d", &friendid);
+		addFriendship(g, *g->adjList[uid], *g->adjList[friendid]);
+	}
 }
 void recommendFriendsExistingUser(Graph *g) {}
 
@@ -582,6 +641,7 @@ void writeFriendshipNetwork(Graph *g) {
 
 		displayFriendsMenu();
 	}
+
 	FILE *f = fopen("data/graphviz.dot", "w");
 
 	fprintf(f, "digraph AmigosFriendNetwork {\n");
@@ -590,14 +650,20 @@ void writeFriendshipNetwork(Graph *g) {
 	for (int i = 1; i <= g->V; ++i) {
 		if (g->adjList[i]) {
 			User *temp = g->adjList[i];
-			fprintf(f, "\t\"%s\" -> ", temp->name);
+
+			fprintf(f, "\t\"%s\"", temp->name);
 			temp = temp->next;
+
+			if (temp)
+				printf(" -> ");
+
 			while (temp) {
 				fprintf(f, "\"%s\"", temp->name);
 				temp = temp->next;
 				if (temp)
 					fprintf(f, " -> ");
 			}
+
 			fprintf(f, "\n");
 		}
 	}
