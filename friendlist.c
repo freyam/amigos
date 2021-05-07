@@ -1,36 +1,28 @@
 /**C implementation for
 	Red-Black Tree Insertion
-	This code is provided by
-	costheta_z **/
+**/
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
 //#include <amigos.h>
 
-int black=0;
-int red=1;
+
 int BLACK=0;
 int RED=1;
 
 
 
 // Structure to represent each
-// node in a red-black tree
+// node in a RED-BLACK tree
 struct node {
-	int data; // data
-	int color; // 1-red, 0-black
+	struct User *data; // data
+	int color; // 1-RED, 0-BLACK
 	struct node *parent; // parent
 	struct node *right; // right-child
 	struct node *left; // left child
 };
 
-struct vertex {
-    struct node *root1;
-    
 
-};
-
-struct vertex a[10000000];
 
 //function to insert node
 struct node *RedBlackTree(struct node *head,struct node *temp)
@@ -64,7 +56,7 @@ struct node *RedBlackTree(struct node *head,struct node *temp)
 
 
 // global root for the entire tree
-struct node *root = NULL;
+//struct node *root = NULL;
 /*
 // function to perform BST insertion of a node
 struct node *bst(struct node *trav,struct node *temp)
@@ -182,7 +174,7 @@ struct node *restructure(struct node *head, struct node *pt)
 			struct node *uncle_pt = grand_parent_pt->right;
 
 			/*Case : 1
-				The uncle of pt is also red
+				The uncle of pt is also RED
 				Only Recoloring required 
 			*/
 			if (uncle_pt != NULL && uncle_pt->color == 1)
@@ -227,7 +219,7 @@ struct node *restructure(struct node *head, struct node *pt)
 			struct node *uncle_pt = grand_parent_pt->left;
 
 			/*Case : 1
-				The uncle of pt is also red
+				The uncle of pt is also RED
 				Only Recoloring required 
 			*/
 			if ((uncle_pt != NULL) && (uncle_pt->color == 1))
@@ -317,10 +309,10 @@ bool hasRedChild(struct node *x) {
 
 
 
-// fix red red at given node
+// fix RED RED at given node
 struct node *fixRedRed(struct node *head,struct node *x) 
 {
-	// if x is root color it black and return
+	// if x is root color it BLACK and return
 	if (x == head) 
 	{
 		x->color = 0;//BLACK;
@@ -336,7 +328,7 @@ struct node *fixRedRed(struct node *head,struct node *x)
 	{
 		if (uncle != NULL && uncle->color == 1) 
 		{
-			// uncle red, perform recoloring and recurse
+			// uncle RED, perform recoloring and recurse
 			parent->color = 0;//BLACK;
 			uncle->color = 0;//BLACK;
 			grandparent->color = 1;//RED;
@@ -421,14 +413,14 @@ struct node *fixDoubleBlack(struct node *head,struct node *x) {
 
 	if (sibling == NULL) 
 	{
-		// No sibiling, double black pushed up
+		// No sibiling, double BLACK pushed up
 		head = fixDoubleBlack(head,parent);
 	} 
 	else 
 	{
 		if (sibling->color == RED) 
 		{
-			// Sibling red
+			// Sibling RED
 			parent->color = RED;
 			sibling->color = BLACK;
 			if (sibling->parent->left == sibling) 
@@ -445,10 +437,10 @@ struct node *fixDoubleBlack(struct node *head,struct node *x) {
 		} 
 		else 
 		{
-			// Sibling black
+			// Sibling BLACK
 			if (hasRedChild(sibling)) 
 			{
-				// at least 1 red children
+				// at least 1 RED children
 				if (sibling->left != NULL && sibling->left->color == RED) 
 				{
 					if (sibling->parent->left == sibling) 
@@ -487,7 +479,7 @@ struct node *fixDoubleBlack(struct node *head,struct node *x) {
 			} 
 			else 
 			{
-				// 2 black children
+				// 2 BLACK children
 				sibling->color = RED;
 				if (parent->color == BLACK)
 				{
@@ -509,8 +501,8 @@ struct node *deleteNode(struct node *head ,struct node *v) {
 	
 	struct node *u = BSTreplace(v);
 
-	// True when u and v are both black
-	bool uvBlack = ((u == NULL || u->color == black) && (v->color == black));
+	// True when u and v are both BLACK
+	bool uvBlack = ((u == NULL || u->color == BLACK) && (v->color == BLACK));
 	struct node *parent = v->parent;
 
 	if (u == NULL) 
@@ -525,15 +517,15 @@ struct node *deleteNode(struct node *head ,struct node *v) {
 		{
 			if (uvBlack) 
 			{
-				// u and v both black
-				// v is leaf, fix double black at v
+				// u and v both BLACK
+				// v is leaf, fix double BLACK at v
 				head = fixDoubleBlack(head,v);
 			} 
 			else 
 			{
-				// u or v is red
+				// u or v is RED
 				if (siblingfind(v) != NULL)
-					// sibling is not null, make it red"
+					// sibling is not null, make it RED"
 					siblingfind(v)->color = RED;
 			}
 
@@ -554,7 +546,7 @@ struct node *deleteNode(struct node *head ,struct node *v) {
 	if (v->left == NULL || v->right == NULL) 
 	{
 		// v has 1 child
-		if (v == root) 
+		if (v == head) 
 		{
 			// v is root, assign the value of u to v, and delete u
 			v->data = u->data;
@@ -578,12 +570,12 @@ struct node *deleteNode(struct node *head ,struct node *v) {
 			
 			if (uvBlack) 
 			{
-			// u and v both black, fix double black at u
+			// u and v both BLACK, fix double BLACK at u
 				head = fixDoubleBlack(head,u);
 			} 
 			else 
 			{
-				// u or v red, color u black
+				// u or v RED, color u BLACK
 				u->color = BLACK;
 			}
 		}
@@ -596,6 +588,13 @@ struct node *deleteNode(struct node *head ,struct node *v) {
 
 	return head;
 }
+
+
+// searches for given value
+// if found returns the node (used for delete)
+// else returns the last node while traversing (used in insert)
+
+
 
 struct node *search(struct node *head,int n) {
 	struct node *temp = head;
@@ -626,7 +625,7 @@ struct node *search(struct node *head,int n) {
 
 // utility function that deletes the node with given value
 struct node *deleteByVal(struct node *head,int n) {
-	if (root == NULL)
+	if (head == NULL)
 	// Tree is empty
 	return head;
 
@@ -662,11 +661,12 @@ int main()
 {
 	int n = 7;
 	int b[7] = { 7, 6, 5, 4, 3, 2, 1 };
-
+	struct node *root;
+	
 	for (int i = 0; i < n; i++) {
 
 		// allocating memory to the node and initializing:
-		// 1. color as red
+		// 1. color as RED
 		// 2. parent, left and right pointers as NULL
 		// 3. data as i-th value in the array
 		struct node *temp
