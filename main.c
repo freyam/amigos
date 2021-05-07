@@ -3,7 +3,6 @@
 int main() {
 	banner();
 	// authorization();
-
 	initialize();
 	mainMenu();
 }

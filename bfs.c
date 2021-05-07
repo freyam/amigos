@@ -1,9 +1,10 @@
 #include "amigos.h"
 
-User null_user = {0, "", "", "", "", "", "", ""};
+User null_user = {0, "", "", "", "", "", "", "", ""};
 
 extern int V;
 
+// Runs the BFS
 void bfs(Graph *g, User startVertex) {
 	Queue *q = createQueue();
 
@@ -29,6 +30,7 @@ void bfs(Graph *g, User startVertex) {
 	}
 }
 
+// Creates a Queue
 Queue *createQueue() {
 	Queue *q = malloc(sizeof(Queue));
 	q->front = -1;

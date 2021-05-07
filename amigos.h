@@ -23,9 +23,10 @@ struct User {
 		age,
 		gender,
 		email,
-		ip,
 		job_title,
-		location;
+		university,
+		city,
+		country;
 	User *next;
 };
 
@@ -89,6 +90,7 @@ void addFriendshipUID(Graph *);
 void addFriendshipName(Graph *);
 
 void recommendFriendsMenu();
+int compatibilityScore(User, User);
 void recommendFriendsNewUser(Graph *);
 void recommendFriendsExistingUser(Graph *);
 

@@ -59,7 +59,7 @@ void heapify_top_bottom(Heap *h, int parent_node) {
 int PopMin(Heap *h) {
 	int pop;
 	if (h->count == 0) {
-		printf("\n__Heap is Empty__\n");
+		printf("\nHeap is Empty\n");
 		return -1;
 	}
 	pop = h->arr[0];

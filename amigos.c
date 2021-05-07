@@ -4,7 +4,8 @@ int minUID = 1;
 
 Graph *g;
 Heap *h;
-int V = 1000;
+int V = 100000;
+int entries = 15;
 
 // Adds Password Checker
 void authorization() {
@@ -60,9 +61,10 @@ User *createUser(User u) {
 	strcpy(newUser->age, u.age);
 	strcpy(newUser->gender, u.gender);
 	strcpy(newUser->email, u.email);
-	strcpy(newUser->ip, u.ip);
 	strcpy(newUser->job_title, u.job_title);
-	strcpy(newUser->location, u.location);
+	strcpy(newUser->university, u.university);
+	strcpy(newUser->city, u.city);
+	strcpy(newUser->country, u.country);
 	newUser->next = NULL;
 
 	return newUser;
@@ -81,12 +83,14 @@ void addUser(Graph *g, Heap *h) {
 	gets(u.gender);
 	printf("Email: ");
 	gets(u.email);
-	printf("IP Address: ");
-	gets(u.ip);
 	printf("Job Title: ");
 	gets(u.job_title);
-	printf("Location: ");
-	gets(u.location);
+	printf("University: ");
+	gets(u.university);
+	printf("City: ");
+	gets(u.city);
+	printf("Country: ");
+	gets(u.country);
 
 	g->adjList[u.uid] = createUser(u);
 	printUser(*(g->adjList[u.uid]));
@@ -96,36 +100,39 @@ void addUser(Graph *g, Heap *h) {
 void importData(Graph *g) {
 	system("clear");
 
-	int entries = 50;  // max 1000
-	char buffer;
+	char comma = ',';
 
-	if (access("data/UserDatabase.csv", F_OK)) {
+	if (access("data/UserDatabase.csv", F_OK))
 		system("make import");
-	}
 
 	FILE *f = fopen("data/UserDatabase.csv", "r");
 
-	string header;
-	fscanf(f, "%[^\n]s", header);
+	char header[100];
+	fscanf(f, "%s", header);
 
 	for (int i = 1; i <= entries; ++i) {
 		User u;
 
 		fscanf(f, "%d", &u.uid);
-		fscanf(f, "%c", &buffer);
+		fscanf(f, "%c", &comma);
 		fscanf(f, "%[^,]s", u.name);
-		fscanf(f, "%c", &buffer);
+		fscanf(f, "%c", &comma);
 		fscanf(f, "%[^,]s", u.gender);
-		fscanf(f, "%c", &buffer);
+		fscanf(f, "%c", &comma);
 		fscanf(f, "%[^,]s", u.age);
-		fscanf(f, "%c", &buffer);
+		fscanf(f, "%c", &comma);
 		fscanf(f, "%[^,]s", u.email);
-		fscanf(f, "%c", &buffer);
-		fscanf(f, "%[^,]s", u.ip);
-		fscanf(f, "%c", &buffer);
+		fscanf(f, "%c", &comma);
 		fscanf(f, "%[^,]s", u.job_title);
-		fscanf(f, "%c", &buffer);
-		fscanf(f, "%[^\n]s", u.location);
+		fscanf(f, "%c", &comma);
+		fscanf(f, "%[^,]s", u.university);
+		fscanf(f, "%c", &comma);
+		fscanf(f, "%[^,]s", u.city);
+		fscanf(f, "%c", &comma);
+		fscanf(f, "%[^\n]s", u.country);
+
+		// fscanf(f, "%d,%[^,]s,%[^,]s,%[^,]s,%[^,]s,%[^,]s,%[^,]s,%[^,]s,%[^\n]s",
+		// 	   &u.uid, u.name, u.gender, u.age, u.email, u.job_title, u.university, u.city, u.country);
 
 		g->adjList[minUID++] = createUser(u);
 	}
@@ -143,8 +150,8 @@ void importData(Graph *g) {
 
 // Prints User Information
 void printUser(User u) {
-	printf("[%03d] %20s | %3s | %1s | %30s | %15s | %30s | %s\n",
-		   u.uid, u.name, u.age, u.gender, u.email, u.ip, u.job_title, u.location);
+	printf("[%03d] %20s | %2s | %1s | %30s | %20s | %20s | %20s | %s\n",
+		   u.uid, u.name, u.age, u.gender, u.email, u.job_title, u.university, u.city, u.country);
 }
 
 // Searches a User by UID
@@ -207,12 +214,14 @@ void editUserUID(Graph *g) {
 		gets(g->adjList[uid]->gender);
 		printf("Email: ");
 		gets(g->adjList[uid]->email);
-		printf("IP Address: ");
-		gets(g->adjList[uid]->ip);
 		printf("Job Title: ");
 		gets(g->adjList[uid]->job_title);
-		printf("Location: ");
-		gets(g->adjList[uid]->location);
+		printf("University: ");
+		gets(g->adjList[uid]->university);
+		printf("City: ");
+		gets(g->adjList[uid]->city);
+		printf("Country: ");
+		gets(g->adjList[uid]->country);
 
 		printf("Edited.\n");
 		printUser(*(g->adjList[uid]));
@@ -246,12 +255,14 @@ void editUserName(Graph *g) {
 			gets(g->adjList[i]->gender);
 			printf("Email: ");
 			gets(g->adjList[i]->email);
-			printf("IP Address: ");
-			gets(g->adjList[i]->ip);
 			printf("Job Title: ");
 			gets(g->adjList[i]->job_title);
-			printf("Location: ");
-			gets(g->adjList[i]->location);
+			printf("University: ");
+			gets(g->adjList[i]->university);
+			printf("City: ");
+			gets(g->adjList[i]->city);
+			printf("Country: ");
+			gets(g->adjList[i]->country);
 
 			printf("Edited.\n");
 			printUser(*(g->adjList[i]));
@@ -273,6 +284,7 @@ void displayUserDatabase(Graph *g) {
 	printf("-------------------------------------------------------");
 	printf("-------------------------------------------------------");
 	printf("-------------------------------------------------------\n");
+
 	for (int i = 1; i <= g->V; ++i)
 		if (g->adjList[i]) {
 			if (!found)
@@ -312,7 +324,11 @@ void removeUserUID(Graph *g, Heap *h) {
 			strcpy(g->adjList[uid]->name, "");
 			strcpy(g->adjList[uid]->age, "");
 			strcpy(g->adjList[uid]->gender, "");
-			strcpy(g->adjList[uid]->location, "");
+			strcpy(g->adjList[uid]->email, "");
+			strcpy(g->adjList[uid]->job_title, "");
+			strcpy(g->adjList[uid]->university, "");
+			strcpy(g->adjList[uid]->city, "");
+			strcpy(g->adjList[uid]->country, "");
 			g->adjList[uid] = NULL;
 		} else {
 			printf("Skipped!\n");
@@ -343,10 +359,15 @@ void removeUserName(Graph *g, Heap *h) {
 			if (c != 'n') {
 				printf("Deleted!\n");
 				insertHeap(h, i);
-				strcpy(g->adjList[i]->age, "");
-				g->adjList[i]->uid = INT_MAX;
+				g->adjList[i]->uid = 0;
 				strcpy(g->adjList[i]->name, "");
-				strcpy(g->adjList[i]->location, "");
+				strcpy(g->adjList[i]->age, "");
+				strcpy(g->adjList[i]->gender, "");
+				strcpy(g->adjList[i]->email, "");
+				strcpy(g->adjList[i]->job_title, "");
+				strcpy(g->adjList[i]->university, "");
+				strcpy(g->adjList[i]->city, "");
+				strcpy(g->adjList[i]->country, "");
 				g->adjList[i] = NULL;
 				found = 1;
 			} else {
@@ -371,7 +392,44 @@ void addFriendship(Graph *g, User u, User v) {
 void addFriendshipUID(Graph *g) {}
 void addFriendshipName(Graph *g) {}
 
-void recommendFriendsNewUser(Graph *g) {}
+int userComp(const void *a, const void *b) {
+	return (*(int *)b - *(int *)a);
+}
+
+int compatibilityScore(User u1, User u2) {
+	int score = 0;
+	if (abs(u1.age - u2.age) <= 3)
+		score += 5 - (abs(u1.age - u2.age));
+	if (u1.gender == u2.gender)
+		score += 5;
+	if (!strcmp(u1.job_title, u2.job_title))
+		score += 10;
+	if (!strcmp(u1.university, u2.university))
+		score += 10;
+	if (!strcmp(u1.city, u2.city))
+		score += 5;
+	if (!strcmp(u1.country, u2.country))
+		score += 3;
+
+	return score;
+}
+
+void recommendFriendsNewUser(Graph *g) {
+	system("clear");
+
+	int uid;
+	printf("Enter the UID: ");
+	scanf("%d", &uid);
+	int scores[g->V];
+
+	for (int i = 1; i < g->V; ++i)
+		if (uid != i)
+			scores[i] = compatibilityScore(*g->adjList[uid], *g->adjList[i]);
+		else
+			scores[i] = 0;
+
+	qsort(scores, g->V, sizeof(int), userComp);
+}
 void recommendFriendsExistingUser(Graph *g) {}
 
 void checkFriendshipUID(Graph *g) {
@@ -514,6 +572,16 @@ void displayFriendsAdjacencyList(Graph *g) {
 //  Writes the Adjacency List for Network Visualization in DOT
 void writeFriendshipNetwork(Graph *g) {
 	system("clear");
+
+	if (entries > 100) {
+		printf("ERROR: 100+ Nodes in the graph!\n");
+		printf("Amigos is doing so well that Graphviz doesn't support rendering such a tremendously dense graph.\n");
+
+		getchar();
+		getchar();
+
+		displayFriendsMenu();
+	}
 	FILE *f = fopen("data/graphviz.dot", "w");
 
 	fprintf(f, "digraph AmigosFriendNetwork {\n");
