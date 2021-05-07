@@ -15,6 +15,11 @@ typedef char string[50];
 	getchar();  \
 	scanf("%[^\n]s", s);
 
+
+int BLACK=0;
+int RED=1;
+
+
 typedef struct User User;
 struct User {
 	int uid;
@@ -30,7 +35,22 @@ struct User {
 	User *next;
 };
 
+struct node {
+	struct User *data; // data
+	int color; // 1-RED, 0-BLACK
+	struct node *parent; // parent
+	struct node *right; // right-child
+	struct node *left; // left child
+};
+
+struct vertex {
+	struct User *User;
+    struct node *root;
+};
+
 typedef struct Graph Graph;
+
+
 struct Graph {
 	int V;			 // number of vertices
 	User **adjList;	 // the adjacency list
@@ -127,5 +147,27 @@ void heapify_top_bottom(Heap *, int);
 int PopMin(Heap *h);
 
 void quit();
+
+
+void swapColors(struct node *x1, struct node *x2);
+void swapValues(struct node *u, struct node *v);
+bool hasRedChild(struct node *x);
+
+
+struct node *RedBlackTree(struct node *head,struct node *temp);
+struct node *rightrotate(struct node *head ,struct node *temp);
+struct node *leftrotate(struct node *head ,struct node *temp);
+struct node *restructure(struct node *head, struct node *pt);
+
+
+struct node *siblingfind(struct node *x) ;
+struct node *unclefind(struct node *x);
+struct node *fixRedRed(struct node *head,struct node *x);
+struct node *successor(struct node *x);
+struct node *BSTreplace(struct node *x);
+struct node *fixDoubleBlack(struct node *head,struct node *x);
+struct node *deleteNode(struct node *head ,struct node *v);
+struct node *search(struct node *head,int n);
+struct node *deleteByVal(struct node *head,int n);
 
 #endif
