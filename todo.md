@@ -8,3 +8,8 @@ TODO
 - [ ] error handling
 - [ ] comments
 - [ ]
+
+BUGS
+
+- [ ] Enter UID greater than minUID.
+- [ ]

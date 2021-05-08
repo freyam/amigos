@@ -478,6 +478,7 @@ void recommendFriendsNewUser(Graph *g) {
 	printf("Enter the UID: ");
 	scanf("%d", &uid);
 
+	printf("{XXX}");
 	printUser(*g->adjList[uid]);
 
 	int toAdd;
@@ -501,24 +502,24 @@ void recommendFriendsNewUser(Graph *g) {
 		else
 			scores[i].val = 0;
 
-	for (int i = 0; i < entries; ++i)
-		printf("{%2d,%3d}", scores[i].idx, scores[i].val);
-	printf("\n");
-
 	countingSort(scores, entries);
 
-	for (int i = 0; i < entries; ++i)
-		printf("{%2d,%3d}", scores[i].idx, scores[i].val);
-	printf("\n");
-
-	for (int i = 0; i <= 10; ++i)
+	for (int i = 0; i <= 10; ++i) {
+		printf("{%03d}", scores[i].val);
 		printUser(*g->adjList[scores[i].idx]);
+	}
 
 	for (int i = 0; i < toAdd; ++i) {
 		int friendid;
 		printf("Enter the UID: ");
 		scanf("%d", &friendid);
-		addFriendship(g, *g->adjList[uid], *g->adjList[friendid]);
+		if (g->adjList[friendid] == NULL || friendid >= minUID) {
+			printf("Invalid UID! Try again\n");
+			i--;
+		} else {
+			addFriendship(g, *g->adjList[uid], *g->adjList[friendid]);
+			printf("Added %s as a Friend\n", g->adjList[friendid]->name);
+		}
 	}
 }
 
@@ -675,7 +676,7 @@ void writeFriendshipNetwork(Graph *g) {
 		displayFriendsMenu();
 	}
 
-	FILE *f = fopen("data/graphviz.dot", "w");
+	FILE *f = fopen("graph/graphviz.dot", "w");
 
 	fprintf(f, "digraph AmigosFriendNetwork {\n");
 	fprintf(f, "\tnode [fontname=\"Consolas\", shape=oval, style=filled, color=\".7 .3 1.0\"];\n");
@@ -706,5 +707,5 @@ void writeFriendshipNetwork(Graph *g) {
 
 void ViewFriendshipNetwork(Graph *g) {
 	writeFriendshipNetwork(g);
-	system("dot -Tpng data/graphviz.dot -o data/friendship-network.png && xdg-open data/friendship-network.png");
+	system("dot -Tpng graph/graphviz.dot -o graph/friendship-network.png && xdg-open graph/friendship-network.png");
 }
