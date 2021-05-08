@@ -501,7 +501,7 @@ void recommendFriendsNewUser(Graph *g) {
 
 	countingSort(scores, entries);
 
-	for (int i = 0; i <= 10; ++i) {
+	for (int i = 0; i < 10; ++i) {
 		printf("{%03d}", scores[i].val);
 		printUser(*g->adjList[scores[i].idx]);
 	}
