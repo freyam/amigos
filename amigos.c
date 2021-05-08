@@ -4,7 +4,7 @@ int minUID = 1;
 
 Graph *g;
 Heap *h;
-int V = 16;
+int V = 51;
 int entries = 15;
 
 bool importRandomData = 0;
@@ -140,9 +140,6 @@ void importData(Graph *g) {
 		fscanf(f, "%[^,]s", u.city);
 		fscanf(f, "%c", &comma);
 		fscanf(f, "%[^\n]s", u.country);
-
-		// fscanf(f, "%d,%[^,]s,%[^,]s,%[^,]s,%[^,]s,%[^,]s,%[^,]s,%[^,]s,%[^\n]s",
-		// 	   &u.uid, u.name, u.gender, u.age, u.email, u.job_title, u.university, u.city, u.country);
 
 		g->adjList[minUID++] = createUser(u);
 	}
@@ -295,7 +292,7 @@ void displayUserDatabase(Graph *g) {
 	printf("-------------------------------------------------------");
 	printf("-------------------------------------------------------\n");
 
-	for (int i = 1; i <= g->V; ++i)
+	for (int i = 1; i < g->V; ++i)
 		if (g->adjList[i]) {
 			if (!found)
 				found = 1;
@@ -421,7 +418,7 @@ void countingSort(intidx scores[], int size) {
 	for (int i = 0; i < size; i++)
 		count[scores[i].val]++;
 
-	for (int i = 1; i <= max; i++)
+	for (int i = 1; i < max; i++)
 		count[i] += count[i - 1];
 
 	for (int i = size - 1; i >= 0; i--) {
@@ -491,12 +488,12 @@ void recommendFriendsNewUser(Graph *g) {
 	}
 
 	intidx scores[entries + 1];
-	for (int i = 1; i <= entries; ++i) {
+	for (int i = 1; i < entries; ++i) {
 		scores[i].idx = i;
 		scores[i].val = 0;
 	}
 
-	for (int i = 1; i <= entries; ++i)
+	for (int i = 1; i < entries; ++i)
 		if (uid != i)
 			scores[i].val = compatibilityScore(*g->adjList[uid], *g->adjList[i]);
 		else
@@ -635,7 +632,7 @@ void displayFriendsAdjacencyList(Graph *g) {
 	printf("-------------------------------------------------------");
 	printf("-------------------------------------------------------\n");
 
-	for (int i = 0; i <= g->V; ++i) {
+	for (int i = 1; i < g->V; ++i) {
 		if (g->adjList[i]) {
 			if (!found)
 				found = 1;
@@ -681,7 +678,7 @@ void writeFriendshipNetwork(Graph *g) {
 	fprintf(f, "digraph AmigosFriendNetwork {\n");
 	fprintf(f, "\tnode [fontname=\"Consolas\", shape=oval, style=filled, color=\".7 .3 1.0\"];\n");
 
-	for (int i = 1; i <= g->V; ++i) {
+	for (int i = 1; i < g->V; ++i) {
 		if (g->adjList[i]) {
 			User *temp = g->adjList[i];
 
