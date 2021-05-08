@@ -9,20 +9,17 @@
 #include <time.h>
 #include <unistd.h>
 
-
 //#include <amigos.h>
-
-
 
 typedef char string[50];
 
+int BLACK = 0;
+int RED = 1;
 
-int BLACK=0;
-int RED=1;
-
-struct User {
+struct User
+{
 	int uid;
-	string
+	/*string
 		name,
 		age,
 		gender,
@@ -31,30 +28,35 @@ struct User {
 		university,
 		city,
 		country;
-	struct User *next;
+	*/
+	//struct User *next;
 };
 
 // Structure to represent each
 // node in a RED-BLACK tree
-struct node {
-	struct User *data; // data
-	int color; // 1-RED, 0-BLACK
+struct node
+{
+	struct User *data;	 // data
+	int color;			 // 1-RED, 0-BLACK
 	struct node *parent; // parent
-	struct node *right; // right-child
-	struct node *left; // left child
+	struct node *right;	 // right-child
+	struct node *left;	 // left child
 };
 
-struct vertex {
+struct vertex
+{
 	struct User *user;
-    struct node *rootofvertex;
+	struct node *rootofvertex;
 };
 
-struct reversenode {
+struct reversenode
+{
 	struct User *user;
 	struct reversenode *next;
 };
 
-struct reversevertex {
+struct reversevertex
+{
 	struct User *user;
 	struct reversenode *head;
 };
@@ -63,36 +65,34 @@ struct vertex a[10000000];
 
 struct reversevertex b[10000000];
 
+bool exist[10000000];
+
 //function to insert node
-struct node *RedBlackTree(struct node *head,struct node *temp)
+struct node *RedBlackTree(struct node *head, struct node *temp)
 {
-    //If RBT is empty
-    //Return the new node
-    if(head == NULL)
-    {
-        return temp;
-    }
-    else
-    {
-        if (temp->data->uid < head->data->uid)
-	    {
-		    head->left = RedBlackTree(head->left, temp);
-		    head->left->parent = head;
-	    }
-	    else if (temp->data->uid > head->data->uid)
-	    {
-		    head->right = RedBlackTree(head->right, temp);
-		    head->right->parent = head;
-	    }
+	//If RBT is empty
+	//Return the new node
+	if (head == NULL)
+	{
+		return temp;
+	}
+	else
+	{
+		if (temp->data->uid < head->data->uid)
+		{
+			head->left = RedBlackTree(head->left, temp);
+			head->left->parent = head;
+		}
+		else if (temp->data->uid > head->data->uid)
+		{
+			head->right = RedBlackTree(head->right, temp);
+			head->right->parent = head;
+		}
 
-	// Return the (unchanged) node pointer
-	return head;
-    }
-
+		// Return the (unchanged) node pointer
+		return head;
+	}
 }
-
-
-
 
 // global root for the entire tree
 //struct node *root = NULL;
@@ -123,28 +123,27 @@ struct node *bst(struct node *trav,struct node *temp)
 */
 // Function performing right rotation
 // of the passed node
-struct node *rightrotate(struct node *head ,struct node *temp)
+struct node *rightrotate(struct node *head, struct node *temp)
 {
 	struct node *left = temp->left;
-	
-    temp->left = left->right;
-	
-    if (temp->left)
-    {
-		temp->left->parent = temp;
-    }
 
+	temp->left = left->right;
+
+	if (temp->left)
+	{
+		temp->left->parent = temp;
+	}
 
 	left->parent = temp->parent;
-	
-    if (!temp->parent)
-    {
+
+	if (!temp->parent)
+	{
 		head = left;
-    }
+	}
 	else if (temp == temp->parent->left)
-    {
+	{
 		temp->parent->left = left;
-    }
+	}
 	else
 	{
 		temp->parent->right = left;
@@ -159,19 +158,19 @@ struct node *rightrotate(struct node *head ,struct node *temp)
 // Function performing left rotation
 // of the passed node
 
-struct node *leftrotate(struct node *head ,struct node *temp)
+struct node *leftrotate(struct node *head, struct node *temp)
 {
 	struct node *right = temp->right;
 
 	temp->right = right->left;
-	
+
 	if (temp->right)
 	{
 		temp->right->parent = temp;
 	}
 
 	right->parent = temp->parent;
-	
+
 	if (!temp->parent)
 	{
 		head = right;
@@ -224,16 +223,16 @@ struct node *restructure(struct node *head, struct node *pt)
 				pt = grand_parent_pt;
 			}
 
-			else 
+			else
 			{
 
 				/*Case : 2
 					pt is right child of its parent
 					Left-rotation required 
 				*/
-				if (pt == parent_pt->right) 
+				if (pt == parent_pt->right)
 				{
-					head = leftrotate(head,parent_pt);
+					head = leftrotate(head, parent_pt);
 					pt = parent_pt;
 					parent_pt = pt->parent;
 				}
@@ -242,7 +241,7 @@ struct node *restructure(struct node *head, struct node *pt)
 					pt is left child of its parent
 					Right-rotation required 
 				*/
-				head = rightrotate(head,grand_parent_pt);
+				head = rightrotate(head, grand_parent_pt);
 				int t = parent_pt->color;
 				parent_pt->color = grand_parent_pt->color;
 				grand_parent_pt->color = t;
@@ -253,7 +252,7 @@ struct node *restructure(struct node *head, struct node *pt)
 		/*Case : B
 			Parent of pt is right child of Grand-parent of pt 
 		*/
-		else 
+		else
 		{
 			struct node *uncle_pt = grand_parent_pt->left;
 
@@ -268,16 +267,16 @@ struct node *restructure(struct node *head, struct node *pt)
 				uncle_pt->color = 0;
 				pt = grand_parent_pt;
 			}
-			else 
+			else
 			{
 				/*Case : 2
 					pt is left child of its parent
 					Right-rotation required 
 				*/
-				
-				if (pt == parent_pt->left) 
+
+				if (pt == parent_pt->left)
 				{
-					head = rightrotate(head,parent_pt);
+					head = rightrotate(head, parent_pt);
 					pt = parent_pt;
 					parent_pt = pt->parent;
 				}
@@ -286,13 +285,12 @@ struct node *restructure(struct node *head, struct node *pt)
 					pt is right child of its parent
 					Left-rotation required 
 				*/
-				head = leftrotate(head,grand_parent_pt);
+				head = leftrotate(head, grand_parent_pt);
 
 				int t = parent_pt->color;
 				parent_pt->color = grand_parent_pt->color;
 				grand_parent_pt->color = t;
 				pt = parent_pt;
-
 			}
 		}
 	}
@@ -302,22 +300,24 @@ struct node *restructure(struct node *head, struct node *pt)
 	return head;
 }
 
-void swapColors(struct node *x1, struct node *x2) {
+void swapColors(struct node *x1, struct node *x2)
+{
 	int temp;
 	temp = x1->color;
 	x1->color = x2->color;
 	x2->color = temp;
 }
 
-void swapValues(struct node *u, struct node *v) {
-	int temp;
+void swapValues(struct node *u, struct node *v)
+{
+	struct User *temp;
 	temp = u->data;
 	u->data = v->data;
 	v->data = temp;
 }
 
-
-struct node *siblingfind(struct node *x) {
+struct node *siblingfind(struct node *x)
+{
 	// sibling null if no parent
 	if (x->parent == NULL)
 		return NULL;
@@ -328,7 +328,8 @@ struct node *siblingfind(struct node *x) {
 	return x->parent->left;
 }
 
-struct node *unclefind(struct node *x) {
+struct node *unclefind(struct node *x)
+{
 	// If no parent or grandparent, then no uncle
 	if (x->parent == NULL || x->parent->parent == NULL)
 		return NULL;
@@ -341,20 +342,18 @@ struct node *unclefind(struct node *x) {
 		return x->parent->parent->left;
 }
 
-bool hasRedChild(struct node *x) {
-	return (x->left != NULL && x->left->color == RED) ||(x->right != NULL && x->right->color == RED);
+bool hasRedChild(struct node *x)
+{
+	return (x->left != NULL && x->left->color == RED) || (x->right != NULL && x->right->color == RED);
 }
 
-
-
-
 // fix RED RED at given node
-struct node *fixRedRed(struct node *head,struct node *x) 
+struct node *fixRedRed(struct node *head, struct node *x)
 {
 	// if x is root color it BLACK and return
-	if (x == head) 
+	if (x == head)
 	{
-		x->color = 0;//BLACK;
+		x->color = 0; //BLACK;
 		return head;
 	}
 
@@ -363,49 +362,49 @@ struct node *fixRedRed(struct node *head,struct node *x)
 	struct node *grandparent = parent->parent;
 	struct node *uncle = unclefind(x);
 
-	if (parent->color != 0) 
+	if (parent->color != 0)
 	{
-		if (uncle != NULL && uncle->color == 1) 
+		if (uncle != NULL && uncle->color == 1)
 		{
 			// uncle RED, perform recoloring and recurse
-			parent->color = 0;//BLACK;
-			uncle->color = 0;//BLACK;
-			grandparent->color = 1;//RED;
-			head = fixRedRed(head,grandparent);
-		} 
-		else 
+			parent->color = 0;		//BLACK;
+			uncle->color = 0;		//BLACK;
+			grandparent->color = 1; //RED;
+			head = fixRedRed(head, grandparent);
+		}
+		else
 		{
 			// Else perform LR, LL, RL, RR
-			if (parent->parent->left == parent) 
+			if (parent->parent->left == parent)
 			{
-				if (x->parent->left == x) 
+				if (x->parent->left == x)
 				{
 					// for left right
 					swapColors(parent, grandparent);
 				}
-				else 
+				else
 				{
-					head = leftrotate(head,parent);
+					head = leftrotate(head, parent);
 					swapColors(x, grandparent);
 				}
 				// for left left and left right
-				head = rightrotate(head,grandparent);
+				head = rightrotate(head, grandparent);
 			}
-			else 
+			else
 			{
-				if (x->parent->left == x) 
+				if (x->parent->left == x)
 				{
 					// for right left
-					head = rightrotate(head,parent);
+					head = rightrotate(head, parent);
 					swapColors(x, grandparent);
-				}	 
-				else 
+				}
+				else
 				{
 					swapColors(parent, grandparent);
 				}
 
 				// for right right and right left
-				head = leftrotate(head,grandparent);
+				head = leftrotate(head, grandparent);
 			}
 		}
 	}
@@ -414,7 +413,8 @@ struct node *fixRedRed(struct node *head,struct node *x)
 
 // find node that do not have a left child
 // in the subtree of the given node
-struct node *successor(struct node *x) {
+struct node *successor(struct node *x)
+{
 	struct node *temp = x;
 
 	while (temp->left != NULL)
@@ -425,7 +425,8 @@ struct node *successor(struct node *x) {
 }
 
 // find node that replaces a deleted node in BST
-struct node *BSTreplace(struct node *x) {
+struct node *BSTreplace(struct node *x)
+{
 	// when node have 2 children
 	if (x->left != NULL && x->right != NULL)
 		return successor(x->right);
@@ -441,88 +442,88 @@ struct node *BSTreplace(struct node *x) {
 		return x->right;
 }
 
-
-struct node *fixDoubleBlack(struct node *head,struct node *x) {
+struct node *fixDoubleBlack(struct node *head, struct node *x)
+{
 	if (x == head)
-	// Reached root
-	return head;
+		// Reached root
+		return head;
 
 	struct node *sibling = siblingfind(x);
 	struct node *parent = x->parent;
 
-	if (sibling == NULL) 
+	if (sibling == NULL)
 	{
 		// No sibiling, double BLACK pushed up
-		head = fixDoubleBlack(head,parent);
-	} 
-	else 
+		head = fixDoubleBlack(head, parent);
+	}
+	else
 	{
-		if (sibling->color == RED) 
+		if (sibling->color == RED)
 		{
 			// Sibling RED
 			parent->color = RED;
 			sibling->color = BLACK;
-			if (sibling->parent->left == sibling) 
+			if (sibling->parent->left == sibling)
 			{
 				// left case
-				head = rightrotate(head,parent);
-			} 
-			else 
+				head = rightrotate(head, parent);
+			}
+			else
 			{
 				// right case
-				head = leftrotate(head,parent);
+				head = leftrotate(head, parent);
 			}
-			head = fixDoubleBlack(head,x);
-		} 
-		else 
+			head = fixDoubleBlack(head, x);
+		}
+		else
 		{
 			// Sibling BLACK
-			if (hasRedChild(sibling)) 
+			if (hasRedChild(sibling))
 			{
 				// at least 1 RED children
-				if (sibling->left != NULL && sibling->left->color == RED) 
+				if (sibling->left != NULL && sibling->left->color == RED)
 				{
-					if (sibling->parent->left == sibling) 
+					if (sibling->parent->left == sibling)
 					{
 						// left left
 						sibling->left->color = sibling->color;
 						sibling->color = parent->color;
-						head = rightrotate(head,parent);
-					} 
-					else 
+						head = rightrotate(head, parent);
+					}
+					else
 					{
 						// right left
 						sibling->left->color = parent->color;
-						head = rightrotate(head,sibling);
-						head = leftrotate(head,parent);
+						head = rightrotate(head, sibling);
+						head = leftrotate(head, parent);
 					}
-				} 
-				else 
+				}
+				else
 				{
-					if (sibling->parent->left==sibling) 
+					if (sibling->parent->left == sibling)
 					{
 						// left right
 						sibling->right->color = parent->color;
-						head = leftrotate(head,sibling);
-						head = rightrotate(head,parent);
-					} 
-					else 
+						head = leftrotate(head, sibling);
+						head = rightrotate(head, parent);
+					}
+					else
 					{
 						// right right
 						sibling->right->color = sibling->color;
 						sibling->color = parent->color;
-						head = leftrotate(head,parent);
+						head = leftrotate(head, parent);
 					}
 				}
 				parent->color = BLACK;
-			} 
-			else 
+			}
+			else
 			{
 				// 2 BLACK children
 				sibling->color = RED;
 				if (parent->color == BLACK)
 				{
-					head = fixDoubleBlack(head,parent);
+					head = fixDoubleBlack(head, parent);
 				}
 				else
 				{
@@ -534,33 +535,33 @@ struct node *fixDoubleBlack(struct node *head,struct node *x) {
 	return head;
 }
 
-
 // deletes the given node
-struct node *deleteNode(struct node *head ,struct node *v) {
-	
+struct node *deleteNode(struct node *head, struct node *v)
+{
+
 	struct node *u = BSTreplace(v);
 
 	// True when u and v are both BLACK
 	bool uvBlack = ((u == NULL || u->color == BLACK) && (v->color == BLACK));
 	struct node *parent = v->parent;
 
-	if (u == NULL) 
+	if (u == NULL)
 	{
 		// u is NULL therefore v is leaf
-		if (v == head) 
+		if (v == head)
 		{
 			// v is root, making root null
 			head = NULL;
-		} 
-		else 
+		}
+		else
 		{
-			if (uvBlack) 
+			if (uvBlack)
 			{
 				// u and v both BLACK
 				// v is leaf, fix double BLACK at v
-				head = fixDoubleBlack(head,v);
-			} 
-			else 
+				head = fixDoubleBlack(head, v);
+			}
+			else
 			{
 				// u or v is RED
 				if (siblingfind(v) != NULL)
@@ -569,50 +570,50 @@ struct node *deleteNode(struct node *head ,struct node *v) {
 			}
 
 			// delete v from the tree
-			if (v->parent->left == v) 
+			if (v->parent->left == v)
 			{
 				parent->left = NULL;
-			} 
-			else 
+			}
+			else
 			{
 				parent->right = NULL;
 			}
 		}
-		free(v);//delete v;
+		free(v); //delete v;
 		return head;
 	}
 
-	if (v->left == NULL || v->right == NULL) 
+	if (v->left == NULL || v->right == NULL)
 	{
 		// v has 1 child
-		if (v == head) 
+		if (v == head)
 		{
 			// v is root, assign the value of u to v, and delete u
 			v->data = u->data;
 			v->left = v->right = NULL;
-			free(u);//delete u;
-		} 
-		else 
+			free(u); //delete u;
+		}
+		else
 		{
 			// Detach v from tree and move u up
-			if (v->parent->left == v) 
+			if (v->parent->left == v)
 			{
 				parent->left = u;
-			} 
+			}
 			else
 			{
 				parent->right = u;
 			}
-			free(v);//delete v;
+			free(v); //delete v;
 
 			u->parent = parent;
-			
-			if (uvBlack) 
+
+			if (uvBlack)
 			{
-			// u and v both BLACK, fix double BLACK at u
-				head = fixDoubleBlack(head,u);
-			} 
-			else 
+				// u and v both BLACK, fix double BLACK at u
+				head = fixDoubleBlack(head, u);
+			}
+			else
 			{
 				// u or v RED, color u BLACK
 				u->color = BLACK;
@@ -623,34 +624,32 @@ struct node *deleteNode(struct node *head ,struct node *v) {
 
 	// v has 2 children, swap values with successor and recurse
 	swapValues(u, v);
-	head = deleteNode(head,u);
+	head = deleteNode(head, u);
 
 	return head;
 }
-
 
 // searches for given value
 // if found returns the node (used for delete)
 // else returns the last node while traversing (used in insert)
 
-
-
-struct node *search(struct node *head,int n) {
+struct node *search(struct node *head, int n)
+{
 	struct node *temp = head;
-	while (temp != NULL) 
+	while (temp != NULL)
 	{
-		if (n < temp->data->uid) 
+		if (n < temp->data->uid)
 		{
 			if (temp->left == NULL)
 				break;
 			else
 				temp = temp->left;
-		} 
-		else if ( n == temp->data->uid) 
+		}
+		else if (n == temp->data->uid)
 		{
 			break;
-		} 
-		else 
+		}
+		else
 		{
 			if (temp->right == NULL)
 				break;
@@ -663,65 +662,120 @@ struct node *search(struct node *head,int n) {
 }
 
 // utility function that deletes the node with given value
-struct node *deleteByVal(struct node *head,int n) {
+struct node *deleteByVal(struct node *head, int n)
+{
 	if (head == NULL)
-	// Tree is empty
-	return head;
+		// Tree is empty
+		return head;
 
-	struct node *v = search(head,n), *u;
+	struct node *v = search(head, n), *u;
 
-	if (v->data->uid!= n) 
+	if (v->data->uid != n)
 	{
-		printf("No node found to delete with value: %d \n",n);
+		printf("No node found to delete with value: %d \n", n);
 		//cout << "No node found to delete with value:" << n << '\n';;
 		return head;
 	}
 
-	head = deleteNode(head,v);
+	head = deleteNode(head, v);
 
 	return head;
-
 }
 
-struct reversenode *reverselinkedlist(struct reversenode *head,struct User *reverseusertobeinserted){
+struct reversenode *ReverseLinkedListUserAdd(struct reversenode *head, struct User *reverseusertobeinserted)
+{
 
-	struct reversenode *temp = ((struct reversenode*)malloc(sizeof(struct reversenode)));
+	struct reversenode *temp = ((struct reversenode *)malloc(sizeof(struct reversenode)));
 	temp->user = reverseusertobeinserted;
 	temp->next = head;
 	head = temp;
 	return head;
 }
 
-void DeleteUSER (int nodetobedeleted){
-	
+void RBTreeToDelete(struct node *temphead)
+{
+	if (temphead->left != NULL)
+		RBTreeToDelete(temphead->left);
+	if (temphead->right != NULL)
+		RBTreeToDelete(temphead->right);
+	free(temphead);
+}
+
+void DeleteUSER(int nodetobedeleted)
+{
+	if (exist[nodetobedeleted] == false)
+		printf("User doesn't exist");
+
 	struct reversenode *current;
 
-	for(current = b[nodetobedeleted].head ; current != NULL ; current = current->next)
+	for (current = b[nodetobedeleted].head; current != NULL; current = current->next)
 	{
-		a[current->user->uid].rootofvertex = deleteByVal(a[current->user->uid].rootofvertex,nodetobedeleted);
+		a[current->user->uid].rootofvertex = deleteByVal(a[current->user->uid].rootofvertex, nodetobedeleted);
 	}
-	while(b[nodetobedeleted].head != NULL)
+	while (b[nodetobedeleted].head != NULL)
 	{
 		struct reversenode *temp = b[nodetobedeleted].head;
 		b[nodetobedeleted].head = b[nodetobedeleted].head->next;
 		free(temp);
 	}
+	if (a[nodetobedeleted].rootofvertex != NULL)
+		RBTreeToDelete(a[nodetobedeleted].rootofvertex);
+	a[nodetobedeleted].rootofvertex = NULL;
+
+	exist[nodetobedeleted] = false;
 }
 
-void addUSER (struct User *userTObeInserted){
-	
+void addUSER(struct User *userTObeInserted)
+{
+
 	struct vertex temp;
 	temp.rootofvertex = NULL;
 	temp.user = userTObeInserted;
 	a[userTObeInserted->uid] = temp;
-	
-	struct reversevertex temp1 ;
+
+	struct reversevertex temp1;
 	temp1.head = NULL;
 	temp1.user = userTObeInserted;
 	b[userTObeInserted->uid] = temp1;
+
+	exist[userTObeInserted->uid] = true;
 }
 
+void addfriends(int UserIdOfUser, int UserIdOfFriend)
+{
+	if ((exist[UserIdOfUser] == false) || (exist[UserIdOfFriend] == false))
+	{
+		printf("Atleast one of the user dont exist");
+		return;
+	}
 
+	struct User *FriendToBeAdded = (struct User *)malloc(sizeof(struct User));
+	FriendToBeAdded->uid = UserIdOfFriend;
+
+	struct node *temp = (struct node *)malloc(sizeof(struct node));
+	temp->right = NULL;
+	temp->left = NULL;
+	temp->parent = NULL;
+	temp->data = FriendToBeAdded;
+	temp->color = 1;
+
+	struct User *ReverseUserToBeAdded = (struct User *)malloc(sizeof(struct User));
+	ReverseUserToBeAdded->uid = UserIdOfUser;
+
+	a[UserIdOfUser].rootofvertex = RedBlackTree(a[UserIdOfUser].rootofvertex, temp);
+	a[UserIdOfUser].rootofvertex = restructure(a[UserIdOfUser].rootofvertex, temp);
+	b[UserIdOfFriend].head = ReverseLinkedListUserAdd(b[UserIdOfFriend].head, ReverseUserToBeAdded);
+}
+
+void deletefriends(int UserIdOfUser, int UserIdOfFriend)
+{
+	if ((exist[UserIdOfUser] == false) || (exist[UserIdOfFriend] == false))
+	{
+		printf("Atleast one of the user dont exist");
+		return;
+	}
+	deleteByVal(a[UserIdOfUser].rootofvertex, UserIdOfFriend);
+}
 ///*
 // Function to print inorder traversal
 // of the fixated tree
@@ -730,25 +784,100 @@ void inorder(struct node *trav)
 	if (trav == NULL)
 		return;
 	inorder(trav->left);
-	printf("%d ", trav->data);
+	printf("%d ", trav->data->uid);
 	inorder(trav->right);
 }
 ///*
 // driver code
 int main()
 {
-	int n = 7;
-	int b[7] = { 7, 6, 5, 4, 3, 2, 1 };
+	int n;
+	scanf("%d", &n);
+	//int b[7] = { 7, 6, 5, 4, 3, 2, 1 };
 	struct node *root;
-	
+
+	for (int i = 0; i < n; i++)
+	{
+		int x, y, z;
+		scanf("%d", &x);
+		if (x < 3)
+		{
+			scanf("%d", &y);
+		}
+		else if (x < 5)
+		{
+			scanf("%d", &y);
+			scanf("%d", &z);
+		}
+		else
+		{
+			printf("function code %d doesnt exist", x);
+			continue;
+		}
+		if (x == 1)
+		{
+			struct User *UserToBeAdded = (struct User *)malloc(sizeof(struct User));
+			UserToBeAdded->uid = y;
+			addUSER(UserToBeAdded);
+		}
+		else if (x == 2)
+		{
+			DeleteUSER(y);
+		}
+		else if (x == 3)
+		{
+			addfriends(y, z);
+			/*
+			struct User *FriendToBeAdded = (struct User *)malloc(sizeof(struct User));
+			FriendToBeAdded->uid = z;
+			struct node *temp = (struct node *)malloc(sizeof(struct node));
+			temp->right = NULL;
+			temp->left = NULL;
+			temp->parent = NULL;
+			temp->data = FriendToBeAdded;
+			temp->color = 1;
+			struct User *ReverseUserToBeAdded = (struct User *)malloc(sizeof(struct User));
+			ReverseUserToBeAdded->uid = y;
+
+
+			a[y].rootofvertex = RedBlackTree(a[y].rootofvertex, temp);
+			a[y].rootofvertex = restructure(a[y].rootofvertex, temp);
+			b[z].head = ReverseLinkedListUserAdd(b[z].head, ReverseUserToBeAdded);
+			*/
+		}
+		else
+		{
+			deletefriends(y, z);
+		}
+		for (int j = 1; j <= 10; j++)
+		{
+			printf("%d// ", j);
+
+			if (a[j].rootofvertex != NULL)
+			{
+				printf("%d :", a[j].user->uid);
+				inorder(a[j].rootofvertex);
+			}
+			else
+			{
+				if (exist[j] == false)
+					printf("NonExistant");
+				else
+					printf("NO Friends");
+			}
+			printf("\n");
+		}
+	}
+
+	/*
+
 	for (int i = 0; i < n; i++) {
 
 		// allocating memory to the node and initializing:
 		// 1. color as RED
 		// 2. parent, left and right pointers as NULL
 		// 3. data as i-th value in the array
-		struct node *temp
-			= (struct node*)malloc(sizeof(struct node));
+		struct node *temp	= (struct node*)malloc(sizeof(struct node));
 		temp->right = NULL;
 		temp->left = NULL;
 		temp->parent = NULL;
@@ -772,7 +901,7 @@ int main()
 	root = deleteByVal(root,1);
 
 	inorder(root);
-
+	*/
 	return 0;
 }
 //*/
