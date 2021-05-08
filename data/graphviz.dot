@@ -1,0 +1,18 @@
+digraph AmigosFriendNetwork {
+	node [fontname="Consolas", shape=oval, style=filled, color=".7 .3 1.0"];
+	"Freyam M"
+	"Freya M"
+	"Lokesh V" -> "Shubh A" -> "Rudransh S" -> "Mugundan S"
+	"Varshita K"
+	"Swetha V"
+	"Anusha R"
+	"Shubh A"
+	"Aditya P"
+	"Anshul V"
+	"Kunwar S"
+	"Rudransh S"
+	"Kishore K"
+	"Mugundan S"
+	"Dixit G"
+	"Superman"
+}

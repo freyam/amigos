@@ -4,8 +4,11 @@ int minUID = 1;
 
 Graph *g;
 Heap *h;
-int V = 100000;
+int V = 16;
 int entries = 15;
+
+bool importRandomData = 0;
+bool importCustomData = 1;
 
 // Adds Password Checker
 void authorization() {
@@ -25,7 +28,8 @@ void initialize() {
 	g = createGraph(V);
 	h = createHeap(V);
 
-	importData(g);
+	if (importRandomData || importCustomData)
+		importData(g);
 }
 
 // Finds the minimum UID for a new user
@@ -102,10 +106,16 @@ void importData(Graph *g) {
 
 	char comma = ',';
 
-	if (access("data/UserDatabase.csv", F_OK))
+	string filename;
+	if (importRandomData)
+		strcpy(filename, "data/RandomUserDatabase.csv");
+	else if (importCustomData)
+		strcpy(filename, "data/CustomUserDatabase.csv");
+
+	if (access(filename, F_OK))
 		system("make import");
 
-	FILE *f = fopen("data/UserDatabase.csv", "r");
+	FILE *f = fopen(filename, "r");
 
 	char header[100];
 	fscanf(f, "%s", header);
@@ -392,53 +402,69 @@ void addFriendship(Graph *g, User u, User v) {
 void addFriendshipUID(Graph *g) {}
 void addFriendshipName(Graph *g) {}
 
-void countingSort(intidx scores[]) {
-	intidx temp[g->V];
-	for (int i = 0; i < g->V; ++i) {
+void countingSort(intidx scores[], int size) {
+	intidx temp[size];
+	for (int i = 0; i < size; ++i) {
 		temp[i].idx = i;
 		temp[i].val = 0;
 	}
 	int max = scores[0].val;
-	for (int i = 1; i < g->V; i++)
+	for (int i = 1; i < size; i++)
 		if (scores[i].val > max)
 			max = scores[i].val;
 
-	int count[81];
+	int count[151];
 
 	for (int i = 0; i <= max; ++i)
 		count[i] = 0;
 
-	for (int i = 0; i < g->V; i++)
+	for (int i = 0; i < size; i++)
 		count[scores[i].val]++;
 
 	for (int i = 1; i <= max; i++)
 		count[i] += count[i - 1];
 
-	for (int i = g->V - 1; i >= 0; i--) {
+	for (int i = size - 1; i >= 0; i--) {
 		temp[count[scores[i].val] - 1] = scores[i];
 		count[scores[i].val]--;
 	}
 
-	for (int i = 0; i < g->V; i++)
+	for (int i = 0; i < size; i++)
 		scores[i] = temp[i];
+
+	for (int low = 0, high = size - 1; low < high; low++, high--) {
+		intidx temp = scores[low];
+		scores[low] = scores[high];
+		scores[high] = temp;
+	}
 }
 
-int userComp(const void *a, const void *b) {
-	return (*(int *)b - *(int *)a);
+void printINTIDXarray(intidx arr[], int size) {
+	for (int i = 0; i < size; ++i) {
+		printf("[%d] %d ", arr[i].idx, arr[i].val);
+	}
+	printf("\n");
 }
 
 int compatibilityScore(User u1, User u2) {
-	int score = 0;	// max 80
-	if (abs(u1.age - u2.age) <= 3)
-		score += 10 - (abs(u1.age - u2.age));
-	if (u1.gender == u2.gender)
+	int score = 0; // max 105
+
+	score += 10 - abs(atoi(u2.age) - atoi(u1.age));
+
+	if (u1.gender != u2.gender)
+		score += 10;
+	else
 		score += 5;
+
 	if (!strcmp(u1.job_title, u2.job_title))
-		score += 30;
+		score += 40;
+
 	if (!strcmp(u1.university, u2.university))
-		score += 20;
+		score += 30;
+
 	if (!strcmp(u1.city, u2.city))
 		score += 10;
+
 	if (!strcmp(u1.country, u2.country))
 		score += 5;
 
@@ -452,6 +478,8 @@ void recommendFriendsNewUser(Graph *g) {
 	printf("Enter the UID: ");
 	scanf("%d", &uid);
 
+	printUser(*g->adjList[uid]);
+
 	int toAdd;
 	printf("Enter the number of friends you want to add: ");
 	scanf("%d", &toAdd);
@@ -461,8 +489,8 @@ void recommendFriendsNewUser(Graph *g) {
 		recommendFriendsMenu();
 	}
 
-	intidx scores[g->V];
-	for (int i = 0; i < g->V; ++i) {
+	intidx scores[entries + 1];
+	for (int i = 1; i <= entries; ++i) {
 		scores[i].idx = i;
 		scores[i].val = 0;
 	}
@@ -473,13 +501,17 @@ void recommendFriendsNewUser(Graph *g) {
 		else
 			scores[i].val = 0;
 
-	countingSort(scores);
-
-	for (int i = 0; i < 10; ++i)
-		printf("%d ", scores[i].val);
+	for (int i = 0; i < entries; ++i)
+		printf("{%2d,%3d}", scores[i].idx, scores[i].val);
 	printf("\n");
 
-	for (int i = 0; i < 10; ++i)
+	countingSort(scores, entries);
+
+	for (int i = 0; i < entries; ++i)
+		printf("{%2d,%3d}", scores[i].idx, scores[i].val);
+	printf("\n");
+
+	for (int i = 0; i <= 10; ++i)
 		printUser(*g->adjList[scores[i].idx]);
 
 	for (int i = 0; i < toAdd; ++i) {
@@ -489,6 +521,7 @@ void recommendFriendsNewUser(Graph *g) {
 		addFriendship(g, *g->adjList[uid], *g->adjList[friendid]);
 	}
 }
+
 void recommendFriendsExistingUser(Graph *g) {}
 
 void checkFriendshipUID(Graph *g) {
@@ -601,7 +634,7 @@ void displayFriendsAdjacencyList(Graph *g) {
 	printf("-------------------------------------------------------");
 	printf("-------------------------------------------------------\n");
 
-	for (int i = 0; i < g->V; ++i) {
+	for (int i = 0; i <= g->V; ++i) {
 		if (g->adjList[i]) {
 			if (!found)
 				found = 1;
@@ -655,7 +688,7 @@ void writeFriendshipNetwork(Graph *g) {
 			temp = temp->next;
 
 			if (temp)
-				printf(" -> ");
+				fprintf(f, " -> ");
 
 			while (temp) {
 				fprintf(f, "\"%s\"", temp->name);

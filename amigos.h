@@ -2,6 +2,7 @@
 #define AMIGOS_H
 
 #include <limits.h>
+#include <math.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -14,11 +15,6 @@ typedef char string[50];
 #define gets(s) \
 	getchar();  \
 	scanf("%[^\n]s", s);
-
-
-int BLACK=0;
-int RED=1;
-
 
 typedef struct User User;
 struct User {
@@ -36,25 +32,24 @@ struct User {
 };
 
 struct node {
-	struct User *data; // data
-	int color; // 1-RED, 0-BLACK
+	struct User *data;	 // data
+	int color;			 // 1-RED, 0-BLACK
 	struct node *parent; // parent
-	struct node *right; // right-child
-	struct node *left; // left child
+	struct node *right;	 // right-child
+	struct node *left;	 // left child
 };
 
 struct vertex {
 	struct User *User;
-    struct node *root;
+	struct node *root;
 };
 
 typedef struct Graph Graph;
 
-
 struct Graph {
-	int V;			 // number of vertices
-	User **adjList;	 // the adjacency list
-	bool *visited;	 // a boolean array
+	int V;			// number of vertices
+	User **adjList; // the adjacency list
+	bool *visited;	// a boolean array
 };
 
 typedef struct Queue Queue;
@@ -73,8 +68,8 @@ struct Heap {
 
 typedef struct intidx intidx;
 struct intidx {
-	int idx;
 	int val;
+	int idx;
 };
 
 // Core UI and UX Functions
@@ -148,26 +143,23 @@ int PopMin(Heap *h);
 
 void quit();
 
-
 void swapColors(struct node *x1, struct node *x2);
 void swapValues(struct node *u, struct node *v);
 bool hasRedChild(struct node *x);
 
-
-struct node *RedBlackTree(struct node *head,struct node *temp);
-struct node *rightrotate(struct node *head ,struct node *temp);
-struct node *leftrotate(struct node *head ,struct node *temp);
+struct node *RedBlackTree(struct node *head, struct node *temp);
+struct node *rightrotate(struct node *head, struct node *temp);
+struct node *leftrotate(struct node *head, struct node *temp);
 struct node *restructure(struct node *head, struct node *pt);
 
-
-struct node *siblingfind(struct node *x) ;
+struct node *siblingfind(struct node *x);
 struct node *unclefind(struct node *x);
-struct node *fixRedRed(struct node *head,struct node *x);
+struct node *fixRedRed(struct node *head, struct node *x);
 struct node *successor(struct node *x);
 struct node *BSTreplace(struct node *x);
-struct node *fixDoubleBlack(struct node *head,struct node *x);
-struct node *deleteNode(struct node *head ,struct node *v);
-struct node *search(struct node *head,int n);
-struct node *deleteByVal(struct node *head,int n);
+struct node *fixDoubleBlack(struct node *head, struct node *x);
+struct node *deleteNode(struct node *head, struct node *v);
+struct node *search(struct node *head, int n);
+struct node *deleteByVal(struct node *head, int n);
 
 #endif

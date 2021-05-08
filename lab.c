@@ -1,12 +1,15 @@
 #include "amigos.h"
 
-void countingSort(int array[], int size) {
-	int output[81];
-
-	int max = array[0];
+void countingSort(intidx scores[], int size) {
+	intidx temp[size];
+	for (int i = 0; i < size; ++i) {
+		temp[i].idx = i;
+		temp[i].val = 0;
+	}
+	int max = scores[0].val;
 	for (int i = 1; i < size; i++)
-		if (array[i] > max)
-			max = array[i];
+		if (scores[i].val > max)
+			max = scores[i].val;
 
 	int count[81];
 
@@ -14,31 +17,40 @@ void countingSort(int array[], int size) {
 		count[i] = 0;
 
 	for (int i = 0; i < size; i++)
-		count[array[i]]++;
+		count[scores[i].val]++;
 
 	for (int i = 1; i <= max; i++)
 		count[i] += count[i - 1];
 
 	for (int i = size - 1; i >= 0; i--) {
-		output[count[array[i]] - 1] = array[i];
-		count[array[i]]--;
+		temp[count[scores[i].val] - 1] = scores[i];
+		count[scores[i].val]--;
 	}
 
 	for (int i = 0; i < size; i++)
-		array[i] = output[i];
+		scores[i] = temp[i];
 }
 
-void printArray(int array[], int size) {
+void reverseArray(intidx arr[], int n) {
+	for (int low = 0, high = n - 1; low < high; low++, high--) {
+		intidx temp = arr[low];
+		arr[low] = arr[high];
+		arr[high] = temp;
+	}
+}
+
+void printINTIDXarray(intidx arr[], int size) {
 	for (int i = 0; i < size; ++i) {
-		printf("%d  ", array[i]);
+		printf("[%d] %d ", arr[i].idx, arr[i].val);
 	}
 	printf("\n");
 }
 
 int main() {
-	int array[10] = {30, 40, 78, 34, 9, 0, 1, 76, 79, 80};
+	intidx array[10] = {{30, 0}, {40, 1}, {78, 2}, {34, 3}, {9, 4}, {0, 5}, {1, 6}, {76, 7}, {79, 8}, {80, 9}};
 
 	countingSort(array, 10);
+	reverseArray(array, 10);
 
-	printArray(array, 10);
+	printINTIDXarray(array, 10);
 }
