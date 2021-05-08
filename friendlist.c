@@ -4,13 +4,35 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <limits.h>
+#include <string.h>
+#include <time.h>
+#include <unistd.h>
+
+
 //#include <amigos.h>
+
+
+
+typedef char string[50];
 
 
 int BLACK=0;
 int RED=1;
 
-
+struct User {
+	int uid;
+	string
+		name,
+		age,
+		gender,
+		email,
+		job_title,
+		university,
+		city,
+		country;
+	struct User *next;
+};
 
 // Structure to represent each
 // node in a RED-BLACK tree
@@ -22,7 +44,24 @@ struct node {
 	struct node *left; // left child
 };
 
+struct vertex {
+	struct User *user;
+    struct node *rootofvertex;
+};
 
+struct reversenode {
+	struct User *user;
+	struct reversenode *next;
+};
+
+struct reversevertex {
+	struct User *user;
+	struct reversenode *head;
+};
+
+struct vertex a[10000000];
+
+struct reversevertex b[10000000];
 
 //function to insert node
 struct node *RedBlackTree(struct node *head,struct node *temp)
@@ -35,12 +74,12 @@ struct node *RedBlackTree(struct node *head,struct node *temp)
     }
     else
     {
-        if (temp->data < head->data)
+        if (temp->data->uid < head->data->uid)
 	    {
 		    head->left = RedBlackTree(head->left, temp);
 		    head->left->parent = head;
 	    }
-	    else if (temp->data > head->data)
+	    else if (temp->data->uid > head->data->uid)
 	    {
 		    head->right = RedBlackTree(head->right, temp);
 		    head->right->parent = head;
@@ -600,14 +639,14 @@ struct node *search(struct node *head,int n) {
 	struct node *temp = head;
 	while (temp != NULL) 
 	{
-		if (n < temp->data) 
+		if (n < temp->data->uid) 
 		{
 			if (temp->left == NULL)
 				break;
 			else
 				temp = temp->left;
 		} 
-		else if (n == temp->data) 
+		else if ( n == temp->data->uid) 
 		{
 			break;
 		} 
@@ -631,7 +670,7 @@ struct node *deleteByVal(struct node *head,int n) {
 
 	struct node *v = search(head,n), *u;
 
-	if (v->data != n) 
+	if (v->data->uid!= n) 
 	{
 		printf("No node found to delete with value: %d \n",n);
 		//cout << "No node found to delete with value:" << n << '\n';;
@@ -643,6 +682,45 @@ struct node *deleteByVal(struct node *head,int n) {
 	return head;
 
 }
+
+struct reversenode *reverselinkedlist(struct reversenode *head,struct User *reverseusertobeinserted){
+
+	struct reversenode *temp = ((struct reversenode*)malloc(sizeof(struct reversenode)));
+	temp->user = reverseusertobeinserted;
+	temp->next = head;
+	head = temp;
+	return head;
+}
+
+void DeleteUSER (int nodetobedeleted){
+	
+	struct reversenode *current;
+
+	for(current = b[nodetobedeleted].head ; current != NULL ; current = current->next)
+	{
+		a[current->user->uid].rootofvertex = deleteByVal(a[current->user->uid].rootofvertex,nodetobedeleted);
+	}
+	while(b[nodetobedeleted].head != NULL)
+	{
+		struct reversenode *temp = b[nodetobedeleted].head;
+		b[nodetobedeleted].head = b[nodetobedeleted].head->next;
+		free(temp);
+	}
+}
+
+void addUSER (struct User *userTObeInserted){
+	
+	struct vertex temp;
+	temp.rootofvertex = NULL;
+	temp.user = userTObeInserted;
+	a[userTObeInserted->uid] = temp;
+	
+	struct reversevertex temp1 ;
+	temp1.head = NULL;
+	temp1.user = userTObeInserted;
+	b[userTObeInserted->uid] = temp1;
+}
+
 
 ///*
 // Function to print inorder traversal
