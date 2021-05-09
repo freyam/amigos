@@ -1,6 +1,7 @@
 #ifndef AMIGOS_H
 #define AMIGOS_H
 
+#include <ctype.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -118,6 +119,10 @@ void displayFriendshipNetwork();
 void writeFriendshipNetwork();
 void ViewFriendshipNetwork();
 
+void removeFriendMenu();
+void removeFriendshipUID();
+void removeFriendshipName();
+
 // AVL Functions (for the Friendlist)
 int height(treeNode *);
 int max(int, int);
@@ -127,7 +132,7 @@ treeNode *leftRotate(treeNode *);
 int getBalance(treeNode *);
 treeNode *insertTreeNode(treeNode *, int);
 treeNode *minValueNode(treeNode *);
-treeNode *deleteNode(treeNode *, int);
+treeNode *removeTreeNode(treeNode *, int);
 void printPreOrder(treeNode *);
 bool findFriend(treeNode *, int);
 void printFriendlist(treeNode *);
@@ -151,6 +156,7 @@ void heapify_bottom_top(Heap *, int);
 void heapify_top_bottom(Heap *, int);
 int PopMin(Heap *token);
 
+void error();
 void quit();
 
 #endif

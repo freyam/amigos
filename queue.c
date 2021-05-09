@@ -1,6 +1,6 @@
 #include "amigos.h"
 
-// externing global network from amigos.c
+// Externing the Global Friend Network
 extern FriendNetwork *network;
 
 // Creates a Queue

@@ -2,15 +2,10 @@ TODO
 
 Time Left: 3 hours
 
-- [ ] Delete Friends
 - [ ] Fix the Recommendation System
-- [ ] character bug in menu
-- [ ] error handling
 - [ ] testing
-- [ ] comments
 - [ ] README
 - [ ] Report
-- [ ] Colourful printf
 - [ ] Restrict random countries
 
 BUGS

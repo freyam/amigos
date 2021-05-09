@@ -1,5 +1,6 @@
 #include "amigos.h"
 
+// Creates the Token Counter
 Heap *createHeap(int capacity) {
   Heap *token = (Heap *)malloc(sizeof(Heap));
 
@@ -9,6 +10,7 @@ Heap *createHeap(int capacity) {
   return token;
 }
 
+// Inserts a New Token into the Token Counter
 void insertHeap(Heap *token, int key) {
   if (token->count < token->capacity) {
     token->arr[token->count] = key;
@@ -17,6 +19,7 @@ void insertHeap(Heap *token, int key) {
   }
 }
 
+// Restructures the Token Counter to Maintain Balance
 void heapify_bottom_top(Heap *token, int index) {
   int temp;
   int parent_node = (index - 1) / 2;
@@ -29,6 +32,7 @@ void heapify_bottom_top(Heap *token, int index) {
   }
 }
 
+// Restructures the Token Counter to Maintain Balance
 void heapify_top_bottom(Heap *token, int parent_node) {
   int left = parent_node * 2 + 1;
   int right = parent_node * 2 + 2;
@@ -56,6 +60,7 @@ void heapify_top_bottom(Heap *token, int parent_node) {
   }
 }
 
+// Pop the Minimum Token from the Token Counter
 int PopMin(Heap *token) {
   int pop;
   if (token->count == 0) {
@@ -68,12 +73,3 @@ int PopMin(Heap *token) {
   heapify_top_bottom(token, 0);
   return pop;
 }
-
-// void printHeap(Heap *token) {
-//   int i;
-//   printf("____________Print Heap_____________\n");
-//   for (i = 0; i < token->count; i++) {
-//     printf("-> %d ", token->arr[i]);
-//   }
-//   printf("->__/\\__\n");
-// }

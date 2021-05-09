@@ -1,6 +1,6 @@
 #include "amigos.h"
 
-// Calculate height
+// Calculate the Height of a Tree
 int height(treeNode *N) {
   if (N == NULL)
     return 0;
@@ -11,7 +11,7 @@ int max(int a, int b) {
   return (a > b) ? a : b;
 }
 
-// Create a node
+// Creates a New AVL Tree Node
 treeNode *newNode(int friend_id) {
   treeNode *node = (treeNode *)malloc(sizeof(treeNode));
   node->friend_id = friend_id;
@@ -49,14 +49,14 @@ treeNode *leftRotate(treeNode *x) {
   return y;
 }
 
-// Get the balance factor
+// Returns the Balance Factor of a Node
 int getBalance(treeNode *N) {
   if (N == NULL)
     return 0;
   return height(N->left_child) - height(N->right_child);
 }
 
-// Insert node
+// INserts a Node into the AVL Tree in O(logV)
 treeNode *insertTreeNode(treeNode *node, int friend_id) {
   // Find the correct position to insertTreeNode the node and insertTreeNode it
   if (node == NULL)
@@ -102,17 +102,16 @@ treeNode *minValueNode(treeNode *node) {
   return current;
 }
 
-// Delete a nodes
-treeNode *deleteNode(treeNode *root, int friend_id) {
-  // Find the node and delete it
+// Deletes a Node from the AVL Tree in O(logV)
+treeNode *removeTreeNode(treeNode *root, int friend_id) {
   if (root == NULL)
     return root;
 
   if (friend_id < root->friend_id)
-    root->left_child = deleteNode(root->left_child, friend_id);
+    root->left_child = removeTreeNode(root->left_child, friend_id);
 
   else if (friend_id > root->friend_id)
-    root->right_child = deleteNode(root->right_child, friend_id);
+    root->right_child = removeTreeNode(root->right_child, friend_id);
 
   else {
     if ((root->left_child == NULL) || (root->right_child == NULL)) {
@@ -129,7 +128,7 @@ treeNode *deleteNode(treeNode *root, int friend_id) {
 
       root->friend_id = temp->friend_id;
 
-      root->right_child = deleteNode(root->right_child, temp->friend_id);
+      root->right_child = removeTreeNode(root->right_child, temp->friend_id);
     }
   }
 
@@ -161,7 +160,7 @@ treeNode *deleteNode(treeNode *root, int friend_id) {
   return root;
 }
 
-// Print the trees
+// Prints the AVL Tree in Pre Order Traversal in O(V)
 void printPreOrder(treeNode *root) {
   if (root != NULL) {
     printPreOrder(root->left_child);
@@ -170,6 +169,8 @@ void printPreOrder(treeNode *root) {
   }
 }
 
+// Returns TRUE if User 'fid' is found in the Friendlist of 'uid'
+// by O(logV) AVL Tree Search
 bool findFriend(treeNode *root, int fid) {
   if (root == NULL)
     return 0;
@@ -184,12 +185,13 @@ bool findFriend(treeNode *root, int fid) {
   return findFriend(root->right_child, fid);
 }
 
+// Traverses through the entire friendlist
+// by O(V) Pre Order Traversal of AVL Tree
 void singlePass(treeNode *root, Queue *q, bool visited[]) {
   if (root != NULL) {
     singlePass(root->left_child, q, visited);
     visited[root->friend_id] = 1;
     enqueue(q, root->friend_id);
-    // printf("%d ", root->friend_id);
     singlePass(root->right_child, q, visited);
   }
 }
@@ -208,7 +210,7 @@ void singlePass(treeNode *root, Queue *q, bool visited[]) {
 
 //   printf("\n3 -> %d", findFriend(root, 3));
 
-//   root = deleteNode(root, 3);
+//   root = removeTreeNode(root, 3);
 
 //   printf("\nAfter deletion: ");
 //   printPreOrder(root);

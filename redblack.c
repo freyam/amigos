@@ -723,7 +723,7 @@ int Queueforbfs[1000000];
 int LevelForQueueforbfs[1000000];
 
 struct FriendQuality {
-  int userid;
+  int user_id;
   int similarityscore;
   int level;
 };
@@ -760,10 +760,10 @@ void merge(int left, int mid, int right) {
         Recommendation[pos] = temp2[j];
         j++;
       } else {
-        if (temp1[i].userid <= temp2[j].userid) {
+        if (temp1[i].user_id <= temp2[j].user_id) {
           Recommendation[pos] = temp1[i];
           i++;
-        } else if (temp1[i].userid > temp2[j].userid) {
+        } else if (temp1[i].user_id > temp2[j].user_id) {
           Recommendation[pos] = temp2[j];
           j++;
         }
@@ -832,7 +832,7 @@ void TraverseBFSNODE(struct Node *trav, int level) {
     if (FriendofUser[trav->UserID] == 0) {
       struct FriendQuality temp;
 
-      temp.userid = trav->UserID;
+      temp.user_id = trav->UserID;
       temp.level = level + 1;
       temp.similarityscore = 0;
 
@@ -870,7 +870,7 @@ void Recommendfriends(int Userid, int K, int maximumUserID) {
     for (int i = 1; i <= maximumUserID; i++) {
       if ((exist[i] == 1) && (visitedForRecommendation[i] == 0) && (FriendofUser[i] == 0)) {
         struct FriendQuality temp;
-        temp.userid = i;
+        temp.user_id = i;
         temp.level = INT_MAX;
         temp.similarityscore = 0;
         Recommendation[NoRecUsers + 1] = temp;
@@ -881,7 +881,7 @@ void Recommendfriends(int Userid, int K, int maximumUserID) {
     }
   }
   for (int i = 1; i <= NoRecUsers; i++) {
-    Recommendation[i].similarityscore = compatibilityScore(vertex[Recommendation[i].userid], vertex[Userid]);
+    Recommendation[i].similarityscore = compatibilityScore(vertex[Recommendation[i].user_id], vertex[Userid]);
   }
   mergeSort(1, NoRecUsers);
   int NoRecUsersFinal = NoRecUsers;
@@ -889,7 +889,7 @@ void Recommendfriends(int Userid, int K, int maximumUserID) {
     NoRecUsersFinal = K;
   printf("no of recommended users %d\n", NoRecUsersFinal);
   for (int i = 1; i <= NoRecUsersFinal; i++) {
-    printUser(vertex[Recommendation[i].userid]);
+    printUser(vertex[Recommendation[i].user_id]);
   }
   IniFriendOfUser(Root, 0);
   clearQueue(FinIndex);
@@ -932,14 +932,14 @@ void addUser() {
 void searchUserUID() {
   system("clear");
 
-  int userid;
+  int user_id;
   printf("Enter the User ID: ");
-  scanf("%d", &userid);
+  scanf("%d", &user_id);
 
-  if (exist[userid])
-    printUser(vertex[userid]);
+  if (exist[user_id])
+    printUser(vertex[user_id]);
   else
-    printf("EROR 404: USER ID #%d NOT FOUND!\n", userid);
+    printf("EROR 404: USER ID #%d NOT FOUND!\n", user_id);
 
   printf("\n");
 }
@@ -971,36 +971,36 @@ void searchUserName() {
 void editUserUID() {
   system("clear");
 
-  int userid;
+  int user_id;
   printf("Enter the User ID: ");
-  scanf("%d", &userid);
+  scanf("%d", &user_id);
 
-  if (exist[userid]) {
-    printUser(vertex[userid]);
+  if (exist[user_id]) {
+    printUser(vertex[user_id]);
     printf("\n");
 
     printf("Enter the new details\n");
     printf("Name: ");
-    gets(vertex[userid].name);
+    gets(vertex[user_id].name);
     printf("Age: ");
-    gets(vertex[userid].age);
+    gets(vertex[user_id].age);
     printf("Gender: ");
-    gets(vertex[userid].gender);
+    gets(vertex[user_id].gender);
     printf("Email: ");
-    gets(vertex[userid].email);
+    gets(vertex[user_id].email);
     printf("Job Title: ");
-    gets(vertex[userid].job_title);
+    gets(vertex[user_id].job_title);
     printf("University: ");
-    gets(vertex[userid].university);
+    gets(vertex[user_id].university);
     printf("City: ");
-    gets(vertex[userid].city);
+    gets(vertex[user_id].city);
     printf("Country: ");
-    gets(vertex[userid].country);
+    gets(vertex[user_id].country);
 
     printf("Edited.\n");
-    printUser(vertex[userid]);
+    printUser(vertex[user_id]);
   } else
-    printf("EROR 404: USER ID #%d NOT FOUND!\n", userid);
+    printf("EROR 404: USER ID #%d NOT FOUND!\n", user_id);
 
   printf("\n");
 }
@@ -1079,24 +1079,24 @@ void displayUserDatabase() {
 void removeUserUID() {
   system("clear");
 
-  int userid;
+  int user_id;
   printf("Enter the User ID: ");
-  scanf("%d", &userid);
+  scanf("%d", &user_id);
 
-  if (exist[userid]) {
-    printUser(vertex[userid]);
+  if (exist[user_id]) {
+    printUser(vertex[user_id]);
     printf("Confirm Delete (y/n)? ");
     char c, buff;
     scanf("%c%c", &buff, &c);
     if (c != 'n') {
       printf("Deleted!\n");
-      DeleteUSER(userid);
-      insertHeap(h, userid);
+      DeleteUSER(user_id);
+      insertHeap(h, user_id);
     } else {
       printf("Skipped!\n");
     }
   } else
-    printf("EROR 404: USER ID #%d NOT FOUND!\n", userid);
+    printf("EROR 404: USER ID #%d NOT FOUND!\n", user_id);
 
   printf("\n");
 }
@@ -1137,16 +1137,16 @@ void removeUserName() {
 void addFriendshipUID() {
   system("clear");
 
-  int userid, friendid;
+  int user_id, friendid;
   printf("Enter the User ID and the Friend ID: ");
-  scanf("%d %d", &userid, &friendid);
+  scanf("%d %d", &user_id, &friendid);
 
-  if (exist[userid] && exist[friendid]) {
-    printUser(vertex[userid]);
+  if (exist[user_id] && exist[friendid]) {
+    printUser(vertex[user_id]);
     printUser(vertex[friendid]);
-    addfriends(userid, friendid);
+    addfriends(user_id, friendid);
     printf("Added %s as %s\'s Friend.\n",
-           vertex[friendid].name, vertex[userid].name);
+           vertex[friendid].name, vertex[user_id].name);
   } else
     printf("EROR 404: USER ID(s) NOT FOUND!\n");
 
@@ -1156,7 +1156,7 @@ void addFriendshipName() {
   system("clear");
 
   bool founduser = 0, foundfriend = 0;
-  int userid = 0, friendid = 0;
+  int user_id = 0, friendid = 0;
   string username, friendname;
 
   printf("Enter the User Name: ");
@@ -1165,7 +1165,7 @@ void addFriendshipName() {
   for (int i = 0; i < minUID; ++i)
     if (exist[i]) {
       if (!strcmp(vertex[i].name, username)) {
-        userid = i;
+        user_id = i;
         founduser = 1;
         printUser(vertex[i]);
         break;
@@ -1194,26 +1194,26 @@ void addFriendshipName() {
     return;
   }
 
-  addfriends(userid, friendid);
+  addfriends(user_id, friendid);
   printf("Added %s as %s\'s Friend.\n",
-         vertex[friendid].name, vertex[userid].name);
+         vertex[friendid].name, vertex[user_id].name);
 
   printf("\n");
 }
 void recommendFriendsExistingUser() {
   system("clear");
 
-  int userid;
+  int user_id;
   printf("Enter the User ID: ");
-  scanf("%d", &userid);
+  scanf("%d", &user_id);
 
-  if (exist[userid] == 0) {
-    printf("ERROR 404: USER #%d NOT FOUND.\n", userid);
+  if (exist[user_id] == 0) {
+    printf("ERROR 404: USER #%d NOT FOUND.\n", user_id);
     return;
   }
 
   printf("------> ");
-  printUser(vertex[userid]);
+  printUser(vertex[user_id]);
 
   int toAdd;
   printf("Enter the number of friends you want to add: ");
@@ -1224,9 +1224,9 @@ void recommendFriendsExistingUser() {
     recommendFriendsMenu();
   }
 
-  if (vertex[userid].RootUser == NULL) {
-    printf("%s has no friends.\n", vertex[userid].name);
-    printf("Treat %s as a New User (y/n)? ", vertex[userid].name);
+  if (vertex[user_id].RootUser == NULL) {
+    printf("%s has no friends.\n", vertex[user_id].name);
+    printf("Treat %s as a New User (y/n)? ", vertex[user_id].name);
     char c, buff;
     scanf("%c%c", &buff, &c);
     if (c != 'n') {
@@ -1237,18 +1237,18 @@ void recommendFriendsExistingUser() {
     }
     return;
   }
-  Recommendfriends(userid, toAdd, minUID - 1);
+  Recommendfriends(user_id, toAdd, minUID - 1);
   printf("\n");
 }
 void checkFriendshipUID() {
   system("clear");
 
-  int userid, friendid;
+  int user_id, friendid;
   printf("Enter the User ID: ");
-  scanf("%d", &userid);
+  scanf("%d", &user_id);
 
-  if (exist[userid] == 0) {
-    printf("ERROR 404: USER #%03d NOT FOUND!\n", userid);
+  if (exist[user_id] == 0) {
+    printf("ERROR 404: USER #%03d NOT FOUND!\n", user_id);
     return;
   }
 
@@ -1259,20 +1259,20 @@ void checkFriendshipUID() {
     printf("ERROR 404: USER #%03d NOT FOUND!\n", friendid);
     return;
   }
-  bool friend12 = Findfrienshipstatus(userid, friendid);
-  bool friend21 = Findfrienshipstatus(friendid, userid);
+  bool friend12 = Findfrienshipstatus(user_id, friendid);
+  bool friend21 = Findfrienshipstatus(friendid, user_id);
 
   if (friend12 && friend21)
-    printf("%s and %s are Mutual Friends.\n", vertex[userid].name,
+    printf("%s and %s are Mutual Friends.\n", vertex[user_id].name,
            vertex[friendid].name);
   else if (friend12)
-    printf("%s considers %s to be a friend.\n", vertex[userid].name,
+    printf("%s considers %s to be a friend.\n", vertex[user_id].name,
            vertex[friendid].name);
   else if (friend21)
     printf("%s considers %s to be a friend.\n", vertex[friendid].name,
-           vertex[userid].name);
+           vertex[user_id].name);
   else
-    printf("%s and %s are not Friends.\n", vertex[userid].name,
+    printf("%s and %s are not Friends.\n", vertex[user_id].name,
            vertex[friendid].name);
 
   printf("\n");
@@ -1281,7 +1281,7 @@ void checkFriendshipName() {
   system("clear");
 
   bool founduser = 0, foundfriend = 0;
-  int userid = 0, friendid = 0;
+  int user_id = 0, friendid = 0;
   string username, friendname;
 
   printf("Enter the User Name: ");
@@ -1290,7 +1290,7 @@ void checkFriendshipName() {
   for (int i = 0; i < minUID; ++i)
     if (exist[i]) {
       if (!strcmp(vertex[i].name, username)) {
-        userid = i;
+        user_id = i;
         founduser = 1;
         printUser(vertex[i]);
         break;
@@ -1320,20 +1320,20 @@ void checkFriendshipName() {
     return;
   }
 
-  bool friend12 = Findfrienshipstatus(userid, friendid);
-  bool friend21 = Findfrienshipstatus(friendid, userid);
+  bool friend12 = Findfrienshipstatus(user_id, friendid);
+  bool friend21 = Findfrienshipstatus(friendid, user_id);
 
   if (friend12 && friend21)
-    printf("%s and %s are Mutual Friends.\n", vertex[userid].name,
+    printf("%s and %s are Mutual Friends.\n", vertex[user_id].name,
            vertex[friendid].name);
   else if (friend12)
-    printf("%s considers %s to be a friend.\n", vertex[userid].name,
+    printf("%s considers %s to be a friend.\n", vertex[user_id].name,
            vertex[friendid].name);
   else if (friend21)
     printf("%s considers %s to be a friend.\n", vertex[friendid].name,
-           vertex[userid].name);
+           vertex[user_id].name);
   else
-    printf("%s and %s are not Friends.\n", vertex[userid].name,
+    printf("%s and %s are not Friends.\n", vertex[user_id].name,
            vertex[friendid].name);
 
   printf("\n");
@@ -1880,7 +1880,6 @@ void quit() {
 
 int main() {
   banner();
-  // authorization();
   initialize();
   mainMenu();
 }

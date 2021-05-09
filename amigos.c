@@ -7,19 +7,16 @@ User NULLUSER = {0, "", "", "", "", "", "", "", ""}; // A NULL User
 int V;       // The Total Number of Vertices
 int entries; // The Total Number of Entries to Import
 
-bool importRandomData = 1; // Toggle Importing API-generated Random User Date
-bool importCustomData = 0; // Toggle Importing Custom User-generated User Data
+bool importCustomData = 1; // Toggle Importing Custom User-generated User Data
+bool importRandomData = 0; // Toggle Importing API-generated Random User Date
 
 // Adds Password Checker
 void authentication() {
   string pass;
   scanf("%s", pass);
 
-  if (strcmp(pass, "team13")) {
-    system("clear");
-    printf("[ERROR #403] ACCESS DENIED!\n");
-    exit(EXIT_SUCCESS);
-  }
+  if (strcmp(pass, "admin"))
+    error();
 }
 
 // Initializes the Necessary Functions and Data Structures
@@ -27,7 +24,7 @@ void initialize() {
   srand(time(0));
 
   V = 101;
-  entries = 20;
+  entries = 15;
 
   network = createGraph(V);
   token = createHeap(V);
@@ -151,7 +148,7 @@ void importData() {
 
 // Pretty Prints User Information
 void printUser(User u) {
-  printf("[%03d] %20s | %2s | %1s | %40s | %50s | %40s | %s\n",
+  printf("[%03d] %-15s | %-2s | %-1s | %-20s | %-20s | %-15s | %-s\n",
          u.uid, u.name, u.age, u.gender, u.job_title, u.university, u.city, u.country);
 }
 
@@ -160,15 +157,18 @@ void printUser(User u) {
 void searchUserUID() {
   system("clear");
 
-  int userid;
+  int user_id;
 
   printf("Enter the User ID: ");
-  scanf("%d", &userid);
+  scanf("%d", &user_id);
 
-  if (network->userList[userid].uid)
-    printUser(network->userList[userid]);
+  if (user_id > network->minUID)
+    return;
+
+  if (network->userList[user_id].uid)
+    printUser(network->userList[user_id]);
   else
-    printf("EROR 404: USER ID #%d NOT FOUND!\n", userid);
+    printf("EROR 404: USER ID #%d NOT FOUND!\n", user_id);
 
   printf("\n");
 }
@@ -203,38 +203,38 @@ void searchUserName() {
 void editUserUID() {
   system("clear");
 
-  int userid;
+  int user_id;
 
   printf("Enter the User ID: ");
-  scanf("%d", &userid);
+  scanf("%d", &user_id);
 
-  if (network->userList[userid].uid) {
-    printUser(network->userList[userid]);
+  if (network->userList[user_id].uid) {
+    printUser(network->userList[user_id]);
     printf("\n");
 
     printf("Enter the New Details\n");
     printf("Name: ");
-    gets(network->userList[userid].name);
+    gets(network->userList[user_id].name);
     printf("Age: ");
-    gets(network->userList[userid].age);
+    gets(network->userList[user_id].age);
     printf("Gender: ");
-    gets(network->userList[userid].gender);
+    gets(network->userList[user_id].gender);
     printf("Email: ");
-    gets(network->userList[userid].email);
+    gets(network->userList[user_id].email);
     printf("Job Title: ");
-    gets(network->userList[userid].job_title);
+    gets(network->userList[user_id].job_title);
     printf("University: ");
-    gets(network->userList[userid].university);
+    gets(network->userList[user_id].university);
     printf("City: ");
-    gets(network->userList[userid].city);
+    gets(network->userList[user_id].city);
     printf("Country: ");
-    gets(network->userList[userid].country);
+    gets(network->userList[user_id].country);
 
     printf("Edited.\n");
 
-    printUser(network->userList[userid]);
+    printUser(network->userList[user_id]);
   } else
-    printf("EROR 404: USER ID #%d NOT FOUND!\n", userid);
+    printf("EROR 404: USER ID #%d NOT FOUND!\n", user_id);
 
   printf("\n");
 }
@@ -294,23 +294,22 @@ void displayUserDatabase() {
 
   bool found = 0;
 
-  printf("-------------------------------------------------------");
-  printf("-------------------------------------------------------");
-  printf("-------------------------------------------------------\n");
+  printf("\t---------------------------------------------------------");
+  printf("---------------------------------------------------------\n");
 
   for (int i = 1; i < network->V; ++i)
     if (network->userList[i].uid) {
       if (!found)
         found = 1;
+      printf("\t");
       printUser(network->userList[i]);
     }
 
   if (!found)
     printf("User Database is Empty!\n");
 
-  printf("-------------------------------------------------------");
-  printf("-------------------------------------------------------");
-  printf("-------------------------------------------------------\n");
+  printf("\t---------------------------------------------------------");
+  printf("---------------------------------------------------------\n");
 
   printf("\n");
 
@@ -323,12 +322,12 @@ void displayUserDatabase() {
 void removeUserUID() {
   system("clear");
 
-  int userid;
+  int user_id;
   printf("Enter the User ID: ");
-  scanf("%d", &userid);
+  scanf("%d", &user_id);
 
-  if (network->userList[userid].uid) {
-    printUser(network->userList[userid]);
+  if (network->userList[user_id].uid) {
+    printUser(network->userList[user_id]);
 
     printf("Confirm Delete (y/n)? ");
 
@@ -340,22 +339,22 @@ void removeUserUID() {
 
       for (int i = 0; i < network->minUID; ++i) {
         if (network->userList[i].uid && network->userList[i].friend_list) {
-          bool exists = findFriend(network->userList[i].friend_list, userid);
+          bool exists = findFriend(network->userList[i].friend_list, user_id);
 
           if (exists)
-            network->userList[i].friend_list = deleteNode(network->userList[i].friend_list, userid);
+            network->userList[i].friend_list = removeTreeNode(network->userList[i].friend_list, user_id);
         }
       }
 
-      insertHeap(token, userid); // to Insert Freed UID to Heap.
+      insertHeap(token, user_id); // to Insert Freed UID to Heap.
 
-      network->userList[userid] = NULLUSER;
-      network->userList[userid].friend_list = NULL;
+      network->userList[user_id] = NULLUSER;
+      network->userList[user_id].friend_list = NULL;
     } else {
       printf("Skipped!\n");
     }
   } else
-    printf("EROR 404: USER ID #%d NOT FOUND!\n", userid);
+    printf("EROR 404: USER ID #%d NOT FOUND!\n", user_id);
 
   printf("\n");
 }
@@ -388,7 +387,7 @@ void removeUserName() {
             bool exists = findFriend(network->userList[i].friend_list, j);
 
             if (exists)
-              network->userList[i].friend_list = deleteNode(network->userList[i].friend_list, j);
+              network->userList[i].friend_list = removeTreeNode(network->userList[i].friend_list, j);
           }
         }
 
@@ -412,9 +411,9 @@ void removeUserName() {
 
 // Adds a Frienship to the Network
 // by O(logV) AVL Insertion of a Node
-void addFriendship(int userid, int friend_id) {
-  network->userList[userid].friend_list =
-      insertTreeNode(network->userList[userid].friend_list, friend_id);
+void addFriendship(int user_id, int friend_id) {
+  network->userList[user_id].friend_list =
+      insertTreeNode(network->userList[user_id].friend_list, friend_id);
 }
 
 // Adds a Frienship to the Network (User Input: 2 UIDs)
@@ -422,18 +421,18 @@ void addFriendship(int userid, int friend_id) {
 void addFriendshipUID() {
   system("clear");
 
-  int userid, friend_id;
+  int user_id, friend_id;
   printf("Enter the User ID and the Friend ID: ");
-  scanf("%d %d", &userid, &friend_id);
+  scanf("%d %d", &user_id, &friend_id);
 
-  if (network->userList[userid].uid && network->userList[friend_id].uid) {
-    printUser(network->userList[userid]);
+  if (network->userList[user_id].uid && network->userList[friend_id].uid) {
+    printUser(network->userList[user_id]);
     printUser(network->userList[friend_id]);
 
-    addFriendship(userid, friend_id);
+    addFriendship(user_id, friend_id);
 
     printf("Added %s as %s\'s Friend.\n",
-           network->userList[friend_id].name, network->userList[userid].name);
+           network->userList[friend_id].name, network->userList[user_id].name);
   } else
     printf("EROR 404: USER ID(s) NOT FOUND!\n");
 
@@ -446,7 +445,7 @@ void addFriendshipName() {
   system("clear");
 
   bool founduser = 0, foundfriend = 0;
-  int userid = 0, friend_id = 0;
+  int user_id = 0, friend_id = 0;
   string username, friendname;
 
   printf("Enter the User Name: ");
@@ -454,7 +453,7 @@ void addFriendshipName() {
 
   for (int i = 0; i < network->V; ++i)
     if (network->userList[i].uid && !strcmp(network->userList[i].name, username)) {
-      userid = i;
+      user_id = i;
       founduser = 1;
 
       printUser(network->userList[i]);
@@ -485,9 +484,9 @@ void addFriendshipName() {
     return;
   }
 
-  addFriendship(userid, friend_id);
+  addFriendship(user_id, friend_id);
   printf("Added %s as %s\'s Friend.\n",
-         network->userList[friend_id].name, network->userList[userid].name);
+         network->userList[friend_id].name, network->userList[user_id].name);
 
   printf("\n");
 }
@@ -582,18 +581,18 @@ suggest Friends.
 void recommendFriendsNewUser() {
   system("clear");
 
-  int userid;
+  int user_id;
 
   printf("Enter the User ID: ");
-  scanf("%d", &userid);
+  scanf("%d", &user_id);
 
-  if (network->userList[userid].uid == 0) {
-    printf("[ERROR #404]: USER #%d NOT FOUND.", userid);
+  if (network->userList[user_id].uid == 0) {
+    printf("[ERROR #404]: USER #%d NOT FOUND.", user_id);
     return;
   }
 
   printf("------> ");
-  printUser(network->userList[userid]);
+  printUser(network->userList[user_id]);
 
   int toAdd;
 
@@ -609,9 +608,9 @@ void recommendFriendsNewUser() {
   for (int i = 0; i < network->minUID; ++i) {
     scores[i].idx = i + 1;
 
-    if (i + 1 != userid)
+    if (i + 1 != user_id)
       scores[i].val =
-          compatibilityScore(network->userList[userid], network->userList[i + 1]);
+          compatibilityScore(network->userList[user_id], network->userList[i + 1]);
     else
       scores[i].val = 0;
   }
@@ -634,11 +633,13 @@ void recommendFriendsNewUser() {
 
       i--;
     } else {
-      addFriendship(userid, friend_id);
+      addFriendship(user_id, friend_id);
 
       printf("Added %s as a Friend\n", network->userList[friend_id].name);
     }
   }
+
+  printf("\n");
 }
 
 /*
@@ -656,18 +657,18 @@ Traverse through the first toAdd Users in the Queue and suggest Friends.
 void recommendFriendsExistingUser() {
   system("clear");
 
-  int userid;
+  int user_id;
 
   printf("Enter the User ID: ");
-  scanf("%d", &userid);
+  scanf("%d", &user_id);
 
-  if (network->userList[userid].uid == 0) {
-    printf("[ERROR #404]: USER #%d NOT FOUND.\n", userid);
+  if (network->userList[user_id].uid == 0) {
+    printf("[ERROR #404]: USER #%d NOT FOUND.\n", user_id);
 
     return;
   }
 
-  printUser(network->userList[userid]);
+  printUser(network->userList[user_id]);
 
   int toAdd;
 
@@ -680,9 +681,9 @@ void recommendFriendsExistingUser() {
     recommendFriendsMenu();
   }
 
-  if (network->userList[userid].friend_list == NULL) {
-    printf("%s has no friends.\n", network->userList[userid].name);
-    printf("Treat %s as a New User (y/n)? ", network->userList[userid].name);
+  if (network->userList[user_id].friend_list == NULL) {
+    printf("%s has no friends.\n", network->userList[user_id].name);
+    printf("Treat %s as a New User (y/n)? ", network->userList[user_id].name);
 
     char c, buff;
     scanf("%c%c", &buff, &c);
@@ -704,9 +705,9 @@ void recommendFriendsExistingUser() {
   for (int i = 0; i < network->minUID; ++i)
     alreadyfriend[i] = visited[i] = 0;
 
-  visited[userid] = alreadyfriend[userid] = 1; // Flag the Current User so we don't recommend the User itself
+  visited[user_id] = alreadyfriend[user_id] = 1; // Flag the Current User so we don't recommend the User itself
 
-  singlePass(network->userList[userid].friend_list, friendstream, alreadyfriend); // Traverse through the Friendlist once and Fill the Queue Accordingly
+  singlePass(network->userList[user_id].friend_list, friendstream, alreadyfriend); // Traverse through the Friendlist once and Fill the Queue Accordingly
 
   for (int i = 0; i < network->minUID; ++i)
     visited[i] = alreadyfriend[i];
@@ -752,7 +753,7 @@ void recommendFriendsExistingUser() {
 
       i--;
     } else {
-      addFriendship(userid, friend_id);
+      addFriendship(user_id, friend_id);
 
       printf("Added %s as a Friend\n", network->userList[friend_id].name);
     }
@@ -764,13 +765,13 @@ void recommendFriendsExistingUser() {
 void checkFriendshipUID() {
   system("clear");
 
-  int userid, friend_id;
+  int user_id, friend_id;
 
   printf("Enter the User ID: ");
-  scanf("%d", &userid);
+  scanf("%d", &user_id);
 
-  if (network->userList[userid].uid == 0) {
-    printf("[ERROR #404]: USER #%03d NOT FOUND!\n", userid);
+  if (network->userList[user_id].uid == 0) {
+    printf("[ERROR #404]: USER #%03d NOT FOUND!\n", user_id);
 
     return;
   }
@@ -785,22 +786,22 @@ void checkFriendshipUID() {
   }
 
   bool friend12; // Is User 2 a friend of User 1?
-  friend12 = findFriend(network->userList[userid].friend_list, friend_id);
+  friend12 = findFriend(network->userList[user_id].friend_list, friend_id);
 
   bool friend21; // Is User 1 a friend of User 2?
-  friend21 = findFriend(network->userList[friend_id].friend_list, userid);
+  friend21 = findFriend(network->userList[friend_id].friend_list, user_id);
 
   if (friend12 && friend21)
-    printf("%s and %s are Mutual Friends.\n", network->userList[userid].name,
+    printf("%s and %s are Mutual Friends.\n", network->userList[user_id].name,
            network->userList[friend_id].name);
   else if (friend12)
-    printf("%s considers %s to be a friend.\n", network->userList[userid].name,
+    printf("%s considers %s to be a friend.\n", network->userList[user_id].name,
            network->userList[friend_id].name);
   else if (friend21)
     printf("%s considers %s to be a friend.\n", network->userList[friend_id].name,
-           network->userList[userid].name);
+           network->userList[user_id].name);
   else
-    printf("%s and %s are not Friends.\n", network->userList[userid].name,
+    printf("%s and %s are not Friends.\n", network->userList[user_id].name,
            network->userList[friend_id].name);
 
   printf("\n");
@@ -812,7 +813,7 @@ void checkFriendshipName() {
   system("clear");
 
   bool founduser = 0, foundfriend = 0;
-  int userid = 0, friend_id = 0;
+  int user_id = 0, friend_id = 0;
   string username, friendname;
 
   printf("Enter the User Name: ");
@@ -820,7 +821,7 @@ void checkFriendshipName() {
 
   for (int i = 0; i < network->V; ++i)
     if (network->userList[i].uid && !strcmp(network->userList[i].name, username)) {
-      userid = i;
+      user_id = i;
       founduser = 1;
 
       printUser(network->userList[i]);
@@ -852,22 +853,22 @@ void checkFriendshipName() {
   }
 
   bool friend12; // Is User 2 a friend of User 1?
-  friend12 = findFriend(network->userList[userid].friend_list, friend_id);
+  friend12 = findFriend(network->userList[user_id].friend_list, friend_id);
 
   bool friend21; // Is User 1 a friend of User 2?
-  friend21 = findFriend(network->userList[friend_id].friend_list, userid);
+  friend21 = findFriend(network->userList[friend_id].friend_list, user_id);
 
   if (friend12 && friend21)
-    printf("%s and %s are Mutual Friends.\n", network->userList[userid].name,
+    printf("%s and %s are Mutual Friends.\n", network->userList[user_id].name,
            network->userList[friend_id].name);
   else if (friend12)
-    printf("%s considers %s to be a friend.\n", network->userList[userid].name,
+    printf("%s considers %s to be a friend.\n", network->userList[user_id].name,
            network->userList[friend_id].name);
   else if (friend21)
     printf("%s considers %s to be a friend.\n", network->userList[friend_id].name,
-           network->userList[userid].name);
+           network->userList[user_id].name);
   else
-    printf("%s and %s are not Friends.\n", network->userList[userid].name,
+    printf("%s and %s are not Friends.\n", network->userList[user_id].name,
            network->userList[friend_id].name);
 
   printf("\n");
@@ -900,7 +901,7 @@ void displayFriendshipNetwork() {
       if (!found)
         found = 1;
 
-      printf("Friends of [%03d] %25s: ", network->userList[i].uid, network->userList[i].name);
+      printf("Friends of [%03d] %-15s: ", network->userList[i].uid, network->userList[i].name);
 
       if (network->userList[i].friend_list)
         printFriendlist(network->userList[i].friend_list);
@@ -980,4 +981,100 @@ void ViewFriendshipNetwork() {
   writeFriendshipNetwork(network);
 
   system("dot -Tpng graph/graphviz.dot -o graph/friendship-network.png && xdg-open graph/friendship-network.png");
+}
+
+// Adds a Frienship to the Network
+// by O(logV) AVL Insertion of a Node
+void removeFriendship(int user_id, int friend_id) {
+  network->userList[user_id].friend_list =
+      removeTreeNode(network->userList[user_id].friend_list, friend_id);
+}
+
+// Removes a Frienship to the Network (User Input: 2 UIDs)
+// by O(1) Array Lookup, O(logV) AVL Search, and O(logV) AVL Removal of a Node
+void removeFriendshipUID() {
+  system("clear");
+
+  int user_id, friend_id;
+  printf("Enter the User ID and the Friend ID: ");
+  scanf("%d %d", &user_id, &friend_id);
+
+  if (network->userList[user_id].uid && network->userList[friend_id].uid) {
+    bool isFriend = findFriend(network->userList[user_id].friend_list, friend_id);
+
+    if (!isFriend) {
+      printf("%s and %s are not friends.\n", network->userList[user_id].name, network->userList[friend_id].name);
+      return;
+    }
+
+    printUser(network->userList[user_id]);
+    printUser(network->userList[friend_id]);
+
+    removeFriendship(user_id, friend_id);
+
+    printf("Removed %s as %s\'s Friend.\n",
+           network->userList[friend_id].name, network->userList[user_id].name);
+  } else
+    printf("EROR 404: USER ID(s) NOT FOUND!\n");
+
+  printf("\n");
+}
+
+// Removes a Frienship to the Network (User Input: 2 Names)
+// by O(V) Array Lookup, O(logV) AVL Search, and O(logV) AVL Removal of a Node
+void removeFriendshipName() {
+  system("clear");
+
+  bool founduser = 0, foundfriend = 0;
+  int user_id = 0, friend_id = 0;
+  string username, friendname;
+
+  printf("Enter the User Name: ");
+  gets(username);
+
+  for (int i = 0; i < network->V; ++i)
+    if (network->userList[i].uid && !strcmp(network->userList[i].name, username)) {
+      user_id = i;
+      founduser = 1;
+
+      printUser(network->userList[i]);
+
+      break;
+    }
+
+  if (!founduser) {
+    printf("[ERROR #404]: USER \"%s\" NOT FOUND.\n", username);
+    return;
+  }
+
+  printf("Enter the Friend's Name: ");
+  gets(friendname);
+
+  for (int i = 0; i < network->V; ++i)
+    if (network->userList[i].uid && !strcmp(network->userList[i].name, friendname)) {
+      friend_id = i;
+      foundfriend = 1;
+
+      printUser(network->userList[i]);
+
+      break;
+    }
+
+  if (!foundfriend) {
+    printf("[ERROR #404]: USER \"%s\" NOT FOUND.\n", friendname);
+    return;
+  }
+
+  bool isFriend = findFriend(network->userList[user_id].friend_list, friend_id);
+
+  if (!isFriend) {
+    printf("%s and %s are not friends.\n", network->userList[user_id].name, network->userList[friend_id].name);
+    return;
+  }
+
+  removeFriendship(user_id, friend_id);
+  printf("Removed %s as %s\'s Friend.\n",
+         network->userList[friend_id].name, network->userList[user_id].name);
+
+  printf("\n");
 }

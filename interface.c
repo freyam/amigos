@@ -3,9 +3,16 @@
 extern FriendNetwork *network;
 extern Heap *token;
 
+#define RESET "\033[0m"
+#define RED "\033[1m\033[31m"
+#define YELLOW "\033[1m\033[33m"
+#define BLUE "\033[1m\033[34m"
+
+// Provides the User Interface for the Welcome Banner
 void banner() {
   system("clear");
 
+  printf(BLUE);
   printf("  **************************************  \n");
   printf("  **************************************  \n");
   printf("  **                                  **  \n");
@@ -13,14 +20,17 @@ void banner() {
   printf("  **                                  **  \n");
   printf("  **************************************  \n");
   printf("  **************************************  \n");
+  printf(RESET);
   printf("\n");
 }
 
+// Provides the User Interface for the Main Menu
 void mainMenu() {
   system("clear");
 
   int ch;
   do {
+    printf(BLUE);
     printf("  **************************************  \n");
     printf("  **************************************  \n");
     printf("  **                                  **  \n");
@@ -35,10 +45,14 @@ void mainMenu() {
     printf("  **                                  **  \n");
     printf("  **************************************  \n");
     printf("  **************************************  \n");
+    printf(RESET);
     printf("\n");
 
     printf("Enter your choice: ");
     scanf("%d", &ch);
+
+    if (ch >= 100)
+      error();
 
     switch (ch) {
     case 1:
@@ -56,11 +70,13 @@ void mainMenu() {
   } while (ch <= 100);
 }
 
+// Provides the User Interface for the User Menu
 void userMenu() {
   system("clear");
 
   int ch;
   do {
+    printf(RED);
     printf("  **************************************  \n");
     printf("  **************************************  \n");
     printf("  **                                  **  \n");
@@ -79,10 +95,14 @@ void userMenu() {
     printf("  **                                  **  \n");
     printf("  **************************************  \n");
     printf("  **************************************  \n");
+    printf(RESET);
     printf("\n");
 
     printf("Enter your choice: ");
     scanf("%d", &ch);
+
+    if (ch >= 100)
+      error();
 
     switch (ch) {
     case 1:
@@ -115,11 +135,13 @@ void userMenu() {
   } while (ch <= 100);
 }
 
+// Provides the User Interface for the Search User Menu
 void searchUserMenu() {
   system("clear");
 
   int ch;
   do {
+    printf(RED);
     printf("  **************************************  \n");
     printf("  **************************************  \n");
     printf("  **                                  **  \n");
@@ -137,10 +159,14 @@ void searchUserMenu() {
     printf("  **                                  **  \n");
     printf("  **************************************  \n");
     printf("  **************************************  \n");
+    printf(RESET);
     printf("\n");
 
     printf("Enter your choice: ");
     scanf("%d", &ch);
+
+    if (ch >= 100)
+      error();
 
     switch (ch) {
     case 1:
@@ -161,11 +187,13 @@ void searchUserMenu() {
   } while (ch <= 100);
 }
 
+// Provides the User Interface for the Edit User Menu
 void editUserMenu() {
   system("clear");
 
   int ch;
   do {
+    printf(RED);
     printf("  **************************************  \n");
     printf("  **************************************  \n");
     printf("  **                                  **  \n");
@@ -183,10 +211,14 @@ void editUserMenu() {
     printf("  **                                  **  \n");
     printf("  **************************************  \n");
     printf("  **************************************  \n");
+    printf(RESET);
     printf("\n");
 
     printf("Enter your choice: ");
     scanf("%d", &ch);
+
+    if (ch >= 100)
+      error();
 
     switch (ch) {
     case 1:
@@ -207,11 +239,13 @@ void editUserMenu() {
   } while (ch <= 100);
 }
 
+// Provides the User Interface for the Remove User Menu
 void removeUserMenu() {
   system("clear");
 
   int ch;
   do {
+    printf(RED);
     printf("  **************************************  \n");
     printf("  **************************************  \n");
     printf("  **                                  **  \n");
@@ -230,10 +264,14 @@ void removeUserMenu() {
     printf("  **                                  **  \n");
     printf("  **************************************  \n");
     printf("  **************************************  \n");
+    printf(RESET);
     printf("\n");
 
     printf("Enter your choice: ");
     scanf("%d", &ch);
+
+    if (ch >= 100)
+      error();
 
     switch (ch) {
     case 1:
@@ -254,11 +292,13 @@ void removeUserMenu() {
   } while (ch <= 100);
 }
 
+// Provides the User Interface for the Friends Menu
 void friendMenu() {
   system("clear");
 
   int ch;
   do {
+    printf(YELLOW);
     printf("  **************************************  \n");
     printf("  **************************************  \n");
     printf("  **                                  **  \n");
@@ -276,10 +316,14 @@ void friendMenu() {
     printf("  **                                  **  \n");
     printf("  **************************************  \n");
     printf("  **************************************  \n");
+    printf(RESET);
     printf("\n");
 
     printf("Enter your choice: ");
     scanf("%d", &ch);
+
+    if (ch >= 100)
+      error();
 
     switch (ch) {
     case 1:
@@ -294,6 +338,9 @@ void friendMenu() {
     case 4:
       displayFriendsMenu();
       break;
+    case 5:
+      removeFriendMenu();
+      break;
     case 9:
       mainMenu();
       break;
@@ -306,11 +353,13 @@ void friendMenu() {
   } while (ch <= 100);
 }
 
+// Provides the User Interface for the Add Friend Menu
 void addFriendMenu() {
   system("clear");
 
   int ch;
   do {
+    printf(YELLOW);
     printf("  **************************************  \n");
     printf("  **************************************  \n");
     printf("  **                                  **  \n");
@@ -328,10 +377,14 @@ void addFriendMenu() {
     printf("  **                                  **  \n");
     printf("  **************************************  \n");
     printf("  **************************************  \n");
+    printf(RESET);
     printf("\n");
 
     printf("Enter your choice: ");
     scanf("%d", &ch);
+
+    if (ch >= 100)
+      error();
 
     switch (ch) {
     case 1:
@@ -352,11 +405,13 @@ void addFriendMenu() {
   } while (ch <= 100);
 }
 
+// Provides the User Interface for the Recommend Friend Menu
 void recommendFriendsMenu() {
   system("clear");
 
   int ch;
   do {
+    printf(YELLOW);
     printf("  **************************************  \n");
     printf("  **************************************  \n");
     printf("  **                                  **  \n");
@@ -374,10 +429,14 @@ void recommendFriendsMenu() {
     printf("  **                                  **  \n");
     printf("  **************************************  \n");
     printf("  **************************************  \n");
+    printf(RESET);
     printf("\n");
 
     printf("Enter your choice: ");
     scanf("%d", &ch);
+
+    if (ch >= 100)
+      error();
 
     switch (ch) {
     case 1:
@@ -398,11 +457,13 @@ void recommendFriendsMenu() {
   } while (ch <= 100);
 }
 
+// Provides the User Interface for the Check Friend Menu
 void checkFriendMenu() {
   system("clear");
 
   int ch;
   do {
+    printf(YELLOW);
     printf("  **************************************  \n");
     printf("  **************************************  \n");
     printf("  **                                  **  \n");
@@ -420,10 +481,14 @@ void checkFriendMenu() {
     printf("  **                                  **  \n");
     printf("  **************************************  \n");
     printf("  **************************************  \n");
+    printf(RESET);
     printf("\n");
 
     printf("Enter your choice: ");
     scanf("%d", &ch);
+
+    if (ch >= 100)
+      error();
 
     switch (ch) {
     case 1:
@@ -444,11 +509,13 @@ void checkFriendMenu() {
   } while (ch <= 100);
 }
 
+// Provides the User Interface for the Display Friend Menu
 void displayFriendsMenu() {
   system("clear");
 
   int ch;
   do {
+    printf(YELLOW);
     printf("  **************************************  \n");
     printf("  **************************************  \n");
     printf("  **                                  **  \n");
@@ -466,10 +533,14 @@ void displayFriendsMenu() {
     printf("  **                                  **  \n");
     printf("  **************************************  \n");
     printf("  **************************************  \n");
+    printf(RESET);
     printf("\n");
 
     printf("Enter your choice: ");
     scanf("%d", &ch);
+
+    if (ch >= 100)
+      error();
 
     switch (ch) {
     case 1:
@@ -490,8 +561,73 @@ void displayFriendsMenu() {
   } while (ch <= 100);
 }
 
+// Provides the User Interface for the Remove Friend Menu
+void removeFriendMenu() {
+  system("clear");
+
+  int ch;
+  do {
+    printf(YELLOW);
+    printf("  **************************************  \n");
+    printf("  **************************************  \n");
+    printf("  **                                  **  \n");
+    printf("  **              Amigos              **  \n");
+    printf("  **                                  **  \n");
+    printf("  **         Friend Management        **  \n");
+    printf("  **                                  **  \n");
+    printf("  **         Remove Friendship        **  \n");
+    printf("  **                                  **  \n");
+    printf("  **   1. Remove Friendship by UIDs   **  \n");
+    printf("  **   2. Remove Friendship by Names  **  \n");
+    printf("  **                                  **  \n");
+    printf("  **    9. Back to the Friend Menu    **  \n");
+    printf("  **          0. Exit Amigos          **  \n");
+    printf("  **                                  **  \n");
+    printf("  **************************************  \n");
+    printf("  **************************************  \n");
+    printf(RESET);
+    printf("\n");
+
+    printf("Enter your choice: ");
+    scanf("%d", &ch);
+
+    if (ch >= 100)
+      error();
+
+    switch (ch) {
+    case 1:
+      removeFriendshipUID();
+      break;
+    case 2:
+      removeFriendshipName();
+      break;
+    case 9:
+      friendMenu();
+      break;
+    case 0:
+      quit();
+    default:
+      printf("Invalid Choice!\n");
+      friendMenu();
+    }
+  } while (ch <= 100);
+}
+
+// Provides the User Interface for the Error Screen
+void error() {
+  system("clear");
+  printf(BLUE);
+  printf("Critical Error! Bootstrapping the Program.\n");
+  printf("Visit us again at https://amigos.com/\n");
+  printf(RESET);
+  exit(EXIT_FAILURE);
+}
+
+// Provides the User Interface for the Exit Screen
 void quit() {
   system("clear");
+  printf(BLUE);
   printf("Thank You for visiting us at https://amigos.com/\n");
+  printf(RESET);
   exit(EXIT_SUCCESS);
 }
