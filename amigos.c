@@ -3,7 +3,7 @@
 Graph *g;
 Heap *h;
 int V = 101;
-int entries = 15;
+int entriesImported = 15;
 User NULLUSER = {0, "", "", "", "", "", "", "", ""};
 
 bool importRandomData = 0;
@@ -56,24 +56,6 @@ Graph *createGraph(int V) {
   return g;
 }
 
-// Creates a new User Node
-// User *createUser(User u) {
-//   User *newUser = malloc(sizeof(User));
-
-//   newUser->uid = u.uid;
-//   strcpy(newUser->name, u.name);
-//   strcpy(newUser->age, u.age);
-//   strcpy(newUser->gender, u.gender);
-//   strcpy(newUser->email, u.email);
-//   strcpy(newUser->job_title, u.job_title);
-//   strcpy(newUser->university, u.university);
-//   strcpy(newUser->city, u.city);
-//   strcpy(newUser->country, u.country);
-//   newUser->friendlist = NULL;
-
-//   return newUser;
-// }
-
 // Adds a new User to the Friendship Network
 void addUser() {
   User u;
@@ -97,6 +79,7 @@ void addUser() {
   gets(u.country);
 
   g->userList[u.uid] = u;
+  g->userList[u.uid].friendlist = NULL;
   printUser(g->userList[u.uid]);
 }
 
@@ -120,7 +103,7 @@ void importData() {
   char header[100];
   fscanf(f, "%s", header);
 
-  for (int i = 1; i <= entries; ++i) {
+  for (int i = 1; i <= entriesImported; ++i) {
     User u;
 
     fscanf(f, "%d", &u.uid);
@@ -141,16 +124,19 @@ void importData() {
     fscanf(f, "%c", &comma);
     fscanf(f, "%[^\n]s", u.country);
 
-    g->userList[g->minUID++] = u;
+    g->userList[g->minUID] = u;
+    g->userList[g->minUID++].friendlist = NULL;
   }
 
-  // for (int i = 1; i <= entries * 2; ++i) {
-  // 	int u = (rand() % entries) + 1;
-  // 	int v = (rand() % entries) + 1;
+  bool addRandomFriendships = 0;
+  if (addRandomFriendships)
+    for (int i = 1; i <= 2 * entriesImported; ++i) {
+      int u = (rand() % entriesImported) + 1;
+      int v = (rand() % entriesImported) + 1;
 
-  // 	if (u != v)
-  // 		addFriendship(g, *g->userList[u], *g->userList[v]);
-  // }
+      if (u != v)
+        addFriendship(u, v);
+    }
 
   fclose(f);
 }
@@ -167,7 +153,7 @@ void searchUserUID() {
   system("clear");
 
   int userid;
-  printf("Enter the UID: ");
+  printf("Enter the User ID: ");
   scanf("%d", &userid);
 
   if (g->userList[userid].uid)
@@ -206,7 +192,7 @@ void editUserUID() {
   system("clear");
 
   int userid;
-  printf("Enter the UID: ");
+  printf("Enter the User ID: ");
   scanf("%d", &userid);
 
   if (g->userList[userid].uid) {
@@ -311,13 +297,12 @@ void displayUserDatabase() {
   getchar();
   getchar();
 }
-
 // Removes User by UID
 void removeUserUID() {
   system("clear");
 
   int userid;
-  printf("Enter the UID: ");
+  printf("Enter the User ID: ");
   scanf("%d", &userid);
 
   if (g->userList[userid].uid) {
@@ -327,9 +312,19 @@ void removeUserUID() {
     scanf("%c%c", &buff, &c);
     if (c != 'n') {
       printf("Deleted!\n");
+
+      for (int i = 0; i < g->minUID; ++i) {
+        if (g->userList[i].uid && g->userList[i].friendlist) {
+          bool exists = findFriend(g->userList[i].friendlist, userid);
+          if (exists)
+            g->userList[i].friendlist = deleteNode(g->userList[i].friendlist, userid);
+        }
+      }
+
       insertHeap(h, userid);
       g->userList[userid] = NULLUSER;
       g->userList[userid].friendlist = NULL;
+
     } else {
       printf("Skipped!\n");
     }
@@ -358,6 +353,15 @@ void removeUserName() {
 
       if (c != 'n') {
         printf("Deleted!\n");
+
+        for (int j = 0; j < g->minUID; ++j) {
+          if (g->userList[i].uid && g->userList[i].friendlist) {
+            bool exists = findFriend(g->userList[i].friendlist, j);
+            if (exists)
+              g->userList[i].friendlist = deleteNode(g->userList[i].friendlist, j);
+          }
+        }
+
         insertHeap(h, i);
         g->userList[i] = NULLUSER;
         g->userList[i].friendlist = NULL;
@@ -375,14 +379,76 @@ void removeUserName() {
 }
 
 // Adds a Frienship to the Network
-void addFriendship(User u, User v) {
-  // User *newUser = createUser(v);
-  // newUser->friendlist = g->userList[u.uid].friendlist;
-  // g->userList[u.uid].friendlist = newUser;
+void addFriendship(int userid, int friendid) {
+  g->userList[userid].friendlist = insertTreeNode(g->userList[userid].friendlist, friendid);
 }
 
-void addFriendshipUID() {}
-void addFriendshipName() {}
+void addFriendshipUID() {
+  system("clear");
+
+  int userid, friendid;
+  printf("Enter the User ID and the Friend ID: ");
+  scanf("%d %d", &userid, &friendid);
+
+  if (g->userList[userid].uid && g->userList[friendid].uid) {
+    printUser(g->userList[userid]);
+    printUser(g->userList[friendid]);
+
+    addFriendship(userid, friendid);
+
+    printf("Added %s as %s\'s Friend.\n",
+           g->userList[friendid].name, g->userList[userid].name);
+  } else
+    printf("EROR 404: USER ID(s) NOT FOUND!\n");
+
+  printf("\n");
+}
+
+void addFriendshipName() {
+  system("clear");
+
+  bool founduser = 0, foundfriend = 0;
+  int userid = 0, friendid = 0;
+  string username, friendname;
+
+  printf("Enter the User Name: ");
+  gets(username);
+
+  for (int i = 0; i < g->V; ++i)
+    if (g->userList[i].uid && !strcmp(g->userList[i].name, username)) {
+      userid = i;
+      founduser = 1;
+      printUser(g->userList[i]);
+      break;
+    }
+
+  if (!founduser) {
+    printf("ERROR 404: USER \"%s\" NOT FOUND.\n", username);
+    return;
+  }
+
+  printf("Enter the Friend's Name: ");
+  gets(friendname);
+
+  for (int i = 0; i < g->V; ++i)
+    if (g->userList[i].uid && !strcmp(g->userList[i].name, friendname)) {
+      friendid = i;
+      foundfriend = 1;
+      printUser(g->userList[i]);
+      break;
+    }
+
+  if (!foundfriend) {
+    printf("ERROR 404: USER \"%s\" NOT FOUND.\n", friendname);
+    return;
+  }
+
+  addFriendship(userid, friendid);
+  printf("Added %s as %s\'s Friend.\n",
+         g->userList[friendid].name, g->userList[userid].name);
+
+  printf("\n");
+}
 
 void countingSort(intidx scores[], int size) {
   intidx temp[size];
@@ -395,7 +461,7 @@ void countingSort(intidx scores[], int size) {
     if (scores[i].val > max)
       max = scores[i].val;
 
-  int count[151];
+  int count[101];
 
   for (int i = 0; i <= max; ++i)
     count[i] = 0;
@@ -403,7 +469,7 @@ void countingSort(intidx scores[], int size) {
   for (int i = 0; i < size; i++)
     count[scores[i].val]++;
 
-  for (int i = 1; i < max; i++)
+  for (int i = 1; i <= max; i++)
     count[i] += count[i - 1];
 
   for (int i = size - 1; i >= 0; i--) {
@@ -429,11 +495,11 @@ void printINTIDXarray(intidx arr[], int size) {
 }
 
 int compatibilityScore(User u1, User u2) {
-  int score = 0; // max 105
+  int score = 0; // max 100
 
   score += 10 - abs(atoi(u2.age) - atoi(u1.age));
 
-  if (u1.gender != u2.gender)
+  if (strcmp(u1.gender, u2.gender))
     score += 10;
   else
     score += 5;
@@ -445,7 +511,7 @@ int compatibilityScore(User u1, User u2) {
     score += 30;
 
   if (!strcmp(u1.city, u2.city))
-    score += 10;
+    score += 5;
 
   if (!strcmp(u1.country, u2.country))
     score += 5;
@@ -457,10 +523,15 @@ void recommendFriendsNewUser() {
   system("clear");
 
   int userid;
-  printf("Enter the UID: ");
+  printf("Enter the User ID: ");
   scanf("%d", &userid);
 
-  printf("{XXX}");
+  if (g->userList[userid].uid == 0) {
+    printf("ERROR 404: USER #%d NOT FOUND.", userid);
+    return;
+  }
+
+  printf("------> ");
   printUser(g->userList[userid]);
 
   int toAdd;
@@ -472,200 +543,265 @@ void recommendFriendsNewUser() {
     recommendFriendsMenu();
   }
 
-  intidx scores[g->minUID + 1];
-  for (int i = 1; i < g->minUID; ++i) {
-    scores[i].idx = i;
-    scores[i].val = 0;
-  }
+  intidx scores[g->minUID];
+  for (int i = 0; i < g->minUID; ++i) {
+    scores[i].idx = i + 1;
 
-  for (int i = 1; i < entries; ++i)
-    if (userid != i)
-      scores[i].val = compatibilityScore(g->userList[userid], g->userList[i]);
+    if (i + 1 != userid)
+      scores[i].val = compatibilityScore(g->userList[userid], g->userList[i + 1]);
     else
       scores[i].val = 0;
+  }
 
-  countingSort(scores, entries);
+  // printINTIDXarray(scores, g->minUID);
+  countingSort(scores, g->minUID);
+  // printINTIDXarray(scores, g->minUID);
 
   for (int i = 0; i < 10; ++i) {
-    printf("{%03d}", scores[i].val);
+    printf("%03d%% -> ", scores[i].val);
     printUser(g->userList[scores[i].idx]);
   }
 
   for (int i = 0; i < toAdd; ++i) {
     int friendid;
-    printf("Enter the UID: ");
+    printf("Enter the User ID: ");
     scanf("%d", &friendid);
+
     if (g->userList[friendid].uid == 0 || friendid >= g->minUID) {
       printf("Invalid UID! Try again\n");
       i--;
     } else {
-      addFriendship(g->userList[userid], g->userList[friendid]);
+      addFriendship(userid, friendid);
       printf("Added %s as a Friend\n", g->userList[friendid].name);
     }
   }
 }
 
-void recommendFriendsExistingUser() {}
+void recommendFriendsExistingUser() {
+  system("clear");
+
+  int userid;
+  printf("Enter the User ID: ");
+  scanf("%d", &userid);
+
+  if (g->userList[userid].uid == 0) {
+    printf("ERROR 404: USER #%d NOT FOUND.\n", userid);
+    return;
+  }
+
+  printf("------> ");
+  printUser(g->userList[userid]);
+
+  int toAdd;
+  printf("Enter the number of friends you want to add: ");
+  scanf("%d", &toAdd);
+
+  if (toAdd == 0) {
+    printf("Skipping Recommending Friends...\n");
+    recommendFriendsMenu();
+  }
+
+  if (g->userList[userid].friendlist == NULL) {
+    printf("%s has no friends.\n", g->userList[userid].name);
+    printf("Treat %s as a New User (y/n)? ", g->userList[userid].name);
+    char c, buff;
+    scanf("%c%c", &buff, &c);
+    if (c != 'n') {
+      recommendFriendsNewUser();
+    } else {
+      printf("Skipped!\n");
+    }
+    return;
+  }
+
+  Queue *q = createQueue(g->minUID);
+  Queue *newFriends = createQueue(toAdd);
+
+  bool visited[g->minUID];
+  bool alreadyfriend[g->minUID];
+  for (int i = 0; i < g->minUID; ++i)
+    alreadyfriend[i] = visited[i] = 0;
+
+  visited[userid] = alreadyfriend[userid] = 1;
+
+  firstPass(g->userList[userid].friendlist, q, alreadyfriend);
+  for (int i = 0; i < g->minUID; ++i)
+    visited[i] = alreadyfriend[i];
+
+  int added = 0;
+  while (!isEmpty(q) && added < toAdd) {
+    int fid = dequeue(q);
+    if (!alreadyfriend[fid]) {
+      added++;
+      enqueue(newFriends, fid);
+    }
+
+    treeNode *temp = g->userList[fid].friendlist;
+    if (temp == NULL)
+      continue;
+    else
+      firstPass(temp, q, visited);
+  }
+
+  printf("\n");
+  printQueue(newFriends);
+}
 
 void checkFriendshipUID() {
-  // system("clear");
+  system("clear");
 
-  // int uid1, uid2;
-  // printf("Enter the 2 UIDs\n");
-  // scanf("%d %d", &uid1, &uid2);
+  int userid, friendid;
+  printf("Enter the User ID: ");
+  scanf("%d", &userid);
 
-  // if (g->userList[uid1].uid == 0 || g->userList[uid2].uid == 0) {
-  //   printf("ERROR 404: USER(S) NOT FOUND!\n");
-  //   return;
-  // }
+  if (g->userList[userid].uid == 0) {
+    printf("ERROR 404: USER #%03d NOT FOUND!\n", userid);
+    return;
+  }
 
-  // bool friend12 = 0;
-  // User *temp = g->userList[uid1].friendlist;
-  // while (temp)
-  //   if (!strcmp(temp->name, g->userList[uid2].name)) {
-  //     friend12 = 1;
-  //     break;
-  //   } else {
-  //     temp = temp->friendlist;
-  //   }
+  printf("Enter the Friend ID: ");
+  scanf("%d", &friendid);
 
-  // bool friend21 = 0;
-  // temp = g->userList[uid2].friendlist;
-  // while (temp)
-  //   if (!strcmp(temp->name, g->userList[uid1].name)) {
-  //     friend21 = 1;
-  //     break;
-  //   } else {
-  //     temp = temp->friendlist;
-  //   }
+  if (g->userList[friendid].uid == 0) {
+    printf("ERROR 404: USER #%03d NOT FOUND!\n", friendid);
+    return;
+  }
 
-  // if (friend12 && friend21)
-  //   printf("%s and %s are Mutual Friends.\n", g->userList[uid1].name,
-  //          g->userList[uid2].name);
-  // else if (friend12)
-  //   printf("%s considers %s to be a friend.\n", g->userList[uid1].name,
-  //          g->userList[uid2].name);
-  // else if (friend21)
-  //   printf("%s considers %s to be a friend.\n", g->userList[uid2].name,
-  //          g->userList[uid1].name);
-  // else
-  //   printf("%s and %s are not Friends.\n", g->userList[uid1].name,
-  //          g->userList[uid2].name);
+  bool friend12 = findFriend(g->userList[userid].friendlist, friendid);
+  bool friend21 = findFriend(g->userList[friendid].friendlist, userid);
 
-  // printf("\n");
+  if (friend12 && friend21)
+    printf("%s and %s are Mutual Friends.\n", g->userList[userid].name,
+           g->userList[friendid].name);
+  else if (friend12)
+    printf("%s considers %s to be a friend.\n", g->userList[userid].name,
+           g->userList[friendid].name);
+  else if (friend21)
+    printf("%s considers %s to be a friend.\n", g->userList[friendid].name,
+           g->userList[userid].name);
+  else
+    printf("%s and %s are not Friends.\n", g->userList[userid].name,
+           g->userList[friendid].name);
+
+  printf("\n");
 }
 
 void checkFriendshipName() {
-  // system("clear");
+  system("clear");
 
-  // string name1, name2;
-  // printf("Enter the 2 Names\n");
-  // gets(name1);
-  // gets(name2);
+  bool founduser = 0, foundfriend = 0;
+  int userid = 0, friendid = 0;
+  string username, friendname;
 
-  // int uid1 = 0;
-  // int uid2 = 0;
+  printf("Enter the User Name: ");
+  gets(username);
 
-  // for (int i = 0; i < g->V; ++i)
-  //   if (uid1 && uid2)
-  //     break;
-  //   else if (g->userList[i].uid && !strcmp(g->userList[i].name, name1))
-  //     uid1 = i;
-  //   else if (g->userList[i].uid && !strcmp(g->userList[i].name, name2))
-  //     uid2 = i;
+  for (int i = 0; i < g->V; ++i)
+    if (g->userList[i].uid && !strcmp(g->userList[i].name, username)) {
+      userid = i;
+      founduser = 1;
+      printUser(g->userList[i]);
+      break;
+    }
 
-  // if (g->userList[uid1].uid == NULL || g->userList[uid2].uid == NULL) {
-  //   printf("ERROR 404: USER(S) NOT FOUND!\n");
-  //   return;
-  // }
+  if (!founduser) {
+    printf("ERROR 404: USER \"%s\" NOT FOUND.\n", username);
+    return;
+  }
 
-  // bool friend12 = 0;
-  // User *temp = g->userList[uid1].friendlist;
-  // while (temp)
-  //   if (!strcmp(temp->name, g->userList[uid2].name)) {
-  //     friend12 = 1;
-  //     break;
-  //   } else {
-  //     temp = temp->friendlist;
-  //   }
+  printf("Enter the Friend's Name: ");
+  gets(friendname);
 
-  // bool friend21 = 0;
-  // temp = g->userList[uid2].friendlist;
-  // while (temp)
-  //   if (!strcmp(temp->name, g->userList[uid1].name)) {
-  //     friend21 = 1;
-  //     break;
-  //   } else {
-  //     temp = temp->friendlist;
-  //   }
+  for (int i = 0; i < g->V; ++i)
+    if (g->userList[i].uid && !strcmp(g->userList[i].name, friendname)) {
+      friendid = i;
+      foundfriend = 1;
+      printUser(g->userList[i]);
+      break;
+    }
 
-  // if (friend12 && friend21)
-  //   printf("%s and %s are Mutual Friends.\n", g->userList[uid1].name,
-  //          g->userList[uid2].name);
-  // else if (friend12)
-  //   printf("%s considers %s to be a friend.\n", g->userList[uid1].name,
-  //          g->userList[uid2].name);
-  // else if (friend21)
-  //   printf("%s considers %s to be a friend.\n", g->userList[uid2].name,
-  //          g->userList[uid1].name);
-  // else
-  //   printf("%s and %s are not Friends.\n", g->userList[uid1].name,
-  //          g->userList[uid2].name);
+  if (!foundfriend) {
+    printf("ERROR 404: USER \"%s\" NOT FOUND.\n", friendname);
+    return;
+  }
 
-  // printf("\n");
+  bool friend12 = findFriend(g->userList[userid].friendlist, friendid);
+  bool friend21 = findFriend(g->userList[friendid].friendlist, userid);
+
+  if (friend12 && friend21)
+    printf("%s and %s are Mutual Friends.\n", g->userList[userid].name,
+           g->userList[friendid].name);
+  else if (friend12)
+    printf("%s considers %s to be a friend.\n", g->userList[userid].name,
+           g->userList[friendid].name);
+  else if (friend21)
+    printf("%s considers %s to be a friend.\n", g->userList[friendid].name,
+           g->userList[userid].name);
+  else
+    printf("%s and %s are not Friends.\n", g->userList[userid].name,
+           g->userList[friendid].name);
+
+  printf("\n");
+}
+
+void printFriendlist(treeNode *root) {
+  if (root != NULL) {
+    printFriendlist(root->leftchild);
+    printf("%s | ", g->userList[root->friendid].name);
+    printFriendlist(root->rightchild);
+  }
 }
 
 // Displays the Frienship Network
 void displayFriendsAdjacencyList() {
-  // system("clear");
+  system("clear");
 
-  // bool found = 0;
+  bool found = 0;
 
-  // printf("-------------------------------------------------------");
-  // printf("-------------------------------------------------------");
-  // printf("-------------------------------------------------------\n");
+  printf("-------------------------------------------------------");
+  printf("-------------------------------------------------------");
+  printf("-------------------------------------------------------\n");
 
-  // for (int i = 1; i < g->V; ++i) {
-  //   if (g->userList[i].uid) {
-  //     if (!found)
-  //       found = 1;
-  //     User temp = g->userList[i];
-  //     printf("Friends of [%03d] %25s: ", temp.uid, temp.name);
-  //     temp.friendlist = temp.friendlist;
-  //     while (temp.friendlist) {
-  //       printf("[%03d]%s", temp.uid, temp.name);
-  //       temp.friendlist = temp.friendlist;
-  //       if (temp.friendlist)
-  //         printf(", ");
-  //     }
-  //     printf("\n");
-  //   }
-  // }
+  for (int i = 1; i < g->V; ++i) {
+    if (g->userList[i].uid) {
+      if (!found)
+        found = 1;
 
-  // if (!found)
-  //   printf("User Database is Empty!\n");
+      printf("Friends of [%03d] %25s: ", g->userList[i].uid, g->userList[i].name);
 
-  // printf("-------------------------------------------------------");
-  // printf("-------------------------------------------------------");
-  // printf("-------------------------------------------------------\n");
+      if (g->userList[i].friendlist)
+        printFriendlist(g->userList[i].friendlist);
+      else
+        printf("NULL");
 
-  // printf("\n");
+      printf("\n");
+    }
+  }
+
+  if (!found)
+    printf("User Database is Empty!\n");
+
+  printf("-------------------------------------------------------");
+  printf("-------------------------------------------------------");
+  printf("-------------------------------------------------------\n");
+
+  printf("\n");
 }
 
 //  Writes the Adjacency List for Network Visualization in DOT
 void writeFriendshipNetwork() {
-  // system("clear");
+  system("clear");
 
-  // if (entries > 100) {
-  //   printf("ERROR: 100+ Nodes in the graph!\n");
-  //   printf("Amigos is doing so well that Graphviz doesn't support rendering "
-  //          "such a tremendously dense graph.\n");
+  if (g->minUID > 100) {
+    printf("ERROR: 100+ Nodes in the graph!\n");
+    printf("Amigos is doing so well that Graphviz doesn't support rendering "
+           "such a tremendously dense graph.\n");
 
-  //   getchar();
-  //   getchar();
+    getchar();
+    getchar();
 
-  //   displayFriendsMenu();
-  // }
+    displayFriendsMenu();
+  }
 
   // FILE *f = fopen("graph/graphviz.dot", "w");
 

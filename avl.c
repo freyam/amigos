@@ -57,15 +57,15 @@ int getBalance(treeNode *N) {
 }
 
 // Insert node
-treeNode *insertNode(treeNode *node, int friendid) {
-  // Find the correct position to insertNode the node and insertNode it
+treeNode *insertTreeNode(treeNode *node, int friendid) {
+  // Find the correct position to insertTreeNode the node and insertTreeNode it
   if (node == NULL)
     return (newNode(friendid));
 
   if (friendid < node->friendid)
-    node->leftchild = insertNode(node->leftchild, friendid);
+    node->leftchild = insertTreeNode(node->leftchild, friendid);
   else if (friendid > node->friendid)
-    node->rightchild = insertNode(node->rightchild, friendid);
+    node->rightchild = insertTreeNode(node->rightchild, friendid);
   else
     return node;
 
@@ -170,22 +170,50 @@ void printPreOrder(treeNode *root) {
   }
 }
 
+bool findFriend(treeNode *root, int fid) {
+  if (root == NULL)
+    return 0;
+
+  if (root->friendid == fid)
+    return 1;
+
+  int leftcheck = findFriend(root->leftchild, fid);
+  if (leftcheck)
+    return 1;
+
+  return findFriend(root->rightchild, fid);
+}
+
+void firstPass(treeNode *root, Queue *q, bool visited[]) {
+  if (root != NULL) {
+    firstPass(root->leftchild, q, visited);
+    visited[root->friendid] = 1;
+    enqueue(q, root->friendid);
+    // printf("%d ", root->friendid);
+    firstPass(root->rightchild, q, visited);
+  }
+}
+
 // int main() {
-// 	treeNode *root = NULL;
+//   treeNode *root = NULL;
 
-// 	root = insertNode(root, 2);
-// 	root = insertNode(root, 1);
-// 	root = insertNode(root, 7);
-// 	root = insertNode(root, 4);
-// 	root = insertNode(root, 5);
-// 	root = insertNode(root, 3);
-// 	root = insertNode(root, 8);
-// 	printPreOrder(root);
+//   root = insertTreeNode(root, 3);
+//   root = insertTreeNode(root, 2);
+//   root = insertTreeNode(root, 1);
+//   root = insertTreeNode(root, 7);
+//   root = insertTreeNode(root, 4);
+//   root = insertTreeNode(root, 5);
+//   root = insertTreeNode(root, 8);
+//   printPreOrder(root);
 
-// 	root = deleteNode(root, 3);
+//   printf("\n3 -> %d", findFriend(root, 3));
 
-// 	printf("\nAfter deletion: ");
-// 	printPreOrder(root);
+//   root = deleteNode(root, 3);
 
-// 	return 0;
+//   printf("\nAfter deletion: ");
+//   printPreOrder(root);
+
+//   printf("\n3 -> %d", findFriend(root, 3));
+
+//   return 0;
 // }

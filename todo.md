@@ -12,4 +12,5 @@ TODO
 BUGS
 
 - [ ] Enter UID greater than minUID.
-- [ ]
+- [ ] Friend of yourself
+- [ ] entriesImported bug

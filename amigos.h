@@ -44,12 +44,11 @@ struct Graph {
   int V;          // number of users
   int minUID;     // number of registered users
   User *userList; // the user list
-  bool *visited;
 };
 
 typedef struct Queue Queue;
 struct Queue {
-  User items[100];
+  int *items;
   int front;
   int rear;
 };
@@ -99,7 +98,7 @@ void removeUserUID();
 void removeUserName();
 
 // Friend Manangement Functions
-void addFriendship(User, User);
+void addFriendship(int, int);
 
 void addFriendMenu();
 void addFriendshipUID();
@@ -119,14 +118,29 @@ void displayFriendsAdjacencyList();
 void writeFriendshipNetwork();
 void ViewFriendshipNetwork();
 
+// AVL Functions (for the Friendlist)
+int height(treeNode *);
+int max(int, int);
+treeNode *newNode(int);
+treeNode *rightRotate(treeNode *);
+treeNode *leftRotate(treeNode *);
+int getBalance(treeNode *);
+treeNode *insertTreeNode(treeNode *, int);
+treeNode *minValueNode(treeNode *);
+treeNode *deleteNode(treeNode *, int);
+void printPreOrder(treeNode *);
+bool findFriend(treeNode *, int);
+void printFriendlist(treeNode *);
+void firstPass(treeNode *, Queue *, bool[]);
+
 // Queue Functions (for BFS)
-Queue *createQueue();
-void enqueue(Queue *, User);
-User dequeue(Queue *);
+Queue *createQueue(int size);
+void enqueue(Queue *, int);
+int dequeue(Queue *);
 void display(Queue *);
 bool isEmpty(Queue *);
 void printQueue(Queue *);
-void bfs(Graph *, User);
+void bfs(treeNode *, bool[]);
 
 // Min Heap Functions (for Minimum UID)
 Heap *createHeap(int);
