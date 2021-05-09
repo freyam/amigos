@@ -13,63 +13,58 @@
 typedef char string[50];
 
 #define gets(s) \
-	getchar();  \
-	scanf("%[^\n]s", s);
+  getchar();    \
+  scanf("%[^\n]s", s);
+
+typedef struct treeNode treeNode;
+struct treeNode {
+  int friendid;
+  treeNode *leftchild;
+  treeNode *rightchild;
+  int height;
+};
 
 typedef struct User User;
 struct User {
-	int uid;
-	string
-		name,
-		age,
-		gender,
-		email,
-		job_title,
-		university,
-		city,
-		country;
-	User *next;
-};
+  int uid;
+  string name,
+      age,
+      gender,
+      email,
+      job_title,
+      university,
+      city,
+      country;
 
-struct node {
-	struct User *data;	 // data
-	int color;			 // 1-RED, 0-BLACK
-	struct node *parent; // parent
-	struct node *right;	 // right-child
-	struct node *left;	 // left child
-};
-
-struct vertex {
-	struct User *User;
-	struct node *root;
+  treeNode *friendlist;
 };
 
 typedef struct Graph Graph;
-
 struct Graph {
-	int V;			// number of vertices
-	User **adjList; // the adjacency list
-	bool *visited;	// a boolean array
+  int V;          // number of users
+  int minUID;     // number of registered users
+  User *userList; // the user list
+  bool *visited;
 };
 
 typedef struct Queue Queue;
 struct Queue {
-	User items[100];
-	int front;
-	int rear;
+  User items[100];
+  int front;
+  int rear;
 };
 
 typedef struct Heap Heap;
 struct Heap {
-	int *arr;
-	int count;
-	int capacity;
+  int *arr;
+  int count;
+  int capacity;
 };
 
 typedef struct intidx intidx;
 struct intidx {
-	int val;
-	int idx;
+  int val;
+  int idx;
 };
 
 // Core UI and UX Functions
@@ -86,42 +81,42 @@ Graph *createGraph(int);
 // User Manangement Functions
 User *createUser(User);
 void printUser(User);
-void addUser(Graph *, Heap *);
-void importData(Graph *);
+void addUser();
+void importData();
 
-void searchUserMenu(Graph *);
-void searchUserUID(Graph *);
-void searchUserName(Graph *);
+void searchUserMenu();
+void searchUserUID();
+void searchUserName();
 
-void editUserMenu(Graph *);
-void editUserUID(Graph *);
-void editUserName(Graph *);
+void editUserMenu();
+void editUserUID();
+void editUserName();
 
-void displayUserDatabase(Graph *);
+void displayUserDatabase();
 
-void removeUserMenu(Graph *);
-void removeUserUID(Graph *, Heap *h);
-void removeUserName(Graph *, Heap *h);
+void removeUserMenu();
+void removeUserUID();
+void removeUserName();
 
 // Friend Manangement Functions
-void addFriendship(Graph *, User, User);
+void addFriendship(User, User);
 
 void addFriendMenu();
-void addFriendshipUID(Graph *);
-void addFriendshipName(Graph *);
+void addFriendshipUID();
+void addFriendshipName();
 
 void recommendFriendsMenu();
 int compatibilityScore(User, User);
-void recommendFriendsNewUser(Graph *);
-void recommendFriendsExistingUser(Graph *);
+void recommendFriendsNewUser();
+void recommendFriendsExistingUser();
 
 void checkFriendMenu();
-void checkFriendshipUID(Graph *);
-void checkFriendshipName(Graph *);
+void checkFriendshipUID();
+void checkFriendshipName();
 
 void displayFriendsMenu();
-void displayFriendsAdjacencyList(Graph *);
-void writeFriendshipNetwork(Graph *);
+void displayFriendsAdjacencyList();
+void writeFriendshipNetwork();
 void ViewFriendshipNetwork();
 
 // Queue Functions (for BFS)
@@ -142,24 +137,5 @@ void heapify_top_bottom(Heap *, int);
 int PopMin(Heap *h);
 
 void quit();
-
-void swapColors(struct node *x1, struct node *x2);
-void swapValues(struct node *u, struct node *v);
-bool hasRedChild(struct node *x);
-
-struct node *RedBlackTree(struct node *head, struct node *temp);
-struct node *rightrotate(struct node *head, struct node *temp);
-struct node *leftrotate(struct node *head, struct node *temp);
-struct node *restructure(struct node *head, struct node *pt);
-
-struct node *siblingfind(struct node *x);
-struct node *unclefind(struct node *x);
-struct node *fixRedRed(struct node *head, struct node *x);
-struct node *successor(struct node *x);
-struct node *BSTreplace(struct node *x);
-struct node *fixDoubleBlack(struct node *head, struct node *x);
-struct node *deleteNode(struct node *head, struct node *v);
-struct node *search(struct node *head, int n);
-struct node *deleteByVal(struct node *head, int n);
 
 #endif

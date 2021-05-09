@@ -2,13 +2,13 @@ CC = gcc
 CFLAGS = -Wall -g -lm
 
 default:
-	$(CC) $(CFLAGS) main.c interface.c amigos.c heap.c -o amigos && ./amigos
+	$(CC) $(CFLAGS) main.c interface.c amigos.c heap.c avl.c -o amigos && ./amigos
 
 com:
-	$(CC) $(CFLAGS) main.c interface.c amigos.c heap.c -o amigos
+	$(CC) $(CFLAGS) main.c interface.c amigos.c heap.c avl.c -o amigos
 
 dbg:
-	$(CC) $(CFLAGS) -g main.c interface.c amigos.c heap.c -o amigos
+	$(CC) $(CFLAGS) -g main.c interface.c amigos.c heap.c avl.c -o amigos
 	gdb amigos
 
 run:

@@ -7,7 +7,7 @@ TODO
 - [ ] testing
 - [ ] error handling
 - [ ] comments
-- [ ]
+- [ ] file structure
 
 BUGS
 
