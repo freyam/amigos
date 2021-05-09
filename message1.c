@@ -1279,6 +1279,7 @@ void removeUserUID()
     {
       printf("Deleted!\n");
       DeleteUSER(userid);
+      insertHeap(h,userid);
     }
     else
     {
@@ -1315,6 +1316,7 @@ void removeUserName()
         {
           printf("Deleted!\n");
           DeleteUSER(vertex[i].uid);
+	  insertHeap(h,i);
           found = 1;
         }
         else
