@@ -1,7 +1,6 @@
 CC = gcc
 CFLAGS = -Wall
-FILES = main.c interface.c amigos.c heap.c avl.c queue.c
-
+FILES = main.c interface.c amigos.c tokencounter.c friendlist.c
 
 default:
 	$(CC) $(CFLAGS) $(FILES) -o amigos

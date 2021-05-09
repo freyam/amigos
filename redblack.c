@@ -689,7 +689,7 @@ int Findfrienshipstatus(int User1, int User2) {
   }
 }
 
-int compatibilityScore(struct User u1, struct User u2) {
+int CompatiFriend(struct User u1, struct User u2) {
   int score = 0; // max 105
 
   score += 10 - abs(atoi(u2.age) - atoi(u1.age));
@@ -882,7 +882,7 @@ void Recommendfriends(int Userid, int K, int maximumUserID) {
     }
   }
   for (int i = 1; i <= NoRecUsers; i++) {
-    Recommendation[i].similarityscore = compatibilityScore(vertex[Recommendation[i].userid], vertex[Userid]);
+    Recommendation[i].similarityscore = CompatiFriend(vertex[Recommendation[i].userid], vertex[Userid]);
   }
   mergeSort(1, NoRecUsers);
   int NoRecUsersFinal = NoRecUsers;
@@ -1093,7 +1093,7 @@ void displayUserDatabase() {
     }
 
   if (!found)
-    printf("User Database is Empty!\n");
+    printf("\tUser Database is Empty!\n");
 
   printf("-------------------------------------------------------");
   printf("-------------------------------------------------------");
@@ -1414,7 +1414,7 @@ void displayFriendsAdjacencyList() {
   }
 
   if (!found)
-    printf("User Database is Empty!\n");
+    printf("\tUser Database is Empty!\n");
 
   printf("-------------------------------------------------------");
   printf("-------------------------------------------------------");

@@ -9,6 +9,9 @@
 #include <time.h>
 #include <unistd.h>
 
+#define max(x, y) (((x) > (y)) ? (x) : (y))
+#define min(x, y) (((x) < (y)) ? (x) : (y))
+
 typedef char string[50];
 
 #define gets(s) \
@@ -106,7 +109,7 @@ void addFriendshipUID();
 void addFriendshipName();
 
 void recommendFriendsMenu();
-int compatibilityScore(User, User);
+int CompatiFriend(User, User);
 void recommendFriendsNewUser();
 void recommendFriendsExistingUser();
 
@@ -125,7 +128,6 @@ void removeFriendshipName();
 
 // AVL Functions (for the Friendlist)
 int height(treeNode *);
-int max(int, int);
 treeNode *newNode(int);
 treeNode *rightRotate(treeNode *);
 treeNode *leftRotate(treeNode *);
@@ -136,7 +138,7 @@ treeNode *removeTreeNode(treeNode *, int);
 void printPreOrder(treeNode *);
 bool findFriend(treeNode *, int);
 void printFriendlist(treeNode *);
-void writeFriendlist(treeNode *, FILE *);
+void writeFriendlist(string, treeNode *, FILE *);
 void singlePass(treeNode *, Queue *, bool[]);
 
 // Queue Functions (for BFS)

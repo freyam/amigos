@@ -1,10 +1,27 @@
 ![](/src/header.png)
 
-## Amigos - A Rich Social Media Experience
+## Amigos App - A Rich Social Media Experience
 
-Amigos is an clever Friend Recommendation Application that inventively suggests friends to Users. The User Database is stored in an array of polished AVL (Adelson-Velsky and Landis) Trees.
+Amigos is a clever Friend Recommendation Application that inventively suggests friends to Users. The User Database is stored in an array of polished AVL (Adelson-Velsky and Landis) Trees. We are not just any other Social Media. Our remarkable **CompatiFriend** algorithm is using excellent computation to deliver accurate results.
 
 ### Motivation
+
+Everyone needs a good friend who stands next to them during their good and challenging times. We understand this and work towards making everyone's social lives better. At Amigos, we believe in the positive influence a good friend can have in one's life. Our sole motivation is to unite similar-minded people across the world!
+
+<p align="center">
+  <img src="src/gifs/nondoggo-1.gif">
+</p>
+
+### Core Functions
+
+- `checkFriendshipUID()`
+- `checkFriendshipName()`
+- `recommendFriendsNewUser()`
+- `recommendFriendsExisitngUser()`
+
+### Analysis of the Data Structures and Algorithms Used
+
+The Detailed Analysis of our choices can be found in our [Project Report](https://github.com/freyam/amigos/blob/main/src/report.pdf).
 
 ### File Structure
 
@@ -17,7 +34,6 @@ Amigos is an clever Friend Recommendation Application that inventively suggests 
 ├── data
 │   ├── CustomUserDatabase.csv
 │   └── RandomUserDatabase.csv
-├── dump.c
 ├── graph
 │   ├── friendship-network.png
 │   └── graphviz.dot
@@ -57,15 +73,25 @@ Amigos is an clever Friend Recommendation Application that inventively suggests 
 
 ### User Interface
 
-![](/src/header.png)
+![](/src/interface/menus.png)
+![](/src/interface/graph.png)
 
-![](/src/header.png)
+### Some Happy Faces
 
-![](/src/header.png)
+We have helped many users find their true friends.
 
-![](/src/header.png)
+<a align="center">
+  <img src="src/gifs/nondoggo-2.gif">
+  <img src="src/gifs/nondoggo-3.gif">
+</a>
 
-![](/src/header.png)
+<a align="center">
+  <img src="src/gifs/doggo-1.gif">
+  <img src="src/gifs/doggo-2.gif">
+</a>
 
-_This Application was developed as part of the Data Structures and Algorithms Course taught by Sujit Gujar and Ravi Kiran S.
-Special thanks to Dixit Garg for helping us._
+<br>
+<br>
+
+_This Application was developed as part of the Final Project of the Data Structures and Algorithms Course taught by Sujit Gujar and Ravi Kiran S at IIIT Hyderabad._
+_Special thanks to Dixit Garg for helping us._

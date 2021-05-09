@@ -24,7 +24,7 @@ void initialize() {
   srand(time(0));
 
   V = 101;
-  entries = 15;
+  entries = 6;
 
   network = createGraph(V);
   token = createHeap(V);
@@ -162,8 +162,10 @@ void searchUserUID() {
   printf("Enter the User ID: ");
   scanf("%d", &user_id);
 
-  if (user_id > network->minUID)
+  if (user_id > network->minUID) {
+    printf("Invalid User ID!\n");
     return;
+  }
 
   if (network->userList[user_id].uid)
     printUser(network->userList[user_id]);
@@ -207,6 +209,11 @@ void editUserUID() {
 
   printf("Enter the User ID: ");
   scanf("%d", &user_id);
+
+  if (user_id > network->minUID) {
+    printf("Invalid User ID!\n");
+    return;
+  }
 
   if (network->userList[user_id].uid) {
     printUser(network->userList[user_id]);
@@ -306,7 +313,7 @@ void displayUserDatabase() {
     }
 
   if (!found)
-    printf("User Database is Empty!\n");
+    printf("\tUser Database is Empty!\n");
 
   printf("\t---------------------------------------------------------");
   printf("---------------------------------------------------------\n");
@@ -325,6 +332,11 @@ void removeUserUID() {
   int user_id;
   printf("Enter the User ID: ");
   scanf("%d", &user_id);
+
+  if (user_id > network->minUID) {
+    printf("Invalid User ID!\n");
+    return;
+  }
 
   if (network->userList[user_id].uid) {
     printUser(network->userList[user_id]);
@@ -410,20 +422,30 @@ void removeUserName() {
 }
 
 // Adds a Frienship to the Network
-// by O(logV) AVL Insertion of a Node
+// by O(log V) AVL Insertion of a Node
 void addFriendship(int user_id, int friend_id) {
   network->userList[user_id].friend_list =
       insertTreeNode(network->userList[user_id].friend_list, friend_id);
 }
 
 // Adds a Frienship to the Network (User Input: 2 UIDs)
-// by O(1) Array Lookup and O(logV) AVL Insertion of a Node
+// by O(1) Array Lookup and O(log V) AVL Insertion of a Node
 void addFriendshipUID() {
   system("clear");
 
   int user_id, friend_id;
   printf("Enter the User ID and the Friend ID: ");
   scanf("%d %d", &user_id, &friend_id);
+
+  if (user_id > network->minUID) {
+    printf("Invalid User ID!\n");
+    return;
+  }
+
+  if (user_id == friend_id) {
+    printf("You cannot add a User to its own friend list.\n");
+    return;
+  }
 
   if (network->userList[user_id].uid && network->userList[friend_id].uid) {
     printUser(network->userList[user_id]);
@@ -440,7 +462,7 @@ void addFriendshipUID() {
 }
 
 // Adds a Frienship to the Network (User Input: 2 Names)
-// by O(V) Array Lookup and O(logV) AVL Insertion of a Node
+// by O(V) Array Lookup and O(log V) AVL Insertion of a Node
 void addFriendshipName() {
   system("clear");
 
@@ -481,6 +503,11 @@ void addFriendshipName() {
 
   if (!foundfriend) {
     printf("[ERROR #404]: USER \"%s\" NOT FOUND.\n", friendname);
+    return;
+  }
+
+  if (user_id == friend_id) {
+    printf("You cannot add a User to its own friend list.\n");
     return;
   }
 
@@ -534,37 +561,37 @@ void countingSort(intx scores[], int size) {
 }
 
 // Prints the INTX Array (for debugging)
-void printINTXArray(intx arr[], int size) {
+void PrintCompatiblities(intx arr[], int size) {
   for (int i = 0; i < size; ++i)
-    printf("[%d] %d ", arr[i].idx, arr[i].val);
+    printf("[%s %d] ", network->userList[arr[i].idx].name, arr[i].val);
 
   printf("\n");
 }
 
 // Calculates the Compatibility Score between 2 Users on the basis of their Metadata
-int compatibilityScore(User u1, User u2) {
-  int score = 0; // max 100
+int CompatiFriend(User u1, User u2) {
+  int compatiFactor = 0; // max 100
 
-  score += 10 - abs(atoi(u2.age) - atoi(u1.age));
+  compatiFactor += 10 - abs(atoi(u2.age) - atoi(u1.age));
 
   if (strcmp(u1.gender, u2.gender))
-    score += 10;
+    compatiFactor += 10;
   else
-    score += 5;
+    compatiFactor += 5;
 
   if (!strcmp(u1.job_title, u2.job_title))
-    score += 40;
+    compatiFactor += 40;
 
   if (!strcmp(u1.university, u2.university))
-    score += 30;
+    compatiFactor += 30;
 
   if (!strcmp(u1.city, u2.city))
-    score += 5;
+    compatiFactor += 5;
 
   if (!strcmp(u1.country, u2.country))
-    score += 5;
+    compatiFactor += 5;
 
-  return score;
+  return compatiFactor;
 }
 
 /*
@@ -586,23 +613,34 @@ void recommendFriendsNewUser() {
   printf("Enter the User ID: ");
   scanf("%d", &user_id);
 
-  if (network->userList[user_id].uid == 0) {
-    printf("[ERROR #404]: USER #%d NOT FOUND.", user_id);
+  if (user_id > network->minUID) {
+    printf("Invalid User ID!\n");
     return;
   }
 
-  printf("------> ");
-  printUser(network->userList[user_id]);
-
-  int toAdd;
-
-  printf("Enter the number of friends you want to add: ");
-  scanf("%d", &toAdd);
-
-  if (toAdd == 0) {
-    printf("Skipping Recommending Friends...\n");
-    recommendFriendsMenu();
+  if (network->userList[user_id].uid == 0) {
+    printf("[ERROR #404]: USER #%d NOT FOUND.\n", user_id);
+    return;
   }
+
+  if (network->userList[user_id].friend_list) {
+    printf("%s already has friends.\n", network->userList[user_id].name);
+    printf("Treat %s as an Existing User (y/n)? ", network->userList[user_id].name);
+
+    char c, buff;
+    scanf("%c%c", &buff, &c);
+
+    if (c != 'n')
+      recommendFriendsExistingUser();
+    else
+      printf("Skipped!\n");
+
+    return;
+  }
+
+  printf("      > ");
+  printUser(network->userList[user_id]);
+  printf("\n");
 
   intx scores[network->minUID];
   for (int i = 0; i < network->minUID; ++i) {
@@ -610,16 +648,41 @@ void recommendFriendsNewUser() {
 
     if (i + 1 != user_id)
       scores[i].val =
-          compatibilityScore(network->userList[user_id], network->userList[i + 1]);
+          CompatiFriend(network->userList[user_id], network->userList[i + 1]);
     else
       scores[i].val = 0;
   }
 
-  countingSort(scores, network->minUID);
+  countingSort(scores, network->minUID - 1);
 
+  printf("Recommended Friends using CompatiFriend\n");
   for (int i = 0; i < 10; ++i) {
+    if (scores[i].idx >= network->minUID)
+      continue;
+
+    if (network->userList[scores[i].idx].uid == user_id)
+      continue;
+
+    if (network->userList[scores[i].idx].uid == 0)
+      continue;
+
     printf("%03d%% -> ", scores[i].val);
     printUser(network->userList[scores[i].idx]);
+  }
+  printf("\n");
+
+  int toAdd;
+
+  printf("Enter the number of friends you want to add: ");
+  scanf("%d", &toAdd);
+
+  if (toAdd == 0) {
+    printf("Skipping Recommending Friends...\n\n");
+    return;
+  }
+  if (toAdd > network->minUID - 2) {
+    printf("There are only %d possible friends.\n", network->minUID - 2);
+    toAdd = network->minUID - 2;
   }
 
   for (int i = 0; i < toAdd; ++i) {
@@ -628,13 +691,17 @@ void recommendFriendsNewUser() {
     printf("Enter the User ID: ");
     scanf("%d", &friend_id);
 
-    if (network->userList[friend_id].uid == 0 || friend_id >= network->minUID) {
+    if (friend_id >= network->minUID || network->userList[friend_id].uid == 0) {
       printf("Invalid UID! Try again\n");
-
+      i--;
+    } else if (friend_id == user_id) {
+      printf("You cannot add a User to its own friend list.\n");
+      i--;
+    } else if (findFriend(network->userList[user_id].friend_list, friend_id)) {
+      printf("%s is already %s's friend.\n", network->userList[friend_id].name, network->userList[user_id].name);
       i--;
     } else {
       addFriendship(user_id, friend_id);
-
       printf("Added %s as a Friend\n", network->userList[friend_id].name);
     }
   }
@@ -748,20 +815,24 @@ void recommendFriendsExistingUser() {
     printf("Enter the User ID: ");
     scanf("%d", &friend_id);
 
-    if (network->userList[friend_id].uid == 0 || friend_id >= network->minUID) {
+    if (friend_id >= network->minUID || network->userList[friend_id].uid == 0) {
       printf("Invalid UID! Try again\n");
-
+      i--;
+    } else if (friend_id == user_id) {
+      printf("You cannot add a User to its own friend list.\n");
+      i--;
+    } else if (findFriend(network->userList[user_id].friend_list, friend_id)) {
+      printf("%s is already %s's friend.\n", network->userList[friend_id].name, network->userList[user_id].name);
       i--;
     } else {
       addFriendship(user_id, friend_id);
-
       printf("Added %s as a Friend\n", network->userList[friend_id].name);
     }
   }
 }
 
 // Checks whether 2 Users are Friends (User Input: UIDs)
-// by O(1) Array Lookup and O(logV) AVL Tree Search
+// by O(1) Array Lookup and O(log V) AVL Tree Search
 void checkFriendshipUID() {
   system("clear");
 
@@ -808,7 +879,7 @@ void checkFriendshipUID() {
 }
 
 // Checks whether 2 Users are Friends (User Input: Names)
-// by O(V) Array Traversal and O(logV) AVL Tree Search
+// by O(V) Array Traversal and O(log V) AVL Tree Search
 void checkFriendshipName() {
   system("clear");
 
@@ -913,7 +984,7 @@ void displayFriendshipNetwork() {
   }
 
   if (!found)
-    printf("User Database is Empty!\n");
+    printf("\tUser Database is Empty!\n");
 
   printf("-------------------------------------------------------");
   printf("-------------------------------------------------------");
@@ -924,13 +995,13 @@ void displayFriendshipNetwork() {
 
 // Writes the Friendlist of a User into the the Graphviz DOT Source
 // by O(V) AVL Tree PreOrder recursive traversal
-void writeFriendlist(treeNode *root, FILE *f) {
+void writeFriendlist(string username, treeNode *root, FILE *f) {
   if (root != NULL) {
-    writeFriendlist(root->left_child, f);
+    writeFriendlist(username, root->left_child, f);
 
-    fprintf(f, " -> \"%s\"", network->userList[root->friend_id].name);
+    fprintf(f, "\t\"%s\" -> \"%s\"\n", username, network->userList[root->friend_id].name);
 
-    writeFriendlist(root->right_child, f);
+    writeFriendlist(username, root->right_child, f);
   }
 }
 
@@ -962,10 +1033,11 @@ void writeFriendshipNetwork() {
 
   for (int i = 1; i < network->V; ++i) {
     if (network->userList[i].uid) {
-      fprintf(f, "\t\"%s\"", network->userList[i].name);
-
+      string username;
+      strcpy(username, network->userList[i].name);
+      fprintf(f, "\t\"%s\"", username);
       if (network->userList[i].friend_list)
-        writeFriendlist(network->userList[i].friend_list, f);
+        writeFriendlist(username, network->userList[i].friend_list, f);
 
       fprintf(f, "\n");
     }
@@ -984,14 +1056,14 @@ void ViewFriendshipNetwork() {
 }
 
 // Adds a Frienship to the Network
-// by O(logV) AVL Insertion of a Node
+// by O(log V) AVL Insertion of a Node
 void removeFriendship(int user_id, int friend_id) {
   network->userList[user_id].friend_list =
       removeTreeNode(network->userList[user_id].friend_list, friend_id);
 }
 
 // Removes a Frienship to the Network (User Input: 2 UIDs)
-// by O(1) Array Lookup, O(logV) AVL Search, and O(logV) AVL Removal of a Node
+// by O(1) Array Lookup, O(log V) AVL Search, and O(log V) AVL Removal of a Node
 void removeFriendshipUID() {
   system("clear");
 
@@ -1021,7 +1093,7 @@ void removeFriendshipUID() {
 }
 
 // Removes a Frienship to the Network (User Input: 2 Names)
-// by O(V) Array Lookup, O(logV) AVL Search, and O(logV) AVL Removal of a Node
+// by O(V) Array Lookup, O(log V) AVL Search, and O(log V) AVL Removal of a Node
 void removeFriendshipName() {
   system("clear");
 

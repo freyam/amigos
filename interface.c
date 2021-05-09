@@ -7,6 +7,7 @@ extern Heap *token;
 #define RED "\033[1m\033[31m"
 #define YELLOW "\033[1m\033[33m"
 #define BLUE "\033[1m\033[34m"
+#define GREEN "\033[1m\033[32m"
 
 // Provides the User Interface for the Welcome Banner
 void banner() {
@@ -310,6 +311,7 @@ void friendMenu() {
     printf("  **      2. Recommend Friends        **  \n");
     printf("  **      3. Check Friendship         **  \n");
     printf("  **      4. Display Friendships      **  \n");
+    printf("  **      5. Remove Friendship        **  \n");
     printf("  **                                  **  \n");
     printf("  **     9. Back to the Main Menu     **  \n");
     printf("  **          0. Exit Amigos          **  \n");
@@ -422,7 +424,7 @@ void recommendFriendsMenu() {
     printf("  **         Recommend Friends        **  \n");
     printf("  **                                  **  \n");
     printf("  **      1. To a New User            **  \n");
-    printf("  **      2. To an Existing User	    **  \n");
+    printf("  **      2. To an Existing User      **  \n");
     printf("  **                                  **  \n");
     printf("  **    9. Back to the Friend Menu    **  \n");
     printf("  **          0. Exit Amigos          **  \n");
@@ -626,7 +628,8 @@ void error() {
 // Provides the User Interface for the Exit Screen
 void quit() {
   system("clear");
-  printf(BLUE);
+  printf(GREEN);
+  printf("Application Exited Successfully\n");
   printf("Thank You for visiting us at https://amigos.com/\n");
   printf(RESET);
   exit(EXIT_SUCCESS);
