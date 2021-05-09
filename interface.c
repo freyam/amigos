@@ -1,7 +1,7 @@
 #include "amigos.h"
 
-extern Graph *g;
-extern Heap *h;
+extern FriendNetwork *network;
+extern Heap *token;
 
 void banner() {
   system("clear");
@@ -473,7 +473,7 @@ void displayFriendsMenu() {
 
     switch (ch) {
     case 1:
-      displayFriendsAdjacencyList();
+      displayFriendshipNetwork();
       break;
     case 2:
       ViewFriendshipNetwork();
@@ -493,5 +493,5 @@ void displayFriendsMenu() {
 void quit() {
   system("clear");
   printf("Thank You for visiting us at https://amigos.com/\n");
-  exit(0);
+  exit(EXIT_SUCCESS);
 }

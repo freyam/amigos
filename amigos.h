@@ -1,8 +1,6 @@
 #ifndef AMIGOS_H
 #define AMIGOS_H
 
-#include <limits.h>
-#include <math.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -18,16 +16,17 @@ typedef char string[50];
 
 typedef struct treeNode treeNode;
 struct treeNode {
-  int friendid;
-  treeNode *leftchild;
-  treeNode *rightchild;
+  int friend_id;
+  treeNode *left_child;
+  treeNode *right_child;
   int height;
 };
 
 typedef struct User User;
 struct User {
   int uid;
-  string name,
+  string
+      name,
       age,
       gender,
       email,
@@ -36,11 +35,11 @@ struct User {
       city,
       country;
 
-  treeNode *friendlist;
+  treeNode *friend_list;
 };
 
-typedef struct Graph Graph;
-struct Graph {
+typedef struct FriendNetwork FriendNetwork;
+struct FriendNetwork {
   int V;          // number of users
   int minUID;     // number of registered users
   User *userList; // the user list
@@ -60,25 +59,26 @@ struct Heap {
   int capacity;
 };
 
-typedef struct intidx intidx;
-struct intidx {
+typedef struct intx intx;
+struct intx {
   int val;
   int idx;
 };
 
 // Core UI and UX Functions
 void banner();
-void authorization();
+void authentication();
 void initialize();
 void mainMenu();
 void userMenu();
 void friendMenu();
 
 // Frienship Network Functions
-Graph *createGraph(int);
+FriendNetwork *createGraph(int);
 
 // User Manangement Functions
 User *createUser(User);
+int findUID();
 void printUser(User);
 void addUser();
 void importData();
@@ -114,7 +114,7 @@ void checkFriendshipUID();
 void checkFriendshipName();
 
 void displayFriendsMenu();
-void displayFriendsAdjacencyList();
+void displayFriendshipNetwork();
 void writeFriendshipNetwork();
 void ViewFriendshipNetwork();
 
@@ -131,7 +131,8 @@ treeNode *deleteNode(treeNode *, int);
 void printPreOrder(treeNode *);
 bool findFriend(treeNode *, int);
 void printFriendlist(treeNode *);
-void firstPass(treeNode *, Queue *, bool[]);
+void writeFriendlist(treeNode *, FILE *);
+void singlePass(treeNode *, Queue *, bool[]);
 
 // Queue Functions (for BFS)
 Queue *createQueue(int size);
@@ -148,7 +149,7 @@ void insertHeap(Heap *, int);
 void printHeap(Heap *);
 void heapify_bottom_top(Heap *, int);
 void heapify_top_bottom(Heap *, int);
-int PopMin(Heap *h);
+int PopMin(Heap *token);
 
 void quit();
 

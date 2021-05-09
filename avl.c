@@ -12,39 +12,39 @@ int max(int a, int b) {
 }
 
 // Create a node
-treeNode *newNode(int friendid) {
+treeNode *newNode(int friend_id) {
   treeNode *node = (treeNode *)malloc(sizeof(treeNode));
-  node->friendid = friendid;
-  node->leftchild = NULL;
-  node->rightchild = NULL;
+  node->friend_id = friend_id;
+  node->left_child = NULL;
+  node->right_child = NULL;
   node->height = 1;
   return (node);
 }
 
 // Right rotate
 treeNode *rightRotate(treeNode *y) {
-  treeNode *x = y->leftchild;
-  treeNode *T2 = x->rightchild;
+  treeNode *x = y->left_child;
+  treeNode *T2 = x->right_child;
 
-  x->rightchild = y;
-  y->leftchild = T2;
+  x->right_child = y;
+  y->left_child = T2;
 
-  y->height = max(height(y->leftchild), height(y->rightchild)) + 1;
-  x->height = max(height(x->leftchild), height(x->rightchild)) + 1;
+  y->height = max(height(y->left_child), height(y->right_child)) + 1;
+  x->height = max(height(x->left_child), height(x->right_child)) + 1;
 
   return x;
 }
 
 // Left rotate
 treeNode *leftRotate(treeNode *x) {
-  treeNode *y = x->rightchild;
-  treeNode *T2 = y->leftchild;
+  treeNode *y = x->right_child;
+  treeNode *T2 = y->left_child;
 
-  y->leftchild = x;
-  x->rightchild = T2;
+  y->left_child = x;
+  x->right_child = T2;
 
-  x->height = max(height(x->leftchild), height(x->rightchild)) + 1;
-  y->height = max(height(y->leftchild), height(y->rightchild)) + 1;
+  x->height = max(height(x->left_child), height(x->right_child)) + 1;
+  y->height = max(height(y->left_child), height(y->right_child)) + 1;
 
   return y;
 }
@@ -53,40 +53,40 @@ treeNode *leftRotate(treeNode *x) {
 int getBalance(treeNode *N) {
   if (N == NULL)
     return 0;
-  return height(N->leftchild) - height(N->rightchild);
+  return height(N->left_child) - height(N->right_child);
 }
 
 // Insert node
-treeNode *insertTreeNode(treeNode *node, int friendid) {
+treeNode *insertTreeNode(treeNode *node, int friend_id) {
   // Find the correct position to insertTreeNode the node and insertTreeNode it
   if (node == NULL)
-    return (newNode(friendid));
+    return (newNode(friend_id));
 
-  if (friendid < node->friendid)
-    node->leftchild = insertTreeNode(node->leftchild, friendid);
-  else if (friendid > node->friendid)
-    node->rightchild = insertTreeNode(node->rightchild, friendid);
+  if (friend_id < node->friend_id)
+    node->left_child = insertTreeNode(node->left_child, friend_id);
+  else if (friend_id > node->friend_id)
+    node->right_child = insertTreeNode(node->right_child, friend_id);
   else
     return node;
 
   // Update the balance factor of each node and
   // Balance the tree
-  node->height = 1 + max(height(node->leftchild), height(node->rightchild));
+  node->height = 1 + max(height(node->left_child), height(node->right_child));
 
   int balance = getBalance(node);
-  if (balance > 1 && friendid < node->leftchild->friendid)
+  if (balance > 1 && friend_id < node->left_child->friend_id)
     return rightRotate(node);
 
-  if (balance < -1 && friendid > node->rightchild->friendid)
+  if (balance < -1 && friend_id > node->right_child->friend_id)
     return leftRotate(node);
 
-  if (balance > 1 && friendid > node->leftchild->friendid) {
-    node->leftchild = leftRotate(node->leftchild);
+  if (balance > 1 && friend_id > node->left_child->friend_id) {
+    node->left_child = leftRotate(node->left_child);
     return rightRotate(node);
   }
 
-  if (balance < -1 && friendid < node->rightchild->friendid) {
-    node->rightchild = rightRotate(node->rightchild);
+  if (balance < -1 && friend_id < node->right_child->friend_id) {
+    node->right_child = rightRotate(node->right_child);
     return leftRotate(node);
   }
 
@@ -96,27 +96,27 @@ treeNode *insertTreeNode(treeNode *node, int friendid) {
 treeNode *minValueNode(treeNode *node) {
   treeNode *current = node;
 
-  while (current->leftchild != NULL)
-    current = current->leftchild;
+  while (current->left_child != NULL)
+    current = current->left_child;
 
   return current;
 }
 
 // Delete a nodes
-treeNode *deleteNode(treeNode *root, int friendid) {
+treeNode *deleteNode(treeNode *root, int friend_id) {
   // Find the node and delete it
   if (root == NULL)
     return root;
 
-  if (friendid < root->friendid)
-    root->leftchild = deleteNode(root->leftchild, friendid);
+  if (friend_id < root->friend_id)
+    root->left_child = deleteNode(root->left_child, friend_id);
 
-  else if (friendid > root->friendid)
-    root->rightchild = deleteNode(root->rightchild, friendid);
+  else if (friend_id > root->friend_id)
+    root->right_child = deleteNode(root->right_child, friend_id);
 
   else {
-    if ((root->leftchild == NULL) || (root->rightchild == NULL)) {
-      treeNode *temp = root->leftchild ? root->leftchild : root->rightchild;
+    if ((root->left_child == NULL) || (root->right_child == NULL)) {
+      treeNode *temp = root->left_child ? root->left_child : root->right_child;
 
       if (temp == NULL) {
         temp = root;
@@ -125,11 +125,11 @@ treeNode *deleteNode(treeNode *root, int friendid) {
         *root = *temp;
       free(temp);
     } else {
-      treeNode *temp = minValueNode(root->rightchild);
+      treeNode *temp = minValueNode(root->right_child);
 
-      root->friendid = temp->friendid;
+      root->friend_id = temp->friend_id;
 
-      root->rightchild = deleteNode(root->rightchild, temp->friendid);
+      root->right_child = deleteNode(root->right_child, temp->friend_id);
     }
   }
 
@@ -138,23 +138,23 @@ treeNode *deleteNode(treeNode *root, int friendid) {
 
   // Update the balance factor of each node and
   // balance the tree
-  root->height = 1 + max(height(root->leftchild),
-                         height(root->rightchild));
+  root->height = 1 + max(height(root->left_child),
+                         height(root->right_child));
 
   int balance = getBalance(root);
-  if (balance > 1 && getBalance(root->leftchild) >= 0)
+  if (balance > 1 && getBalance(root->left_child) >= 0)
     return rightRotate(root);
 
-  if (balance > 1 && getBalance(root->leftchild) < 0) {
-    root->leftchild = leftRotate(root->leftchild);
+  if (balance > 1 && getBalance(root->left_child) < 0) {
+    root->left_child = leftRotate(root->left_child);
     return rightRotate(root);
   }
 
-  if (balance < -1 && getBalance(root->rightchild) <= 0)
+  if (balance < -1 && getBalance(root->right_child) <= 0)
     return leftRotate(root);
 
-  if (balance < -1 && getBalance(root->rightchild) > 0) {
-    root->rightchild = rightRotate(root->rightchild);
+  if (balance < -1 && getBalance(root->right_child) > 0) {
+    root->right_child = rightRotate(root->right_child);
     return leftRotate(root);
   }
 
@@ -164,9 +164,9 @@ treeNode *deleteNode(treeNode *root, int friendid) {
 // Print the trees
 void printPreOrder(treeNode *root) {
   if (root != NULL) {
-    printPreOrder(root->leftchild);
-    printf("%d ", root->friendid);
-    printPreOrder(root->rightchild);
+    printPreOrder(root->left_child);
+    printf("%d ", root->friend_id);
+    printPreOrder(root->right_child);
   }
 }
 
@@ -174,23 +174,23 @@ bool findFriend(treeNode *root, int fid) {
   if (root == NULL)
     return 0;
 
-  if (root->friendid == fid)
+  if (root->friend_id == fid)
     return 1;
 
-  int leftcheck = findFriend(root->leftchild, fid);
+  int leftcheck = findFriend(root->left_child, fid);
   if (leftcheck)
     return 1;
 
-  return findFriend(root->rightchild, fid);
+  return findFriend(root->right_child, fid);
 }
 
-void firstPass(treeNode *root, Queue *q, bool visited[]) {
+void singlePass(treeNode *root, Queue *q, bool visited[]) {
   if (root != NULL) {
-    firstPass(root->leftchild, q, visited);
-    visited[root->friendid] = 1;
-    enqueue(q, root->friendid);
-    // printf("%d ", root->friendid);
-    firstPass(root->rightchild, q, visited);
+    singlePass(root->left_child, q, visited);
+    visited[root->friend_id] = 1;
+    enqueue(q, root->friend_id);
+    // printf("%d ", root->friend_id);
+    singlePass(root->right_child, q, visited);
   }
 }
 

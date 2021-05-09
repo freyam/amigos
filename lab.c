@@ -1,7 +1,7 @@
 #include "amigos.h"
 
-void countingSort(intidx scores[], int size) {
-  intidx temp[size];
+void countingSort(intx scores[], int size) {
+  intx temp[size];
   for (int i = 0; i < size; ++i) {
     temp[i].idx = i;
     temp[i].val = 0;
@@ -31,13 +31,13 @@ void countingSort(intidx scores[], int size) {
     scores[i] = temp[i];
 
   for (int low = 0, high = size - 1; low < high; low++, high--) {
-    intidx temp = scores[low];
+    intx temp = scores[low];
     scores[low] = scores[high];
     scores[high] = temp;
   }
 }
 
-void printINTIDXarray(intidx arr[], int size) {
+void printINTXArray(intx arr[], int size) {
   for (int i = 0; i < size; ++i) {
     printf("[%d] %d ", arr[i].idx, arr[i].val);
   }
@@ -45,9 +45,9 @@ void printINTIDXarray(intidx arr[], int size) {
 }
 
 int main() {
-  intidx array[11] = {{0, 0}, {40, 1}, {78, 2}, {34, 3}, {9, 4}, {0, 5}, {1, 6}, {76, 7}, {79, 8}, {80, 9}, {30, 10}};
+  intx array[11] = {{0, 0}, {40, 1}, {78, 2}, {34, 3}, {9, 4}, {0, 5}, {1, 6}, {76, 7}, {79, 8}, {80, 9}, {30, 10}};
 
-  printINTIDXarray(array, 11);
+  printINTXArray(array, 11);
   countingSort(array, 11);
-  printINTIDXarray(array, 11);
+  printINTXArray(array, 11);
 }

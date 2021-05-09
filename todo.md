@@ -1,16 +1,20 @@
 TODO
 
-- [ ] Fix Graph size and all the for loops.
-- [ ] Restrict random countries
+Time Left: 3 hours
+
+- [ ] Delete Friends
+- [ ] Fix the Recommendation System
 - [ ] character bug in menu
-- [ ] variable conventions
-- [ ] testing
 - [ ] error handling
+- [ ] testing
 - [ ] comments
-- [ ] file structure
+- [ ] README
+- [ ] Report
+- [ ] Colourful printf
+- [ ] Restrict random countries
 
 BUGS
 
 - [ ] Enter UID greater than minUID.
 - [ ] Friend of yourself
-- [ ] entriesImported bug
+- [ ] entries bug
