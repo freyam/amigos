@@ -145,6 +145,7 @@ void singlePass(treeNode *, Queue *, bool[]);
 Queue *createQueue(int size);
 void enqueue(Queue *, int);
 int dequeue(Queue *);
+bool queueExists(Queue *, int);
 void display(Queue *);
 bool isEmpty(Queue *);
 void printQueue(Queue *);

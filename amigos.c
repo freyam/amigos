@@ -24,7 +24,7 @@ void initialize() {
   srand(time(0));
 
   V = 101;
-  entries = 6;
+  entries = 15;
 
   network = createGraph(V);
   token = createHeap(V);
@@ -655,7 +655,7 @@ void recommendFriendsNewUser() {
 
   countingSort(scores, network->minUID - 1);
 
-  printf("Recommended Friends using CompatiFriend\n");
+  printf("Recommended Friends using CompatiFriend\n\n");
   for (int i = 0; i < 10; ++i) {
     if (scores[i].idx >= network->minUID)
       continue;
@@ -735,19 +735,6 @@ void recommendFriendsExistingUser() {
     return;
   }
 
-  printUser(network->userList[user_id]);
-
-  int toAdd;
-
-  printf("Enter the number of friends you want to add: ");
-  scanf("%d", &toAdd);
-
-  if (toAdd == 0) {
-    printf("Skipping Recommending Friends...\n");
-
-    recommendFriendsMenu();
-  }
-
   if (network->userList[user_id].friend_list == NULL) {
     printf("%s has no friends.\n", network->userList[user_id].name);
     printf("Treat %s as a New User (y/n)? ", network->userList[user_id].name);
@@ -763,8 +750,10 @@ void recommendFriendsExistingUser() {
     return;
   }
 
-  Queue *friendstream = createQueue(network->minUID); // Queue to run BFS on
-  Queue *recommendedFriends = createQueue(toAdd);     // Queue to store the Recommended Friends
+  printUser(network->userList[user_id]);
+
+  Queue *friendstream = createQueue(network->minUID);       // Queue to run BFS on
+  Queue *recommendedFriends = createQueue(network->minUID); // Queue to store the Recommended Friends
 
   bool visited[network->minUID];       // Bool Array to track Visited Users
   bool alreadyfriend[network->minUID]; // Bool Array to store Current Friends
@@ -779,14 +768,13 @@ void recommendFriendsExistingUser() {
   for (int i = 0; i < network->minUID; ++i)
     visited[i] = alreadyfriend[i];
 
-  int added = 0;
+  int common_friends = 0;
 
-  while (!isEmpty(friendstream) && added < toAdd) {
+  while (!isEmpty(friendstream)) {
     int fid = dequeue(friendstream);
 
-    if (!alreadyfriend[fid]) { // if "fid" isn't already a friend of User, add it to the Recommended Users
-      added++;
-
+    if (fid != user_id && !alreadyfriend[fid] && !queueExists(recommendedFriends, fid)) { // if "fid" isn't already a friend of User, add it to the Recommended Users
+      common_friends++;
       enqueue(recommendedFriends, fid);
     }
 
@@ -800,13 +788,29 @@ void recommendFriendsExistingUser() {
 
   printf("\n");
 
-  if (isEmpty(friendstream)) {
-    printf("No Friend Recommendations!");
+  if (isEmpty(recommendedFriends)) {
+    printf("No Common Friend Recommendations!\n");
+    return;
   } else {
-    for (int i = friendstream->front; i < friendstream->rear + 1; ++i)
-      printUser(network->userList[friendstream->items[i]]);
-
+    printf("Recommended Friends using CommonFriendAI\n\n");
+    for (int i = recommendedFriends->front; i < recommendedFriends->rear + 1; ++i)
+      printUser(network->userList[recommendedFriends->items[i]]);
     printf("\n");
+  }
+
+  int toAdd;
+
+  printf("Enter the number of friends you want to add: ");
+  scanf("%d", &toAdd);
+
+  if (toAdd == 0) {
+    printf("Skipping Recommending Friends...\n\n");
+    return;
+  }
+
+  if (toAdd > common_friends) {
+    printf("There are only %d common friends.\n", common_friends);
+    toAdd = common_friends;
   }
 
   for (int i = 0; i < toAdd; ++i) {
@@ -829,6 +833,7 @@ void recommendFriendsExistingUser() {
       printf("Added %s as a Friend\n", network->userList[friend_id].name);
     }
   }
+  printf("\n");
 }
 
 // Checks whether 2 Users are Friends (User Input: UIDs)
@@ -1035,7 +1040,7 @@ void writeFriendshipNetwork() {
     if (network->userList[i].uid) {
       string username;
       strcpy(username, network->userList[i].name);
-      fprintf(f, "\t\"%s\"", username);
+      // fprintf(f, "\t\"%s\"", username);
       if (network->userList[i].friend_list)
         writeFriendlist(username, network->userList[i].friend_list, f);
 

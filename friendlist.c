@@ -45,12 +45,19 @@ int dequeue(Queue *q) {
   return item;
 }
 
+bool queueExists(Queue *q, int value) {
+  for (int i = q->front; i < q->rear + 1; ++i)
+    if (q->items[i] == value)
+      return true;
+  return false;
+}
+
 // Prints the values of the Queue
 void printQueue(Queue *q) {
   int i = q->front;
 
   if (isEmpty(q)) {
-    printf("No Friend Recommendations!");
+    printf("No Friend Recommendations!\n");
   } else {
     for (i = q->front; i < q->rear + 1; i++) {
       printf("%s ", network->userList[q->items[i]].name);
@@ -245,8 +252,10 @@ bool findFriend(treeNode *root, int fid) {
 void singlePass(treeNode *root, Queue *q, bool visited[]) {
   if (root != NULL) {
     singlePass(root->left_child, q, visited);
-    visited[root->friend_id] = 1;
-    enqueue(q, root->friend_id);
+    if (!visited[root->friend_id]) {
+      visited[root->friend_id] = 1;
+      enqueue(q, root->friend_id);
+    }
     singlePass(root->right_child, q, visited);
   }
 }
