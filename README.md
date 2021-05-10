@@ -27,29 +27,37 @@ The Detailed Analysis of our choices can be found in our [Project Report](https:
 
 ```
 .
-├── amigos
 ├── amigos.c
 ├── amigos.h
-├── avl.c
 ├── data
 │   ├── CustomUserDatabase.csv
 │   └── RandomUserDatabase.csv
+├── friendlist.c
 ├── graph
-│   ├── friendship-network.png
-│   └── graphviz.dot
-├── heap.c
 ├── interface.c
 ├── lab.c
+├── LICENSE
 ├── main.c
 ├── Makefile
-├── queue.c
 ├── README.md
 ├── redblack.c
 ├── src
-│   ├── header.png
-│   ├── header-square.png
-│   └── project.pdf
-└── todo.md
+│   ├── brand
+│   │   ├── header.png
+│   │   └── header-square.png
+│   ├── gifs
+│   │   ├── doggo-1.gif
+│   │   ├── doggo-2.gif
+│   │   ├── nondoggo-1.gif
+│   │   ├── nondoggo-2.gif
+│   │   └── nondoggo-3.gif
+│   ├── interface
+│   │   ├── graph.png
+│   │   └── menus.png
+│   ├── project.pdf
+│   └── report.pdf
+├── tokencounter.c
+└── ui
 ```
 
 ### Setup
