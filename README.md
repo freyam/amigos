@@ -1,4 +1,4 @@
-![](/src/header.png)
+![](/src/brand/header.png)
 
 ## Amigos App - A Rich Social Media Experience
 
