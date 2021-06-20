@@ -15,58 +15,58 @@
 typedef char string[50];
 
 #define gets(s) \
-  getchar();    \
-  scanf("%[^\n]s", s);
+    getchar();  \
+    scanf("%[^\n]s", s);
 
 typedef struct treeNode treeNode;
 struct treeNode {
-  int friend_id;
-  treeNode *left_child;
-  treeNode *right_child;
-  int height;
+    int friend_id;
+    treeNode *left_child;
+    treeNode *right_child;
+    int height;
 };
 
 typedef struct User User;
 struct User {
-  int uid;
-  string
-      name,
-      age,
-      gender,
-      email,
-      job_title,
-      university,
-      city,
-      country;
+    int uid;
+    string
+        name,
+        age,
+        gender,
+        email,
+        job_title,
+        university,
+        city,
+        country;
 
-  treeNode *friend_list;
+    treeNode *friend_list;
 };
 
 typedef struct FriendNetwork FriendNetwork;
 struct FriendNetwork {
-  int V;          // number of users
-  int minUID;     // number of registered users
-  User *userList; // the user list
+    int V;          // number of users
+    int minUID;     // number of registered users
+    User *userList; // the user list
 };
 
 typedef struct Queue Queue;
 struct Queue {
-  int *items;
-  int front;
-  int rear;
+    int *items;
+    int front;
+    int rear;
 };
 
 typedef struct Heap Heap;
 struct Heap {
-  int *arr;
-  int count;
-  int capacity;
+    int *arr;
+    int count;
+    int capacity;
 };
 
 typedef struct intx intx;
 struct intx {
-  int val;
-  int idx;
+    int val;
+    int idx;
 };
 
 // Core UI and UX Functions
