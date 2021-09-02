@@ -620,7 +620,7 @@ void error() {
     system("clear");
     printf(BLUE);
     printf("Critical Error! Bootstrapping the Program.\n");
-    printf("Visit us again at https://amigos.com/\n");
+    printf("Visit us again!\n");
     printf(RESET);
     exit(EXIT_FAILURE);
 }
@@ -630,7 +630,7 @@ void quit() {
     system("clear");
     printf(GREEN);
     printf("Application Exited Successfully\n");
-    printf("Thank You for visiting us at https://amigos.com/\n");
+    printf("Thank You for visiting us!\n");
     printf(RESET);
     exit(EXIT_SUCCESS);
 }

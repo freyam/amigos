@@ -14,14 +14,14 @@ Everyone needs a good friend who stands next to them during their good and chall
 
 ### Core Functions
 
-- `checkFriendshipUID()`
-- `checkFriendshipName()`
-- `recommendFriendsNewUser()`
-- `recommendFriendsExisitngUser()`
+-   `checkFriendshipUID()`
+-   `checkFriendshipName()`
+-   `recommendFriendsNewUser()`
+-   `recommendFriendsExisitngUser()`
 
 ### Analysis of the Data Structures and Algorithms Used
 
-The Detailed Analysis of our choices can be found in our [Project Report](https://github.com/freyam/amigos/blob/main/src/report.pdf).
+The Detailed Analysis of our choices can be found in our [Project Report](https://github.com/freyam/amigos/blob/main/src/data-structures-and-algorithms-report.pdf).
 
 ### File Structure
 
@@ -62,22 +62,22 @@ The Detailed Analysis of our choices can be found in our [Project Report](https:
 
 ### Setup
 
-- Install the necessary Build Setup (`gcc 10.2` and `gdb 9.2`)
-  - `sudo apt-get install build-essential`
-- Install [Graphviz](https://graphviz.org/) (Graph Visualization Software)
-  - `sudo apt-get install graphviz`
+-   Install the necessary Build Setup (`gcc 10.2` and `gdb 9.2`)
+    -   `sudo apt-get install build-essential`
+-   Install [Graphviz](https://graphviz.org/) (Graph Visualization Software)
+    -   `sudo apt-get install graphviz`
 
 ### Instructions
 
-- Download the source code of the Amigos App from GitHub.
-- I have a `Makefile` which allows me to compile/run/test/debug/clean/etc. the Amigos Application using simple short commands in the terminal (tested on Linux).
-  - `> make` to compile and run the Amigos App.
-  - `> make com` to only compile the Amigos App.
-  - `> make run` to run a successfully compiled Amigos App.
-  - `> make dbg` to compile the Amigos App with the `-g` flag to run `gdb` for debugging.
-  - `> make test` to test new features before adding to the main branch.
-  - `> make import` to import Random User Data created by an online API (Mockaroo).
-  - `> make clean` to clean the residual files and prepare a consistent file structure.
+-   Download the source code of the Amigos App from GitHub.
+-   I have a `Makefile` which allows me to compile/run/test/debug/clean/etc. the Amigos Application using simple short commands in the terminal (tested on Linux).
+    -   `> make` to compile and run the Amigos App.
+    -   `> make com` to only compile the Amigos App.
+    -   `> make run` to run a successfully compiled Amigos App.
+    -   `> make dbg` to compile the Amigos App with the `-g` flag to run `gdb` for debugging.
+    -   `> make test` to test new features before adding to the main branch.
+    -   `> make import` to import Random User Data created by an online API (Mockaroo).
+    -   `> make clean` to clean the residual files and prepare a consistent file structure.
 
 ### User Interface
 
@@ -88,15 +88,15 @@ The Detailed Analysis of our choices can be found in our [Project Report](https:
 
 We have helped many users find their true friends.
 
-<a align="center">
+<div align="center">
   <img src="src/gifs/nondoggo-2.gif">
   <img src="src/gifs/nondoggo-3.gif">
-</a>
+</div>
 
-<a align="center">
+<div align="center">
   <img src="src/gifs/doggo-1.gif">
   <img src="src/gifs/doggo-2.gif">
-</a>
+</div>
 
 <br>
 <br>
